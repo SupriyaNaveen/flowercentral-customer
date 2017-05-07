@@ -1,0 +1,56 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.flowercentral.flowercentral_customer"
+        minSdkVersion 19
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        development {
+            buildConfigField("String", "BUILD_MODE", "\"DEVELOPMENT\"")
+            buildConfigField("boolean", "IS_PRODUCTION", "false")
+            buildConfigField("String", "SERVER", "\"http://52.50.219.163:90/\"")
+        }
+
+        production {
+            buildConfigField("String", "BUILD_MODE", "\"PRODUCTION\"")
+            buildConfigField("boolean", "IS_PRODUCTION", "true")
+            buildConfigField("String", "SERVER", "\"http://52.50.219.163:90/\"")
+
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:cardview-v7:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.afollestad.material-dialogs:core:0.9.0.2'
+    compile 'com.android.volley:volley:1.0.0'
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.jakewharton:butterknife:8.5.1'
+    /*compile 'com.github.mukeshsolanki:social-login-helper:1.0.2'*/
+    testCompile 'junit:junit:4.12'
+}

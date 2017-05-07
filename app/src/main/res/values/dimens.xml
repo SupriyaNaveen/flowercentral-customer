@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_horizontal_padding_16">16dip</dimen>
+    <dimen name="activity_vertical_padding_16">16dip</dimen>
+    <dimen name="cardview_default_corner_radius">5dp</dimen>
+    <dimen name="cardview_default_elavation">1dp</dimen>
+    <dimen name="dp10">10dip</dimen>
+    <dimen name="dp20">20dip</dimen>
+    <dimen name="sp12">12sp</dimen>
+</resources>

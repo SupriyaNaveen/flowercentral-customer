@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Florist-Customer</string>
+
+
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">Florist\nCustomer</string>
+    <!-- Activity -->
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_login">Login</string>
+
+    <!-- Error Messages and Title -->
+
+    <string name="title_connection_time_out">Connection Timeout</string>
+    <string name="title_internet_unavailable">No Internet</string>
+
+    <string name="msg_connection_time_out">Connection Timeout.</string>
+    <string name="msg_internet_unavailable">It looks like you are offline, connect with Internet &amp; Try Again!</string>
+    <string name="msg_invalid_email">Invalid email format</string>
+    <string name="msg_password_min_length">Min 6 charcter in length.</string>
+
+    <string name="lbl_email">Email</string>
+    <string name="lbl_password">Password</string>
+    <string name="lbl_not_created_account">Not created account yet?</string>
+
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+
+    <string name="btn_try_again">Try Again</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_forgot_password">Forgot Password?</string>
+    <string name="btn_register">Register</string>
+    <string name="msg_authenticating_user">Please wait, authenticating user.</string>
+    <string name="msg_recovering_password">Please wait, recovering your password</string>
+    <string name="err_inavlid_username_password">User name and Password doesn\'t match.</string>
+
+    <!-- SOCIAL APP KEY -->
+    <string name="fb_app_id">1806307213019284</string>
+
+</resources>
