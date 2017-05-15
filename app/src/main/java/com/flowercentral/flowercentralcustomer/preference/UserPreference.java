@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
+import com.flowercentral.flowercentralcustomer.common.model.User;
+
+import java.util.HashMap;
+
 /**
  * Created by Ashish Upadhyay on 4/29/17.
  */
@@ -16,6 +20,13 @@ public class UserPreference extends PreferenceActivity {
     private static Context mContext;
 
     private final static String API_TOKEN_KEY = "api_token_key";
+    private final static String LOGIN_ACCESS_TOKEN = "login_access_token";
+    private final static String LOGGED_IN_USER_ID = "logged_in_user_id";
+    private final static String LOGGED_IN_USER_EMAIL = "logged_in_user_id";
+    private final static String LOGGED_IN_USER_FNAME = "logged_in_user_fname";
+    private final static String LOGGED_IN_USER_LNAME = "logged_in_user_lname";
+    private final static String LOGGED_IN_USER_PIC = "logged_in_user_pic";
+    private static final String LOG_IN_METHOD = "login_method";
 
     @Override
     public void onCreate(Bundle _savedInstanceState){
@@ -111,4 +122,84 @@ public class UserPreference extends PreferenceActivity {
     public static String getApiToken(){
         return readString (mContext, API_TOKEN_KEY, null);
     }
+
+    public static void setAccessToken(String _token){
+        writeString (mContext, LOGIN_ACCESS_TOKEN, _token);
+    }
+
+    public static String getAccessToken(){
+        return readString (mContext, LOGIN_ACCESS_TOKEN, null);
+    }
+
+    public static void setUserID(String _id){
+        writeString (mContext, LOGGED_IN_USER_ID, _id);
+    }
+
+    public static String getUserID(){
+        return readString (mContext, LOGGED_IN_USER_ID, null);
+    }
+
+    public static void setUserEmail(String _email){
+        writeString (mContext, LOGGED_IN_USER_EMAIL, _email);
+    }
+
+    public static String getUserEmail(){
+        return readString (mContext, LOGGED_IN_USER_EMAIL, null);
+    }
+
+    public static void setUserFirstName(String _fname){
+        writeString (mContext, LOGGED_IN_USER_FNAME, _fname);
+    }
+
+    public static String getUserFirstName(){
+        return readString (mContext, LOGGED_IN_USER_FNAME, null);
+    }
+
+    public static void setUserLastName(String _lname){
+        writeString (mContext, LOGGED_IN_USER_LNAME, _lname);
+    }
+
+    public static String getUserLastName(){
+        return readString (mContext, LOGGED_IN_USER_LNAME, null);
+    }
+
+    public static void setProfilePic(String _lname){
+        writeString (mContext, LOGGED_IN_USER_LNAME, _lname);
+    }
+
+    public static String getProfilePic(){
+        return readString (mContext, LOGGED_IN_USER_LNAME, null);
+    }
+
+    public static void setLoginMethod(int _loginType){
+        writeInt (mContext, LOG_IN_METHOD, _loginType);
+    }
+
+    public static int getLoginMethod(){
+        return readInt (mContext, LOG_IN_METHOD, -1);
+    }
+
+    public static User getProfileInformation(){
+        User user = new User ();
+        user.setAccessToken (readString (mContext, LOGIN_ACCESS_TOKEN, null));
+        user.setUserID (readString (mContext, LOGGED_IN_USER_ID, null));
+        user.setUserEmail (readString (mContext, LOGGED_IN_USER_EMAIL, null));
+        user.setUserFName (readString (mContext, LOGGED_IN_USER_FNAME, null));
+        user.setUserLName (readString (mContext, LOGGED_IN_USER_LNAME, null));
+        user.setProfilePic (readString (mContext, LOGGED_IN_USER_PIC, null));
+        user.setLoginMethod (readInt (mContext, LOG_IN_METHOD, -1));
+
+        return user;
+    }
+
+    public static void deleteProfileInformation(){
+        setAccessToken (null);
+        setUserID (null);
+        setUserEmail (null);
+        setUserFirstName (null);
+        setUserLastName (null);
+        setProfilePic (null);
+        setLoginMethod (-1);
+    }
+
 }

@@ -2,8 +2,8 @@ package com.flowercentral.flowercentralcustomer.dao;
 
 import android.util.Log;
 
-import com.flowercentral.customer.preference.UserPreference;
-import com.flowercentral.customer.util.Util;
+import com.flowercentral.flowercentralcustomer.preference.UserPreference;
+import com.flowercentral.flowercentralcustomer.util.Util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

@@ -33,5 +33,6 @@ public final class AppConstant {
 
     //Static Actions/Request
     public enum  ACTIONS{LOGIN, REGISTER, FORGOT_PASSWORD, NO_INTERNET}
+    public enum  LOGIN_TYPE{FACEBOOK, GOOGLE, INSTAGRAM, CUSTOM}
 
 }

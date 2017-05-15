@@ -7,7 +7,6 @@ import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
 
-
 import com.flowercentral.flowercentralcustomer.preference.UserPreference;
 import com.flowercentral.flowercentralcustomer.util.Logger;
 

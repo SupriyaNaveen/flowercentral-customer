@@ -1,17 +1,17 @@
 <resources>
-    <string name="app_name">Florist-Customer</string>
+    <string name="app_name">Flower Central</string>
 
 
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">Florist\nCustomer</string>
     <!-- Activity -->
-    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_launcher">LauncherActivity</string>
     <string name="title_activity_login">Login</string>
 
     <!-- Error Messages and Title -->
 
     <string name="title_connection_time_out">Connection Timeout</string>
-    <string name="title_internet_unavailable">No Internet</string>
+    <string name="title_internet_unavailable">No Internet Connection</string>
 
     <string name="msg_connection_time_out">Connection Timeout.</string>
     <string name="msg_internet_unavailable">It looks like you are offline, connect with Internet &amp; Try Again!</string>
@@ -34,7 +34,23 @@
     <string name="msg_recovering_password">Please wait, recovering your password</string>
     <string name="err_inavlid_username_password">User name and Password doesn\'t match.</string>
 
+    <string name="lbl_fb">Facebook</string>
+    <string name="lbl_google">Google</string>
+    <string name="lbl_instagram">Instagram</string>
+    <string name="lbl_or">OR</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
     <!-- SOCIAL APP KEY -->
     <string name="fb_app_id">1806307213019284</string>
+    <string name="instagram_client_id">0bc257261932418dbfc40e26ab458d5b</string>
+    <string name="instagram_client_secret">1b614f547dc54dfba94623ac358962b3</string>
+    <string name="instagram_callback_url">http://flowercentral.com</string>
+
+
 
 </resources>
