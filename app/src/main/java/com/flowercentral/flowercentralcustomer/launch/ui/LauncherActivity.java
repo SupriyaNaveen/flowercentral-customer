@@ -2,6 +2,7 @@ package com.flowercentral.flowercentralcustomer.launch.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 
 import android.os.Bundle;
@@ -11,9 +12,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.binarysoft.sociallogin.facebook.FacebookGraphListner;
 import com.binarysoft.sociallogin.facebook.FacebookUser;
 import com.binarysoft.sociallogin.google.GoogleUser;
@@ -21,13 +24,17 @@ import com.binarysoft.sociallogin.instagram.InstagramUser;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.preference.UserPreference;
+import com.flowercentral.flowercentralcustomer.rest.BaseModel;
+import com.flowercentral.flowercentralcustomer.rest.QueryBuilder;
 import com.flowercentral.flowercentralcustomer.setting.AppConstant;
 import com.flowercentral.flowercentralcustomer.util.Util;
+import com.flowercentral.flowercentralcustomer.volley.ErrorData;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -59,11 +66,14 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
     //Bind UI View Controls
     private Button mBtnTryAgain;
 
+    private FrameLayout mFlOuterWrapper;
     private FrameLayout mFlNoInternet;
+    private LinearLayout mllLoginWrapper;
 
     private TextView mBtnFacebook;
     private TextView mBtnGoogle;
     private TextView mBtnInstagram;
+    private MaterialDialog mProgressDialog;
 
     @Override
     protected void onCreate (Bundle savedInstanceState){
@@ -78,7 +88,9 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
         mBtnGoogle = (TextView) findViewById (R.id.btn_google);
         mBtnInstagram = (TextView) findViewById (R.id.btn_instagram);
 
+        mFlOuterWrapper = (FrameLayout) findViewById (R.id.outer_wrapper);
         mFlNoInternet = (FrameLayout) findViewById (R.id.fl_no_internet);
+        mllLoginWrapper = (LinearLayout) findViewById (R.id.login_wrapper);
 
         mBtnTryAgain.setOnClickListener (this);
         mBtnFacebook.setOnClickListener (this);
@@ -101,6 +113,13 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onClick (View v) {
+
+        //No internet connection then return
+        if(!Util.checkInternet (mContext)){
+            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable),Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+
         int id = v.getId ();
         switch (id){
             case R.id.btn_try_again:
@@ -142,22 +161,33 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onGoogleAuthSignIn (String authToken, GoogleUser _userAccount) {
         //String msg = String.format(Locale.US, "User id:%s\n\nAuthToken:%s", userId, authToken);
-        //Toast.makeText (mContext, msg, Toast.LENGTH_SHORT).show ();
+
+        //No internet connection then return
+        if(!Util.checkInternet (mContext)){
+            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable),Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+        //Prepare json object by getting required user info from GoogleUser object
+        JSONObject user = new JSONObject ();
+        registerUser (mContext, user);
+
     }
 
     @Override
     public void onGoogleAuthSignInFailed (String errorMessage) {
-        Toast.makeText (mContext, errorMessage, Toast.LENGTH_SHORT).show ();
+        Snackbar.make(mFlOuterWrapper, errorMessage,Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void onGoogleAuthSignOut () {
-        Toast.makeText (mContext, "Signed out of Google Plus", Toast.LENGTH_SHORT).show ();
+        UserPreference.deleteProfileInformation ();
+        Snackbar.make(mFlOuterWrapper, getString (R.string.msg_logout_success), Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void onFbSignInFail (String errorMessage) {
         Toast.makeText (mContext, errorMessage, Toast.LENGTH_SHORT).show ();
+        Snackbar.make(mFlOuterWrapper, errorMessage, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
@@ -169,12 +199,19 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
             @Override
             public void onProfileReceived (FacebookUser _profile) {
                 Log.i(TAG, _profile.toString ());
+                //No internet connection then return
+                if(!Util.checkInternet (mContext)){
+                    Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable),Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+                //Prepare json object by getting required user info from FacebookUser object
+                JSONObject user = new JSONObject ();
+                registerUser (mContext, user);
             }
         });
 
         try{
             mFacebookHelper.getProfile ();
-
         }catch (RuntimeException rEx){
             rEx.printStackTrace ();
         }
@@ -184,16 +221,26 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onFBSignOut () {
         UserPreference.deleteProfileInformation ();
-        Toast.makeText (mContext, "Signed out of Facebook", Toast.LENGTH_SHORT).show ();
+        Snackbar.make(mFlOuterWrapper, getString (R.string.msg_logout_success), Snackbar.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onInstagramSignInFail (String _errorMessage) {
-
+        Snackbar.make(mFlOuterWrapper, _errorMessage, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void onInstagramSignInSuccess (String _authToken, InstagramUser _instagramUser) {
+
+        //No internet connection then return
+        if(!Util.checkInternet (mContext)){
+            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable),Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+        //Prepare json object by getting required user info from InstagramUser object
+        JSONObject user = new JSONObject ();
+        registerUser (mContext, user);
 
     }
 
@@ -202,11 +249,13 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
         //Check internet connectivity
         if(Util.checkInternet (mContext)){
             mFlNoInternet.setVisibility (View.GONE);
+            mllLoginWrapper.setVisibility (View.VISIBLE);
             //Initialize social plugins
             initSocialPlugins();
 
         }else{
             mFlNoInternet.setVisibility (View.VISIBLE);
+            mllLoginWrapper.setVisibility (View.GONE);
         }
     }
 
@@ -265,5 +314,76 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
             return false;
         }
     };
+
+    /**
+     * Register User using Social Login
+     */
+    private void registerUser(Context _context, JSONObject _user){
+        //Start Progress dialog
+        dismissDialog();
+
+        mProgressDialog = Util.showProgressDialog (_context, null, getString (R.string.msg_registering_user), false);
+
+        BaseModel<JSONObject> baseModel = new BaseModel<JSONObject> (_context) {
+            @Override
+            public void onSuccess (int statusCode, Map<String, String> headers, JSONObject response) {
+                //CLose Progress dialog
+                dismissDialog();
+
+            }
+
+            @Override
+            public void onError (ErrorData error) {
+                //Close Progress dialog
+                dismissDialog();
+                if(error != null){
+
+                    switch (error.getErrorType()){
+                        case NETWORK_NOT_AVAILABLE:
+                            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable),Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case INTERNAL_SERVER_ERROR:
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case CONNECTION_TIMEOUT:
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case APPLICATION_ERROR:
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case INVALID_INPUT_SUPPLIED:
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case AUTHENTICATION_ERROR:
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case UNAUTHORIZED_ERROR:
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            break;
+                    }
+                }
+            }
+        };
+
+        String url = QueryBuilder.getLoginUrl ();
+        if(_user != null){
+            baseModel.executePostJsonRequest(url,_user,TAG);
+        }else{
+            Snackbar.make(mFlOuterWrapper, getResources ().getString (R.string.msg_reg_user_missing_input),Snackbar.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void dismissDialog() {
+        try {
+
+            if (mProgressDialog != null && mProgressDialog.isShowing() && !isFinishing()) {
+                mProgressDialog.dismiss();
+                mProgressDialog = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -50,7 +50,9 @@
     <string name="instagram_client_id">0bc257261932418dbfc40e26ab458d5b</string>
     <string name="instagram_client_secret">1b614f547dc54dfba94623ac358962b3</string>
     <string name="instagram_callback_url">http://flowercentral.com</string>
-
+    <string name="msg_reg_user_missing_input">Required parameters are missing. Please check and try again!</string>
+    <string name="msg_registering_user">Please wait, saving information.</string>
+    <string name="msg_logout_success">You have been Successfully logged out.</string>
 
 
 </resources>

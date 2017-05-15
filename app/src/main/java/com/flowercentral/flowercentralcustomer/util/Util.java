@@ -3,6 +3,7 @@ package com.flowercentral.flowercentralcustomer.util;
 import android.app.ActivityManager;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -440,5 +441,37 @@ public class Util {
         }
 
     }
+
+    public static MaterialDialog showProgressDialog(Context _context, String _title, String _message, boolean _cancellable) {
+
+        MaterialDialog progressDialog;
+
+        MaterialDialog.Builder builder =  new MaterialDialog.Builder(_context);
+        if(_title !=null){
+            builder.title(_title);
+        }
+        if(_message != null){
+            builder.content(_message);
+        }
+        builder.progress(true, 0);
+        builder.cancelable(_cancellable);
+
+        progressDialog = builder.build();
+
+        progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dialog.cancel ();
+            }
+        });
+
+        if (!progressDialog.isShowing())
+            progressDialog.show();
+
+        return progressDialog;
+
+    }
+
+
 
 }
