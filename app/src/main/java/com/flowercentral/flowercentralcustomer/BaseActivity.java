@@ -10,8 +10,10 @@ import com.binarysoft.sociallogin.facebook.FacebookHelper;
 import com.binarysoft.sociallogin.facebook.FacebookListener;
 import com.binarysoft.sociallogin.google.GoogleHelper;
 import com.binarysoft.sociallogin.google.GoogleListener;
+import com.binarysoft.sociallogin.google.GoogleUser;
 import com.binarysoft.sociallogin.instagram.InstagramHelper;
 import com.binarysoft.sociallogin.instagram.InstagramListener;
+import com.binarysoft.sociallogin.instagram.InstagramUser;
 
 import java.util.HashMap;
 
@@ -60,8 +62,9 @@ public class BaseActivity extends AppCompatActivity implements FacebookListener,
         mGoogleHelper.onActivityResult(requestCode, resultCode, data);
     }
 
+
     @Override
-    public void onGoogleAuthSignIn (String authToken, HashMap<String, String> _userAccount) {
+    public void onGoogleAuthSignIn (String _authToken, GoogleUser _userAccount) {
 
     }
 
@@ -96,7 +99,8 @@ public class BaseActivity extends AppCompatActivity implements FacebookListener,
     }
 
     @Override
-    public void onInstagramSignInSuccess (String _authToken, String _userId) {
+    public void onInstagramSignInSuccess (String _authToken, InstagramUser _instagramUser) {
 
     }
+
 }

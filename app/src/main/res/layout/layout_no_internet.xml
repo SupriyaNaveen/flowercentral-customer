@@ -7,18 +7,19 @@
     tool:ignore="UselessParent">
 
     <ImageView
+        android:id="@+id/wifi_off"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_portable_wifi_off_accent_50dp"
-        android:layout_above="@+id/txt_err_msg"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerInParent="true"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/txt_err_msg"
         android:text="@string/msg_internet_unavailable"
-        android:layout_centerInParent="true"
+        android:textColor="@color/colorWhite"
+        android:layout_below="@+id/wifi_off"
         android:gravity="center"
         style="@style/AppTheme.Normal"/>
 
@@ -27,8 +28,10 @@
         android:layout_height="wrap_content"
         android:id="@+id/btn_try_again"
         android:text="@string/btn_try_again"
+        android:textColor="@color/colorWhite"
+        android:textAllCaps="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"/>
+        android:background="@drawable/rounded_corner_border"/>
 
 </RelativeLayout>

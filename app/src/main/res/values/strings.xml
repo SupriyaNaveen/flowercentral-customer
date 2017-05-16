@@ -14,7 +14,7 @@
     <string name="title_internet_unavailable">No Internet Connection</string>
 
     <string name="msg_connection_time_out">Connection Timeout.</string>
-    <string name="msg_internet_unavailable">It looks like you are offline, connect with Internet &amp; Try Again!</string>
+    <string name="msg_internet_unavailable">It looks like you are offline, connect with Internet &amp;\nTry Again!</string>
     <string name="msg_invalid_email">Invalid email format</string>
     <string name="msg_password_min_length">Min 6 charcter in length.</string>
 
@@ -37,7 +37,7 @@
     <string name="lbl_fb">Facebook</string>
     <string name="lbl_google">Google</string>
     <string name="lbl_instagram">Instagram</string>
-    <string name="lbl_or">OR</string>
+    <string name="lbl_or">Or Sign-In With</string>
     <string name="title_activity_dashboard">Dashboard</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -53,6 +53,10 @@
     <string name="msg_reg_user_missing_input">Required parameters are missing. Please check and try again!</string>
     <string name="msg_registering_user">Please wait, saving information.</string>
     <string name="msg_logout_success">You have been Successfully logged out.</string>
+    <string name="lbl_lets_connect">Let\'s Connect With Us</string>
+    <string name="lbl_need_flower_central_account">Need Flower Central Account?</string>
+    <string name="lbl_app_name">~ Flower Central ~</string>
+    <string name="lbl_app_tag">Your one stop flower shop</string>
 
 
 </resources>

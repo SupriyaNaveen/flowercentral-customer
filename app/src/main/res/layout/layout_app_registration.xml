@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_gravity="bottom">
+
+    <RelativeLayout
+        android:id="@+id/wrapper_devider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp10"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorWhite"
+            android:layout_toLeftOf="@+id/lbl_app_rgistration"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/lbl_app_rgistration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_or"
+            android:textSize="11sp"
+            android:layout_centerInParent="true"
+            style="@style/AppTheme.Label"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorWhite"
+            android:layout_toRightOf="@+id/lbl_app_rgistration"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txt_link_flower_central_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_need_flower_central_account"
+        android:textSize="15sp"
+        style="@style/AppTheme.Label"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dp10"/>
+
+</LinearLayout>
