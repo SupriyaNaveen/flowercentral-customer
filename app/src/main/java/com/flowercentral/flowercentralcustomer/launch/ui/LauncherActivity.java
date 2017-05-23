@@ -23,6 +23,7 @@ import com.binarysoft.sociallogin.google.GoogleUser;
 import com.binarysoft.sociallogin.instagram.InstagramUser;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
+import com.flowercentral.flowercentralcustomer.dashboard.Dashboard;
 import com.flowercentral.flowercentralcustomer.preference.UserPreference;
 import com.flowercentral.flowercentralcustomer.rest.BaseModel;
 import com.flowercentral.flowercentralcustomer.rest.QueryBuilder;
@@ -128,6 +129,7 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
             case R.id.btn_fb:
                 if(UserPreference.getAccessToken () != null){
                     UserPreference.deleteProfileInformation ();
+                    signout ();
                 }
 
                 mLoginMethod = AppConstant.LOGIN_TYPE.FACEBOOK.ordinal ();
@@ -138,6 +140,7 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
             case R.id.btn_google:
                 if(UserPreference.getAccessToken () != null){
                     UserPreference.deleteProfileInformation ();
+                    signout ();
                 }
 
                 mLoginMethod = AppConstant.LOGIN_TYPE.GOOGLE.ordinal ();
@@ -148,6 +151,7 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
             case R.id.btn_instagram:
                 if(UserPreference.getAccessToken () != null){
                     UserPreference.deleteProfileInformation ();
+                    signout ();
                 }
 
                 mLoginMethod = AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal ();
@@ -186,7 +190,6 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onFbSignInFail (String errorMessage) {
-        Toast.makeText (mContext, errorMessage, Toast.LENGTH_SHORT).show ();
         Snackbar.make(mFlOuterWrapper, errorMessage, Snackbar.LENGTH_SHORT).show();
     }
 
@@ -250,6 +253,9 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
         if(Util.checkInternet (mContext)){
             mFlNoInternet.setVisibility (View.GONE);
             mllLoginWrapper.setVisibility (View.VISIBLE);
+
+            //Todo Goto dashboard if user already logged in
+
             //Initialize social plugins
             initSocialPlugins();
 
@@ -320,7 +326,7 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
      */
     private void registerUser(Context _context, JSONObject _user){
         //Start Progress dialog
-        dismissDialog();
+        /*dismissDialog();
 
         mProgressDialog = Util.showProgressDialog (_context, null, getString (R.string.msg_registering_user), false);
 
@@ -370,11 +376,15 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
             baseModel.executePostJsonRequest(url,_user,TAG);
         }else{
             Snackbar.make(mFlOuterWrapper, getResources ().getString (R.string.msg_reg_user_missing_input),Snackbar.LENGTH_SHORT).show();
-        }
+        }*/
+
+
+        //This method to be called on Success of API call
+        showDashboard();
 
     }
 
-    public void dismissDialog() {
+    private void dismissDialog() {
         try {
 
             if (mProgressDialog != null && mProgressDialog.isShowing() && !isFinishing()) {
@@ -384,6 +394,14 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void showDashboard(){
+        Intent intent = new Intent (mContext, Dashboard.class);
+        intent.setAction(AppConstant.ACTIONS.HOME.name ());
+        intent.addFlags (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity (intent);
+        finish ();
     }
 
 }

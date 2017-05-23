@@ -20,16 +20,18 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_dashboard"
+        app:headerLayout="@layout/nav_header_left_dashboard"
         app:menu="@menu/activity_dashboard_drawer_left"/>
+
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view_right"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"
+        android:gravity="center_horizontal"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_dashboard"
+        app:headerLayout="@layout/nav_header_right_dashboard"
         app:menu="@menu/activity_dashboard_drawer_right"/>
 
 </android.support.v4.widget.DrawerLayout>

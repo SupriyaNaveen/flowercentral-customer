@@ -57,6 +57,18 @@
     <string name="lbl_need_flower_central_account">Need Flower Central Account?</string>
     <string name="lbl_app_name">~ Flower Central ~</string>
     <string name="lbl_app_tag">Your one stop flower shop</string>
+    <string name="nav_menu_order">Order</string>
+    <string name="nav_menu_profile">Profile</string>
+    <string name="nav_menu_delivery">Delivery Time</string>
+    <string name="nav_menu_logout">Logout</string>
+    <string name="nav_menu_help">Help</string>
+    <string name="action_cart">Cart</string>
+    <string name="lbl_search">Search</string>
+    <string name="lbl_categories">Categories</string>
+    <string name="lbl_buy_now">Buy Now</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

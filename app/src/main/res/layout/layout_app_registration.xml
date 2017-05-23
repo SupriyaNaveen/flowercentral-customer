@@ -3,16 +3,16 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_gravity="bottom">
+    android:layout_alignParentBottom="true">
 
     <RelativeLayout
         android:id="@+id/wrapper_devider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/dp10"
         android:gravity="center"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="@dimen/dp20"
+        android:layout_marginEnd="@dimen/dp20">
 
         <TextView
             android:layout_width="match_parent"
@@ -47,6 +47,6 @@
         android:textSize="15sp"
         style="@style/AppTheme.Label"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/dp10"/>
+        android:layout_marginBottom="@dimen/dp20"/>
 
 </LinearLayout>

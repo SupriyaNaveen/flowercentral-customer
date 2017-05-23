@@ -32,7 +32,8 @@ public final class AppConstant {
     public static final String SHORT_DATE_FORMAT = "dd-MMM";
 
     //Static Actions/Request
-    public enum  ACTIONS{LOGIN, REGISTER, FORGOT_PASSWORD, NO_INTERNET}
+    public enum  ACTIONS{LOGIN, REGISTER, FORGOT_PASSWORD, NO_INTERNET, HOME, EXIT}
     public enum  LOGIN_TYPE{FACEBOOK, GOOGLE, INSTAGRAM, CUSTOM}
+    public enum VIEW_TYPE {LIST, GRID};
 
 }

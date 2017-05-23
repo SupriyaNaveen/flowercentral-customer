@@ -29,7 +29,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_pinterest"/>
+                android:src="@drawable/ic_pinterest_svg"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight=".5"
@@ -58,11 +58,11 @@
                 layout="@layout/layout_social_login"/>
 
             <include
-                android:id="@+id/wrapper_app_rgistration"
+                android:id="@+id/wrapper_app_registration"
                 layout="@layout/layout_app_registration" />
 
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 

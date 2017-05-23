@@ -14,6 +14,8 @@ import com.binarysoft.sociallogin.google.GoogleUser;
 import com.binarysoft.sociallogin.instagram.InstagramHelper;
 import com.binarysoft.sociallogin.instagram.InstagramListener;
 import com.binarysoft.sociallogin.instagram.InstagramUser;
+import com.flowercentral.flowercentralcustomer.preference.UserPreference;
+import com.flowercentral.flowercentralcustomer.setting.AppConstant;
 
 import java.util.HashMap;
 
@@ -101,6 +103,27 @@ public class BaseActivity extends AppCompatActivity implements FacebookListener,
     @Override
     public void onInstagramSignInSuccess (String _authToken, InstagramUser _instagramUser) {
 
+    }
+
+    protected void signout(){
+        if(mLoginMethod == AppConstant.LOGIN_TYPE.FACEBOOK.ordinal ()){
+            if(mFacebookHelper != null){
+                mFacebookHelper.performSignOut ();
+            }
+        }else if(mLoginMethod == AppConstant.LOGIN_TYPE.GOOGLE.ordinal ()){
+            if(mGoogleHelper != null){
+                mGoogleHelper.performSignOut ();
+            }
+        }else if(mLoginMethod == AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal ()){
+            if(mInstagramHelper != null){
+
+            }
+        }else{
+            //Custom app
+
+        }
+        //Delete user preferences
+        UserPreference.deleteProfileInformation ();
     }
 
 }

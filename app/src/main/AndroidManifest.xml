@@ -38,16 +38,19 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".dashboard.Dashboard"
+            android:label="@string/title_activity_dashboard"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+        </activity>
+
         <!--Meta data for facebook -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/fb_app_id"/>
 
-        <activity
-            android:name=".dashboard.Dashboard"
-            android:label="@string/title_activity_dashboard"
-            android:theme="@style/AppTheme">
-        </activity>
     </application>
 
 </manifest>

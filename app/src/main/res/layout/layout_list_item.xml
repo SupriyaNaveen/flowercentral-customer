@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/product_outer_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/list_view_item_height"
+    card_view:contentPadding="@dimen/dp5"
+    card_view:cardBackgroundColor="@color/colorWhite"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardCornerRadius="@dimen/cardview_default_corner_radius"
+    card_view:cardElevation="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/item_image_wrapper"
+            android:layout_width="0dp"
+            android:layout_weight=".3"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_alignParentTop="true"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/img_item_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp5"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_content_wrapper"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".7"
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/dp5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/left_header_item"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".7"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txt_item_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Bunch 1"
+                        android:textSize="@dimen/sp12"
+                        android:textColor="@color/colorPrimaryText"
+                        android:textAllCaps="true"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:letterSpacing=".1"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/right_header_item"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:orientation="horizontal"
+                    android:gravity="right">
+
+                    <ImageView
+                        android:id="@+id/img_item_cart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_add_product_cart_svg"
+                        android:layout_marginRight="@dimen/dp5"
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground"/>
+
+                    <ImageView
+                        android:id="@+id/img_item_like"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_product_like_svg"
+                        android:clickable="true"
+                        android:foreground="?android:attr/selectableItemBackground"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_item_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:text="Small Description Text Small"
+                android:textSize="@dimen/sp10"
+                android:textColor="@color/colorSecondaryText"
+                android:letterSpacing=".1"
+                android:lineSpacingExtra="1dp"/>
+
+            <RelativeLayout
+                android:id="@+id/item_footer_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp10"
+                android:layout_alignParentBottom="true">
+
+                <TextView
+                    android:id="@+id/txt_item_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:maxLines="1"
+                    android:text="700"
+                    android:textSize="@dimen/sp12"
+                    android:textColor="@color/colorAccent"
+                    android:letterSpacing=".1"/>
+
+                <TextView
+                    android:id="@+id/txt_item_buy_now"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/rounded_corner_border_pink"
+                    android:paddingTop="@dimen/dp5"
+                    android:paddingBottom="@dimen/dp5"
+                    android:paddingLeft="@dimen/dp10"
+                    android:paddingRight="@dimen/dp10"
+                    android:layout_marginEnd="@dimen/dp10"
+                    android:maxLines="1"
+                    android:text="@string/lbl_buy_now"
+                    android:textSize="@dimen/sp10"
+                    android:textColor="@color/colorPrimary"
+                    android:textAllCaps="true"
+                    android:letterSpacing=".1"
+                    android:clickable="true"
+                    android:foreground="?android:attr/selectableItemBackground"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
