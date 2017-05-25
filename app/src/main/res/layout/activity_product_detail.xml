@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorLightGrey"
+    tools:context="com.flowercentral.flowercentralcustomer.ProductDetail.ProductDetailActivity">
+
+    <include
+        layout="@layout/toolbar_default"
+        android:id="@+id/toolbar_default"/>
+
+    <LinearLayout
+        android:id="@+id/product_detail_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_default"
+        android:padding="@dimen/dp10"
+        android:orientation="vertical"
+        android:weightSum="1"
+        android:layout_above="@+id/button_wrapper">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="10 Roses Flower - XL"
+            android:gravity="center"
+            style="@style/AppTheme.Title"/>
+
+        <!-- Top Sliding Banners -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".4">
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <com.viewpagerindicator.CirclePageIndicator
+                android:id="@+id/indicator"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="bottom"
+                android:padding="10dip"
+                app:centered="true"
+                app:fillColor="@color/colorPrimary"
+                app:pageColor="@color/colorAccent"
+                app:snap="false" />
+        </RelativeLayout>
+        <!-- End of slider Banners-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".4"
+            android:layout_marginTop="@dimen/dp10">
+            <TextView
+                android:id="@+id/txt_lbl_message_occasion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_message_for_occasion"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"/>
+
+            <TextView
+                android:id="@+id/txt_product_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="700"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/colorAccent"/>
+
+            <EditText
+                android:id="@+id/edt_order_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/dp10"
+                android:background="@drawable/rounded_corner_border_pink"
+                android:layout_below="@+id/txt_lbl_message_occasion"/>
+
+
+        </RelativeLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/button_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/btn_add_cart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:padding="@dimen/dp5"
+            android:layout_marginRight="1dp"
+            android:text="@string/btn_add_to_cart"
+            style="@style/Widget.AppCompat.Button.Colored"/>
+
+        <Button
+            android:id="@+id/btn_buy_now"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:padding="@dimen/dp5"
+            android:layout_marginLeft="1dp"
+            android:text="@string/btn_buy_now"
+            style="@style/Widget.AppCompat.Button.Colored"/>
+
+    </LinearLayout>
+</RelativeLayout>

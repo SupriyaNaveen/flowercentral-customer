@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.flowercentral.flowercentralcustomer">
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -22,6 +23,7 @@
             android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -46,7 +48,24 @@
             android:theme="@style/AppTheme">
         </activity>
 
-        <!--Meta data for facebook -->
+        <activity
+            android:name=".ProductDetail.ProductDetailActivity"
+            android:label="@string/title_activity_product_detail"
+            android:launchMode="singleInstance"
+            android:parentActivityName=".dashboard.Dashboard"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+        </activity>
+
+        <activity android:name=".cart.CartActivity"
+            android:label="@string/title_activity_cart"
+            android:launchMode="singleInstance"
+            android:parentActivityName=".dashboard.Dashboard"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+        </activity>
+
+        <!-- Meta data for facebook -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/fb_app_id"/>

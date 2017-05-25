@@ -50,4 +50,12 @@
     </style>
 
 
+    <style name="AppTheme.Title1" parent="AppTheme">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">@dimen/sp14</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+
 </resources>

@@ -107,6 +107,10 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             mProductList.remove(_position);
             this.notifyItemRemoved(_position);
             this.notifyItemRangeChanged(_position, mProductList.size());
+
+            if(mItemClickListener != null){
+                mItemClickListener.onItemDeleted (_position, mProductList.get(_position));
+            }
         }
     }
 
@@ -132,7 +136,7 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     view.setTag("VIEW_GRID_LIST");
                     viewHolder = new ViewGridHolder(view);
                 }else if(mSelectedView == AppConstant.VIEW_TYPE.LIST.ordinal ()){
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_list_item, parent, false);
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_grid_item, parent, false);
                     view.setTag("VIEW_LIST");
                     viewHolder = new ViewListHolder(view);
                 }else{
@@ -149,7 +153,7 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder (RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder (RecyclerView.ViewHolder holder, final int position) {
         Product product = null;
         if(mProductList != null && mProductList.size ()>0){
             product = mProductList.get (position);
@@ -172,8 +176,52 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if(!TextUtils.isEmpty (product.getImage ())){
                 Picasso.with(mContext).load(product.getImage ()).into(gridViewHolder.imgProduct);
             }else{
-
+                //Todo add default image
             }
+
+            gridViewHolder.cv_wrapperLayout.setOnClickListener (new View.OnClickListener () {
+                @Override
+                public void onClick (View v) {
+                    if(mItemClickListener != null){
+                        mItemClickListener.onItemClicked ("item", position, mProductList.get(position));
+                    }else{
+                        Log.e (TAG, "Item Click Listener is not implemented");
+                    }
+                }
+            });
+
+            gridViewHolder.txtBuyNow.setOnClickListener (new View.OnClickListener () {
+                @Override
+                public void onClick (View v) {
+                    if(mItemClickListener != null){
+                        mItemClickListener.onItemClicked ("buy_now", position, mProductList.get(position));
+                    }else{
+                        Log.e (TAG, "Item Click Listener is not implemented");
+                    }
+                }
+            });
+
+            gridViewHolder.imgLike.setOnClickListener (new View.OnClickListener () {
+                @Override
+                public void onClick (View v) {
+                    if(mItemClickListener != null){
+                        mItemClickListener.onItemClicked ("like", position, mProductList.get(position));
+                    }else{
+                        Log.e (TAG, "Item Click Listener is not implemented");
+                    }
+                }
+            });
+
+            gridViewHolder.imgCart.setOnClickListener (new View.OnClickListener () {
+                @Override
+                public void onClick (View v) {
+                    if(mItemClickListener != null){
+                        mItemClickListener.onItemClicked ("cart", position, mProductList.get(position));
+                    }else{
+                        Log.e (TAG, "Item Click Listener is not implemented");
+                    }
+                }
+            });
 
 
         }else if(holder instanceof ViewListHolder){
@@ -193,6 +241,50 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }else{
 
             }
+
+            listViewHolder.cv_wrapperLayout.setOnClickListener (new View.OnClickListener () {
+                @Override
+                public void onClick (View v) {
+                    if(mItemClickListener != null){
+                        mItemClickListener.onItemClicked ("item", position, mProductList.get(position));
+                    }else{
+                        Log.e (TAG, "Item Click Listener is not implemented");
+                    }
+                }
+            });
+
+            listViewHolder.txtBuyNow.setOnClickListener (new View.OnClickListener () {
+                @Override
+                public void onClick (View v) {
+                    if(mItemClickListener != null){
+                        mItemClickListener.onItemClicked ("buy_now", position, mProductList.get(position));
+                    }else{
+                        Log.e (TAG, "Item Click Listener is not implemented");
+                    }
+                }
+            });
+
+            listViewHolder.imgLike.setOnClickListener (new View.OnClickListener () {
+                @Override
+                public void onClick (View v) {
+                    if(mItemClickListener != null){
+                        mItemClickListener.onItemClicked ("like", position, mProductList.get(position));
+                    }else{
+                        Log.e (TAG, "Item Click Listener is not implemented");
+                    }
+                }
+            });
+
+            listViewHolder.imgCart.setOnClickListener (new View.OnClickListener () {
+                @Override
+                public void onClick (View v) {
+                    if(mItemClickListener != null){
+                        mItemClickListener.onItemClicked ("cart", position, mProductList.get(position));
+                    }else{
+                        Log.e (TAG, "Item Click Listener is not implemented");
+                    }
+                }
+            });
 
         }else if(holder instanceof EmptyListViewHolder){
             //Empty view holder

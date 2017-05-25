@@ -26,7 +26,7 @@ import com.google.android.gms.common.api.Status;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class GoogleHelper implements GoogleApiClient.OnConnectionFailedListener {
+public class GoogleHelper implements GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
     private final String SCOPES = "oauth2:profile email";
     private final int RC_SIGN_IN = 100;
     private FragmentActivity mContext;
@@ -117,12 +117,30 @@ public class GoogleHelper implements GoogleApiClient.OnConnectionFailedListener 
     }
 
     public void performSignOut () {
-        Auth.GoogleSignInApi.signOut (mGoogleApiClient).setResultCallback (new ResultCallback<Status> () {
-            @Override
-            public void onResult (@NonNull Status status) {
-                mListener.onGoogleAuthSignOut ();
-            }
-        });
+        if(mGoogleApiClient != null && !mGoogleApiClient.isConnected ()){
+            mGoogleApiClient.connect ();
+        }
+        try{
+            Auth.GoogleSignInApi.signOut (mGoogleApiClient).setResultCallback (new ResultCallback<Status> () {
+                @Override
+                public void onResult (@NonNull Status status) {
+                    mListener.onGoogleAuthSignOut ();
+                }
+            });
+        }catch(Exception ex){
+            ex.printStackTrace ();
+        }
+
+    }
+
+    @Override
+    public void onConnected (@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended (int i) {
+
     }
 
 }

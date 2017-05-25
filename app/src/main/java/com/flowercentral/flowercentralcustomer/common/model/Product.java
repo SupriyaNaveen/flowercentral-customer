@@ -3,6 +3,7 @@ package com.flowercentral.flowercentralcustomer.common.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,32 +12,38 @@ import java.util.List;
 
 public class Product implements Parcelable {
 
+    private int mID;
     private String mTitle;
     private String mDescription;
     private String mImage;
     private double mPrice;
     private int mIsLiked;
+    private ArrayList<String> mRelatedImages;
 
     public Product () {
 
     }
 
     protected Product (Parcel in) {
+        mID = in.readInt ();
         mTitle = in.readString ();
         mDescription = in.readString ();
         mImage = in.readString ();
         mPrice = in.readDouble ();
         mIsLiked = in.readInt ();
+        mRelatedImages = in.readArrayList (String.class.getClassLoader ());
 
     }
 
     @Override
     public void writeToParcel (Parcel dest, int flags) {
+        dest.writeInt (mID);
         dest.writeString (mTitle);
         dest.writeString (mDescription);
         dest.writeString (mImage);
         dest.writeDouble (mPrice);
         dest.writeInt (mIsLiked);
+        dest.writeList (mRelatedImages);
     }
 
     @Override
@@ -96,4 +103,26 @@ public class Product implements Parcelable {
         mIsLiked = _liked;
     }
 
+    public ArrayList<String> getRelatedImages () {
+        return mRelatedImages;
+    }
+
+    public void setRelatedImages (ArrayList<String> relatedImages) {
+        this.mRelatedImages = relatedImages;
+    }
+
+    public void addRelatedImage(String _imageUrl){
+        if(mRelatedImages == null){
+            mRelatedImages = new ArrayList<String> ();
+        }
+        mRelatedImages.add (_imageUrl);
+    }
+
+    public int getID () {
+        return mID;
+    }
+
+    public void setID (int ID) {
+        mID = ID;
+    }
 }

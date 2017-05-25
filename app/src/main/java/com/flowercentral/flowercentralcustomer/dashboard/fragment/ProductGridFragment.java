@@ -9,10 +9,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnFragmentInteractionListener;
@@ -78,22 +80,22 @@ public class ProductGridFragment extends Fragment implements OnItemClickListener
 
         mInternetAvailable = Util.checkInternet(mContext);
 
-        //Get Adapter
-        mProductViewAdapter = new ProductViewAdapter (mContext, mSelectedView, mProductList, this);
-
         //Setup recycler view
         if(mSelectedView == AppConstant.VIEW_TYPE.GRID.ordinal ()){
-
+            //Get Adapter
+            mProductViewAdapter = new ProductViewAdapter (mContext, mSelectedView, mProductList, this);
             mGridLayoutManager = new GridLayoutManager (mContext,2);
             mRVProductList.setLayoutManager(mGridLayoutManager);
 
-        }else if(mSelectedView == AppConstant.VIEW_TYPE.LIST.ordinal ()){
-
+        } else if(mSelectedView == AppConstant.VIEW_TYPE.LIST.ordinal ()){
+            //Get Adapter
+            mProductViewAdapter = new ProductViewAdapter (mContext, mSelectedView, mProductList, this);
             mLinearLayoutManager = new LinearLayoutManager(mContext);
             mRVProductList.setLayoutManager(mLinearLayoutManager);
 
         }else{
-
+            //Get Adapter
+            mProductViewAdapter = new ProductViewAdapter (mContext, mSelectedView, mProductList, this);
             mGridLayoutManager = new GridLayoutManager (mContext,2);
             mRVProductList.setLayoutManager(mGridLayoutManager);
 
@@ -124,22 +126,27 @@ public class ProductGridFragment extends Fragment implements OnItemClickListener
 
 
     @Override
-    public void onItemClicked (int _position, Object _data) {
+    public void onItemClicked (String _type, int _position, Object _data) {
+        if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("item")){
+            Product product = (Product) _data;
+            if(mListener != null){
+                Bundle args = new Bundle ();
+                args.putInt ("action", AppConstant.ACTIONS.PRODUCT_DETAILS.ordinal ());
+                args.putParcelable ("data", product);
+                mListener.onFragmentInteraction (args);
+            }
+        }else if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("item")){
 
+        }else if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("item")){
+
+        }else if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("item")){
+
+        }
     }
 
     @Override
     public void onItemDeleted (int _position, Object _data) {
-
+        Toast.makeText (mContext, "Delete is clicked", Toast.LENGTH_SHORT).show ();
     }
 
-    @Override
-    public void onCartClicked (int _position, Object _data) {
-
-    }
-
-    @Override
-    public void onBuyClicked (int _position, Object _data) {
-
-    }
 }

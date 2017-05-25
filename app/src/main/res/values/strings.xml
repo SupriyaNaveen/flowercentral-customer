@@ -7,6 +7,8 @@
     <!-- Activity -->
     <string name="title_activity_launcher">LauncherActivity</string>
     <string name="title_activity_login">Login</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="title_activity_product_detail">Product Detail</string>
 
     <!-- Error Messages and Title -->
 
@@ -38,7 +40,6 @@
     <string name="lbl_google">Google</string>
     <string name="lbl_instagram">Instagram</string>
     <string name="lbl_or">Or Sign-In With</string>
-    <string name="title_activity_dashboard">Dashboard</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -69,6 +70,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="lbl_message_for_occasion">Message for occasion</string>
+    <string name="btn_add_to_cart">Add to Cart</string>
+    <string name="btn_buy_now">Buy Now</string>
+    <string name="title_activity_cart">Your Cart</string>
+    <string name="lbl_cart_summary">Cart Summary:</string>
 
 
 </resources>

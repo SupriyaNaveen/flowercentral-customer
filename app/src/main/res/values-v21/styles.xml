@@ -49,4 +49,12 @@
         <item name="android:letterSpacing">0.1</item>
     </style>
 
+
+    <style name="AppTheme.Title1" parent="AppTheme">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textAppearance">@dimen/sp14</item>
+        <item name="android:textColor">@color/colorPrimaryText</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
 </resources>
