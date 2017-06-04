@@ -17,6 +17,7 @@ public class Product implements Parcelable {
     private String mDescription;
     private String mImage;
     private double mPrice;
+    private int mQty;
     private int mIsLiked;
     private ArrayList<String> mRelatedImages;
 
@@ -30,6 +31,7 @@ public class Product implements Parcelable {
         mDescription = in.readString ();
         mImage = in.readString ();
         mPrice = in.readDouble ();
+        mQty = in.readInt ();
         mIsLiked = in.readInt ();
         mRelatedImages = in.readArrayList (String.class.getClassLoader ());
 
@@ -42,6 +44,7 @@ public class Product implements Parcelable {
         dest.writeString (mDescription);
         dest.writeString (mImage);
         dest.writeDouble (mPrice);
+        dest.writeInt (mQty);
         dest.writeInt (mIsLiked);
         dest.writeList (mRelatedImages);
     }
@@ -124,5 +127,13 @@ public class Product implements Parcelable {
 
     public void setID (int ID) {
         mID = ID;
+    }
+
+    public int getQty () {
+        return mQty;
+    }
+
+    public void setQty (int qty) {
+        mQty = qty;
     }
 }

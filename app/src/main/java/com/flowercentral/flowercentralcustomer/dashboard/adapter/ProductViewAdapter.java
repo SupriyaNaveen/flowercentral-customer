@@ -136,7 +136,7 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     view.setTag("VIEW_GRID_LIST");
                     viewHolder = new ViewGridHolder(view);
                 }else if(mSelectedView == AppConstant.VIEW_TYPE.LIST.ordinal ()){
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_grid_item, parent, false);
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_list_item, parent, false);
                     view.setTag("VIEW_LIST");
                     viewHolder = new ViewListHolder(view);
                 }else{

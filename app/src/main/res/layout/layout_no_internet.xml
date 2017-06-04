@@ -32,6 +32,6 @@
         android:textAllCaps="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/rounded_corner_border"/>
+        android:background="@drawable/rounded_corner_border_white"/>
 
 </RelativeLayout>

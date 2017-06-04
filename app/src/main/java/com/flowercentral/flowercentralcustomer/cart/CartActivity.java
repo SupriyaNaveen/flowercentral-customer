@@ -4,22 +4,35 @@ import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
+import com.flowercentral.flowercentralcustomer.cart.adapter.CartItemAdapter;
+import com.flowercentral.flowercentralcustomer.common.interfaces.OnItemClickListener;
 import com.flowercentral.flowercentralcustomer.common.model.Product;
+import com.flowercentral.flowercentralcustomer.delivery.AddressActivity;
 import com.flowercentral.flowercentralcustomer.setting.AppConstant;
 
 import java.util.ArrayList;
 
-public class CartActivity extends BaseActivity {
+public class CartActivity extends BaseActivity implements View.OnClickListener, OnItemClickListener{
 
     private Toolbar mToolbar;
     private String mAction;
     private ArrayList<Product> mProductList;
+    private CartItemAdapter mCartItemAdapter;
+    private RecyclerView mRVCartItemList;
+    private LinearLayoutManager mLinearLayoutManager;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -85,11 +98,31 @@ public class CartActivity extends BaseActivity {
 
     private void initializeView () {
         mToolbar = (Toolbar) findViewById (R.id.toolbar);
+
+        TextView txtCartItem = (TextView) findViewById (R.id.txt_total_cart_item);
+        TextView txtTotalItemPrice = (TextView) findViewById (R.id.txt_total_price);
+
+        Button btnCheckout = (Button) findViewById (R.id.btn_checkout);
+
+        mRVCartItemList = (RecyclerView) findViewById (R.id.rv_cart_item_list);
+
+        preparingProductList();
+
         //Setup toolbar
         setSupportActionBar (mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString (R.string.title_activity_cart));
+
+        //Setup recycler view
+        mCartItemAdapter = new CartItemAdapter (mContext, mProductList, this);
+        mLinearLayoutManager = new LinearLayoutManager (mContext);
+        mRVCartItemList.setLayoutManager (mLinearLayoutManager);
+        mRVCartItemList.setHasFixedSize (true);
+        mRVCartItemList.setAdapter (mCartItemAdapter);
+
+        //Add listener
+        btnCheckout.setOnClickListener (this);
 
     }
 
@@ -194,5 +227,53 @@ public class CartActivity extends BaseActivity {
         mProductList.add (p8);
 
     }
+
+    @Override
+    public void onClick (View v) {
+        int id = v.getId ();
+        switch (id){
+            case R.id.btn_checkout:
+                showDeliveryAddress();
+                break;
+        }
+    }
+
+    @Override
+    public void onItemClicked (String _type, int _position, Object _data) {
+        if(mRVCartItemList != null){
+            CartItemAdapter cartItemAdapter = (CartItemAdapter) mRVCartItemList.getAdapter ();
+            if(cartItemAdapter != null){
+                if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("plus")){
+                    cartItemAdapter.updateQuantity(_type, _position, 1);
+
+                }else if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("minus")){
+                    cartItemAdapter.updateQuantity(_type, _position, 1);
+
+                }else{
+                    //Nothing
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public void onItemDeleted (int _position, Object _data) {
+        if(mRVCartItemList != null){
+            CartItemAdapter cartItemAdapter = (CartItemAdapter) mRVCartItemList.getAdapter ();
+            if(cartItemAdapter != null){
+                cartItemAdapter.removeAt (_position);
+            }
+        }
+    }
+
+    private void showDeliveryAddress(){
+        Intent intent = new Intent (mContext, AddressActivity.class);
+        intent.setAction (AppConstant.ACTIONS.SHOW_DELIVERY_ADDR.name ());
+        intent.addFlags (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        startActivity (intent);
+    }
+
 
 }

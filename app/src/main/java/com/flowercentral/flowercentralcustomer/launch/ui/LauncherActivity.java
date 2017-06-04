@@ -1,8 +1,15 @@
 package com.flowercentral.flowercentralcustomer.launch.ui;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 
 import android.os.Bundle;
@@ -16,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.binarysoft.sociallogin.facebook.FacebookGraphListner;
 import com.binarysoft.sociallogin.facebook.FacebookUser;
@@ -23,6 +31,9 @@ import com.binarysoft.sociallogin.google.GoogleUser;
 import com.binarysoft.sociallogin.instagram.InstagramUser;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
+import com.flowercentral.flowercentralcustomer.common.location.LocationApi;
+import com.flowercentral.flowercentralcustomer.common.location.LocationApiConstants;
+import com.flowercentral.flowercentralcustomer.common.location.service.FetchAddressIntentService;
 import com.flowercentral.flowercentralcustomer.dashboard.Dashboard;
 import com.flowercentral.flowercentralcustomer.preference.UserPreference;
 import com.flowercentral.flowercentralcustomer.rest.BaseModel;
@@ -74,14 +85,20 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
     private TextView mBtnFacebook;
     private TextView mBtnGoogle;
     private TextView mBtnInstagram;
+
     private MaterialDialog mProgressDialog;
+    private MaterialDialog mDialog;
+
+    private Activity mCurrentActivity;
 
     @Override
     protected void onCreate (Bundle savedInstanceState){
         super.onCreate (savedInstanceState);
-
         setContentView (R.layout.activity_launcher);
+
         mContext = this;
+        mCurrentActivity = this;
+
         mVisible = true;
 
         mBtnTryAgain = (Button) findViewById (R.id.btn_try_again);
@@ -100,6 +117,68 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
 
         initializeActivity(mContext);
 
+        //Fetching user's current location
+
+        boolean hasLocationPermission = Util.checkLocationPermission (this);
+        if(hasLocationPermission == true){
+            getCurrrentLocation(mContext);
+        }else{
+
+            //Ask for permission
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)){
+
+                mDialog = showDialog(mContext, getString (R.string.title_location_permission),
+                    getString (R.string.content_location_permission),
+                    false, false, getString(R.string.btn_allow), getString (R.string.btn_cancel),null);
+
+                mDialog.getBuilder ().onPositive (new MaterialDialog.SingleButtonCallback () {
+                    @Override
+                    public void onClick (@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        // No explanation needed, we can request the permission.
+                        ActivityCompat.requestPermissions(mCurrentActivity,
+                            new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                            AppConstant.REQUEST_CODE_LOCATION_PERMISSIONS);
+                    }
+                });
+
+                mDialog.getBuilder ().onNegative (new MaterialDialog.SingleButtonCallback () {
+                    @Override
+                    public void onClick (@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        mDialog.dismiss ();
+                    }
+                });
+                mDialog.show ();
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                    AppConstant.REQUEST_CODE_LOCATION_PERMISSIONS);
+
+            }
+
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult (int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //super.onRequestPermissionsResult (requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case AppConstant.REQUEST_CODE_LOCATION_PERMISSIONS:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the task you need to do.
+                    getCurrrentLocation (mContext);
+                }
+
+                break;
+        }
     }
 
     @Override
@@ -402,6 +481,65 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
         intent.addFlags (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity (intent);
         finish ();
+    }
+
+    private void getCurrrentLocation (Context _context) {
+        try {
+
+            LocationApi locationApi = new LocationApi (_context);
+
+            LocationApi.MyLocationDataListener myLocationListener = new LocationApi.MyLocationDataListener () {
+
+                @Override
+                public void gotLocation (Location _location) {
+                    Log.i (TAG,"Location: Lat"+String.valueOf (_location.getLatitude ())+", Lon: "+String.valueOf (_location.getLongitude ()));
+                    UserPreference.setLatitude (_location.getLatitude ());
+                    UserPreference.setLongitude (_location.getLongitude ());
+                }
+
+                @Override
+                public void gotLocation (Location location, Bundle _addresses) {
+                    Log.i (TAG,"Location: Address"+ _addresses.getString (LocationApiConstants.RESULT_DATA_MSG_KEY));
+                    UserPreference.setAddress (_addresses.getString (LocationApiConstants.RESULT_DATA_MSG_KEY));
+                }
+
+                @Override
+                public void locationNotAvailable () {
+                    Log.i (TAG, "Location is not Available");
+                }
+
+                @Override
+                public void onPermissionRequired () {
+                    Log.i (TAG, "Permission required");
+                }
+            };
+
+            locationApi.init (mContext, true, myLocationListener);
+
+        }catch (SecurityException sqEx){
+            sqEx.printStackTrace ();
+        }catch (Exception ex){
+            ex.printStackTrace ();
+        }
+    }
+
+    private MaterialDialog showDialog(Context _context, String _title, String _content, boolean _cancellable,
+        boolean _autoDismiss, String _positiveText, String _negativeText, Drawable _icon){
+
+        MaterialDialog.Builder builder = new MaterialDialog.Builder(_context)
+            .title(_title)
+            .content(_content)
+            .cancelable(_cancellable)
+            .autoDismiss(_autoDismiss)
+            .positiveText(_positiveText)
+            .negativeText(_negativeText);
+
+        if(_icon != null){
+            builder.icon(_icon);
+        }
+
+        mDialog = builder.build();
+        return mDialog;
     }
 
 }

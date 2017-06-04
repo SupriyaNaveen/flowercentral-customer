@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/dp5"
         android:layout_marginLeft="@dimen/dp5"
-        android:src="@drawable/ic_filter_list_svg"
+        android:src="@drawable/ic_filter_svg"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"/>
 

@@ -25,6 +25,7 @@ import com.flowercentral.flowercentralcustomer.common.interfaces.OnFragmentInter
 import com.flowercentral.flowercentralcustomer.common.model.Product;
 import com.flowercentral.flowercentralcustomer.dashboard.fragment.ProductGridFragment;
 import com.flowercentral.flowercentralcustomer.dashboard.fragment.ProductListFragment;
+import com.flowercentral.flowercentralcustomer.profile.ProfileActivity;
 import com.flowercentral.flowercentralcustomer.setting.AppConstant;
 
 import java.util.ArrayList;
@@ -156,6 +157,7 @@ public class Dashboard extends BaseActivity
         if (id == R.id.nav_orders) {
             // Handle the camera action
         } else if (id == R.id.nav_profile) {
+            showProfile ();
 
         } else if (id == R.id.nav_delivery_time) {
 
@@ -259,6 +261,14 @@ public class Dashboard extends BaseActivity
     private void showCart(){
         Intent intent = new Intent (mContext, CartActivity.class);
         intent.setAction (AppConstant.ACTIONS.SHOW_CART.name ());
+        intent.addFlags (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity (intent);
+    }
+
+
+    private void showProfile(){
+        Intent intent = new Intent (mContext, ProfileActivity.class);
+        intent.setAction (AppConstant.ACTIONS.USER_PROFILE.name ());
         intent.addFlags (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity (intent);
     }

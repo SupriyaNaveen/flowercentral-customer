@@ -12,6 +12,7 @@ public final class AppConstant {
     public final static String APP_NAME = "FlowerCentral";
     public static final String LOCAL_DB_NAME = "florist.db";
     public static final int DB_VERSION = 1;
+    public static final int REQUEST_CODE_LOCATION_PERMISSIONS = 100;
 
     public enum APP_MODE {DEVELOPMENT, TEST, PRODUCTION};
 
@@ -32,7 +33,9 @@ public final class AppConstant {
     public static final String SHORT_DATE_FORMAT = "dd-MMM";
 
     //Static Actions/Request
-    public enum  ACTIONS{LOGIN, REGISTER, FORGOT_PASSWORD, NO_INTERNET, HOME, EXIT, PRODUCT_DETAILS, SHOW_CART};
+    public enum  ACTIONS{LOGIN, REGISTER, FORGOT_PASSWORD, NO_INTERNET, HOME, EXIT,
+        PRODUCT_DETAILS, SHOW_CART, SHOW_DELIVERY_ADDR, USER_PROFILE};
+
     public enum  LOGIN_TYPE{FACEBOOK, GOOGLE, INSTAGRAM, CUSTOM};
     public enum VIEW_TYPE {LIST, GRID};
 

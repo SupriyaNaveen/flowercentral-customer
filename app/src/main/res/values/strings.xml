@@ -9,6 +9,8 @@
     <string name="title_activity_login">Login</string>
     <string name="title_activity_dashboard">Dashboard</string>
     <string name="title_activity_product_detail">Product Detail</string>
+    <string name="title_activity_cart">Your Cart</string>
+    <string name="title_activity_address">Address</string>
 
     <!-- Error Messages and Title -->
 
@@ -23,23 +25,56 @@
     <string name="lbl_email">Email</string>
     <string name="lbl_password">Password</string>
     <string name="lbl_not_created_account">Not created account yet?</string>
+    <string name="lbl_message_for_occasion">Message for occasion</string>
+    <string name="lbl_cart_summary">Cart Summary:</string>
+    <string name="lbl_btn_checkout">Checkout</string>
+    <string name="lbl_register">Register</string>
+    <string name="lbl_delivery_address">Please enter your delivery address.</string>
+    <string name="lbl_search">Search</string>
+    <string name="lbl_categories">Categories</string>
+    <string name="lbl_buy_now">Buy Now</string>
+    <string name="lbl_lets_connect">Let\'s Connect With Us</string>
+    <string name="lbl_need_flower_central_account">Need Flower Central Account?</string>
+    <string name="lbl_app_name">~ Flower Central ~</string>
+    <string name="lbl_app_tag">Your one stop flower shop</string>
+    <string name="lbl_fb">Facebook</string>
+    <string name="lbl_google">Google</string>
+    <string name="lbl_instagram">Instagram</string>
+    <string name="lbl_or">Or Sign-In With</string>
+
+    <string name="nav_menu_order">Order</string>
+    <string name="nav_menu_profile">Profile</string>
+    <string name="nav_menu_delivery">Delivery Time</string>
+    <string name="nav_menu_logout">Logout</string>
+    <string name="nav_menu_help">Help</string>
+
+    <string name="action_cart">Cart</string>
+    <string name="action_plus">+</string>
+    <string name="action_minus">-</string>
 
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
+    <string name="hint_name">Name</string>
+    <string name="hint_address">Address</string>
+    <string name="hint_city">City</string>
+    <string name="hint_state">State</string>
+    <string name="hint_zip">Zip</string>
+    <string name="hint_phone">Phone</string>
 
     <string name="btn_try_again">Try Again</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_login">Login</string>
     <string name="btn_forgot_password">Forgot Password?</string>
     <string name="btn_register">Register</string>
+    <string name="btn_add_to_cart">Add to Cart</string>
+    <string name="btn_buy_now">Buy Now</string>
+    <string name="btn_remove">Remove</string>
+
     <string name="msg_authenticating_user">Please wait, authenticating user.</string>
     <string name="msg_recovering_password">Please wait, recovering your password</string>
-    <string name="err_inavlid_username_password">User name and Password doesn\'t match.</string>
+    <string name="msg_empty_cart">No item in the Cart.</string>
 
-    <string name="lbl_fb">Facebook</string>
-    <string name="lbl_google">Google</string>
-    <string name="lbl_instagram">Instagram</string>
-    <string name="lbl_or">Or Sign-In With</string>
+    <string name="err_inavlid_username_password">User name and Password doesn\'t match.</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -54,27 +89,21 @@
     <string name="msg_reg_user_missing_input">Required parameters are missing. Please check and try again!</string>
     <string name="msg_registering_user">Please wait, saving information.</string>
     <string name="msg_logout_success">You have been Successfully logged out.</string>
-    <string name="lbl_lets_connect">Let\'s Connect With Us</string>
-    <string name="lbl_need_flower_central_account">Need Flower Central Account?</string>
-    <string name="lbl_app_name">~ Flower Central ~</string>
-    <string name="lbl_app_tag">Your one stop flower shop</string>
-    <string name="nav_menu_order">Order</string>
-    <string name="nav_menu_profile">Profile</string>
-    <string name="nav_menu_delivery">Delivery Time</string>
-    <string name="nav_menu_logout">Logout</string>
-    <string name="nav_menu_help">Help</string>
-    <string name="action_cart">Cart</string>
-    <string name="lbl_search">Search</string>
-    <string name="lbl_categories">Categories</string>
-    <string name="lbl_buy_now">Buy Now</string>
+    <string name="err_empty_text">Can not be empty.</string>
+    <string name="title_location_permission">Location Access</string>
+    <string name="content_location_permission">Flower Central needs your location info to look for nearest provider.</string>
+    <string name="btn_allow">Allow</string>
+    <string name="title_activity_order_details">Order Details</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="lbl_first_name">First Name</string>
+    <string name="lbl_last_name">Last Name</string>
+    <string name="lbl_mobile">Mobile</string>
+    <string name="lbl_gender">Gender</string>
+    <string name="lbl_male">Male</string>
+    <string name="lbl_female">Female</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="lbl_message_for_occasion">Message for occasion</string>
-    <string name="btn_add_to_cart">Add to Cart</string>
-    <string name="btn_buy_now">Buy Now</string>
-    <string name="title_activity_cart">Your Cart</string>
-    <string name="lbl_cart_summary">Cart Summary:</string>
 
 
 </resources>

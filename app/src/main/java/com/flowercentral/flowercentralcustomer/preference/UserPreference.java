@@ -26,7 +26,12 @@ public class UserPreference extends PreferenceActivity {
     private final static String LOGGED_IN_USER_FNAME = "logged_in_user_fname";
     private final static String LOGGED_IN_USER_LNAME = "logged_in_user_lname";
     private final static String LOGGED_IN_USER_PIC = "logged_in_user_pic";
-    private static final String LOG_IN_METHOD = "login_method";
+    private final static String LOG_IN_METHOD = "login_method";
+
+    private final static String CURR_LATITUDE = "latitude";
+    private final static String CURR_LONGITUDE = "longitude";
+    private final static String CURR_ADDRESS = "address";
+
 
     @Override
     public void onCreate(Bundle _savedInstanceState){
@@ -201,5 +206,41 @@ public class UserPreference extends PreferenceActivity {
         setProfilePic (null);
         setLoginMethod (-1);
     }
+
+    public static void setLatitude(double _latitude){
+        writeFloat (mContext, CURR_LATITUDE, (float)_latitude);
+    }
+
+    public static double getLatitude(){
+        double latitude = (double) readFloat (mContext, CURR_LATITUDE, 0f);
+        return latitude;
+    }
+
+    public static void setLongitude(double _longitude){
+        writeFloat (mContext, CURR_LONGITUDE, (float)_longitude);
+    }
+
+    public static double getLongitude(){
+        double longitude = (double) readFloat (mContext, CURR_LONGITUDE, 0f);
+        return longitude;
+    }
+
+    public static void setAddress(String _address){
+        writeString (mContext, CURR_ADDRESS, _address);
+    }
+
+    public static String getAddress(){
+        String address = readString (mContext, CURR_ADDRESS, null);
+        return address;
+    }
+
+    public static HashMap<String, String> getCurrentLocation(){
+        HashMap<String, String> location = new HashMap<String, String> ();
+        location.put ("latitude", String.valueOf (getLatitude ()));
+        location.put ("longitude", String.valueOf (getLongitude ()));
+        location.put ("address", getAddress ());
+        return location;
+    }
+
 
 }

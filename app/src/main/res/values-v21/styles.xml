@@ -43,7 +43,7 @@
     </style>
 
     <style name="AppTheme.Label" parent="AppTheme">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:padding">5dp</item>
         <item name="android:letterSpacing">0.1</item>
@@ -52,9 +52,18 @@
 
     <style name="AppTheme.Title1" parent="AppTheme">
         <item name="android:textAllCaps">true</item>
-        <item name="android:textAppearance">@dimen/sp14</item>
+        <item name="android:textSize">@dimen/sp14</item>
         <item name="android:textColor">@color/colorPrimaryText</item>
         <item name="android:padding">10dp</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+
+
+    <style name="AppTheme.Error" parent="AppTheme">
+        <item name="android:textSize">@dimen/sp12</item>
+        <item name="android:textColor">@color/colorPrimaryLight</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:letterSpacing">0.1</item>
     </style>
 
 </resources>

@@ -12,6 +12,6 @@
         android:id="@+id/action_cart"
         android:orderInCategory="101"
         android:title="@string/action_cart"
-        android:icon="@drawable/ic_add_shopping_cart"
+        android:icon="@drawable/ic_add_shopping_cart_svg"
         app:showAsAction="always"/>
 </menu>

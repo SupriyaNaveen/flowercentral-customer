@@ -2,12 +2,16 @@
 <resources>
     <dimen name="activity_horizontal_padding_16">16dip</dimen>
     <dimen name="activity_vertical_padding_16">16dip</dimen>
+
     <dimen name="cardview_default_corner_radius">5dp</dimen>
     <dimen name="cardview_default_elavation">1dp</dimen>
 
+    <dimen name="dp2">2dp</dimen>
     <dimen name="dp5">5dip</dimen>
     <dimen name="dp10">10dip</dimen>
+    <dimen name="dp16">16dip</dimen>
     <dimen name="dp20">20dip</dimen>
+    <dimen name="dp32">32dip</dimen>
     <dimen name="dp50">50dip</dimen>
     <dimen name="dp75">75dip</dimen>
 
@@ -29,7 +33,11 @@
     <dimen name="grid_view_item_width">160dp</dimen>
     <dimen name="grid_view_item_height">180dp</dimen>
     <dimen name="list_view_item_height">100dp</dimen>
-    <dimen name="dp2">2dp</dimen>
+    <dimen name="detail_backdrop_height">250dip</dimen>
+    <dimen name="sp20">20sp</dimen>
+    <dimen name="sp24">24sp</dimen>
+    <dimen name="profile_image_width">100dip</dimen>
+    <dimen name="profile_image_height">100dip</dimen>
 
 
 </resources>

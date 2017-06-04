@@ -29,14 +29,15 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_pinterest_svg"/>
+                android:src="@drawable/logo03"
+                android:scaleType="fitXY"/>
 
-            <TextView
+            <!--<TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_app_name"
                 android:textSize="17sp"
-                style="@style/AppTheme.Label"/>
+                style="@style/AppTheme.Label"/>-->
 
             <TextView
                 android:layout_width="wrap_content"
