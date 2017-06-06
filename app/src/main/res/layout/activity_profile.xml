@@ -23,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
+            android:background="@drawable/background_pattern_03"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
@@ -57,7 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Ashish upadhyay"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/colorPrimaryLight"
                         android:textSize="@dimen/sp24"
                         android:textAllCaps="true"/>
 
@@ -65,7 +66,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="ashishupadhyay76@gmail.com"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/colorPrimaryLight"
                         android:textSize="@dimen/sp14" />
 
                 </LinearLayout>

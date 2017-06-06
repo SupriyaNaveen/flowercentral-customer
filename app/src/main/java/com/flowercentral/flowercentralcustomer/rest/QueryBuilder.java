@@ -15,7 +15,7 @@ public class QueryBuilder {
     {
         StringBuilder sb = new StringBuilder();
         sb.append(BuildConfig.SERVER);
-        sb.append("customerApi/v1/login");
+        sb.append("customer_login");
         return sb.toString();
     }
 
@@ -23,7 +23,7 @@ public class QueryBuilder {
     {
         StringBuilder sb = new StringBuilder();
         sb.append(BuildConfig.SERVER);
-        sb.append("customerApi/v1/register");
+        sb.append("customer_login");
         return sb.toString();
     }
 

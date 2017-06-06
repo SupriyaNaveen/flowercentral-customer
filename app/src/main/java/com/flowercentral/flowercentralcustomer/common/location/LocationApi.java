@@ -160,7 +160,7 @@ public class LocationApi implements GoogleApiClient.ConnectionCallbacks, GoogleA
             handler = new Handler();
         }
         handler.postDelayed(findBestLocation, iteration_timeout_step);
-        showProgressbar (mContext, null, false, true);
+        showProgressbar (mContext, LocationApiConstants.FETCHING_ADDRESS, false, true);
         return initialized;
     }
 
@@ -456,6 +456,9 @@ public class LocationApi implements GoogleApiClient.ConnectionCallbacks, GoogleA
 
             // Display the address string
             // or an error message sent from the intent service.
+
+            stopProgressbar();
+
             String addressOutput = resultData.getString(LocationApiConstants.RESULT_DATA_MSG_KEY);
             // Show a toast message if an address was found.
             if (resultCode == LocationApiConstants.SUCCESS_RESULT) {
@@ -465,7 +468,7 @@ public class LocationApi implements GoogleApiClient.ConnectionCallbacks, GoogleA
             }else{
                 Log.e (TAG, "Location not received");
             }
-            stopProgressbar();
+
         }
     }
 

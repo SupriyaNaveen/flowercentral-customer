@@ -122,12 +122,16 @@ public class ProfileActivity extends BaseActivity {
     }
 
     private void dynamicToolbar(){
-        Bitmap bitmap = BitmapFactory.decodeResource (getResources (), R.mipmap.ic_launcher_round);
+        Bitmap bitmap = BitmapFactory.decodeResource (getResources (), R.drawable.background_pattern_03);
         Palette.from (bitmap).generate (new Palette.PaletteAsyncListener () {
             @Override
             public void onGenerated (Palette palette) {
-                mCollapsingToolbar.setContentScrimColor (palette.getMutedColor (getResources ().getColor (R.color.colorPrimary)));
-                mCollapsingToolbar.setStatusBarScrimColor (palette.getMutedColor (getResources ().getColor (R.color.colorPrimaryDark)));
+                //mCollapsingToolbar.setContentScrimColor (palette.getMutedColor (getResources ().getColor (R.color.colorPrimary)));
+                //mCollapsingToolbar.setStatusBarScrimColor (palette.getMutedColor (getResources ().getColor (R.color.colorPrimaryDark)));
+
+                mCollapsingToolbar.setContentScrimColor (getResources ().getColor (R.color.colorPrimary));
+                mCollapsingToolbar.setStatusBarScrimColor (getResources ().getColor (R.color.colorPrimaryDark));
+
             }
         });
     }

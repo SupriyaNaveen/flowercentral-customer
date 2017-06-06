@@ -24,6 +24,7 @@ public class LocationApiConstants {
     public static final int SUCCESS_RESULT = 0;
     public static final int FAILURE_RESULT = 1;
     //public static final String PACKAGE_NAME = "com.google.android.gms.location.sample.locationaddress";
+
     public static final String PACKAGE_NAME = "com.flowercentral.flowercentralcustomer";
     public static final String RECEIVER = PACKAGE_NAME + ".RECEIVER";
     public static final String RESULT_DATA_MSG_KEY = PACKAGE_NAME + ".RESULT_DATA_MSG_KEY";
@@ -31,10 +32,12 @@ public class LocationApiConstants {
     public static final String RESULT_DATA_LNG_KEY = PACKAGE_NAME + ".RESULT_DATA_LNG_KEY";
     public static final String LOCATION_DATA_EXTRA = PACKAGE_NAME + ".LOCATION_DATA_EXTRA";
 
-    public static String geocoder_service_not_available = "No Geocoder service is available.";
-    public static String invalid_lat_long_used = "Invalid latitude & longitude of the place.";
-    public static String no_address_found = "No address found for the given location.";
-    public static String address_found = "Address found.";
+    public static final String GEOCODER_SERVICE_NOT_AVAILABLE = "No Geocoder service is available.";
+    public static final String INVALID_LAT_LNG_USED = "Invalid latitude & longitude of the place.";
+    public static final String NO_ADDRESS_FOUND = "No address found for the given location.";
+    public static final String ADDRESS_FOUND = "Address found.";
+    public static final String FETCHING_ADDRESS = "Looking for address...";
+
 
 }
 

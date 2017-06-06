@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,6 +43,7 @@ import com.flowercentral.flowercentralcustomer.setting.AppConstant;
 import com.flowercentral.flowercentralcustomer.util.Util;
 import com.flowercentral.flowercentralcustomer.volley.ErrorData;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -252,7 +254,41 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
         }
         //Prepare json object by getting required user info from GoogleUser object
         JSONObject user = new JSONObject ();
-        registerUser (mContext, user);
+
+        try{
+
+            user.put ("email", _userAccount.getEmail ());
+            user.put ("auth_token", _userAccount.getIDToken ());
+            user.put ("auth_type", "google");
+            user.put ("imeiNum", Util.getIEMINumber (mContext));
+            user.put ("deviceid", Util.getDeviceId (mContext));
+
+            String name = "";
+            if(!TextUtils.isEmpty (_userAccount.getGivenName ())) {
+                name = _userAccount.getGivenName ();
+            }else if(!TextUtils.isEmpty (_userAccount.getDisplayName ())) {
+                name = _userAccount.getDisplayName ();
+            }else if(!TextUtils.isEmpty (_userAccount.getFamilyName ())) {
+                name = _userAccount.getFamilyName ();
+            }else {
+                name = "";
+            }
+
+            user.put ("name", name);
+            user.put ("age", "");
+            if(!TextUtils.isEmpty (_userAccount.getPhotoUrl ())) {
+                user.put ("profile_pic", _userAccount.getPhotoUrl ());
+            }else {
+                user.put ("profile_pic", "");
+            }
+            user.put ("address", "");
+            user.put ("phone", "0000000000");
+
+            registerUser (mContext, user);
+
+        }catch(JSONException jsonEx){
+            Snackbar.make(mFlOuterWrapper, "JSON Parsing Error",Snackbar.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -273,7 +309,7 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    public void onFbSignInSuccess (String authToken, String userId) {
+    public void onFbSignInSuccess (final String authToken, String userId) {
         String msg = String.format(Locale.US, "User id:%s\n\nAuthToken:%s", userId, authToken);
 
         //Must implement this interface before calling get Profile
@@ -286,9 +322,44 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
                     Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable),Snackbar.LENGTH_SHORT).show();
                     return;
                 }
-                //Prepare json object by getting required user info from FacebookUser object
+                //Prepare json object by getting required user info from GoogleUser object
                 JSONObject user = new JSONObject ();
-                registerUser (mContext, user);
+
+                try{
+
+                    user.put ("email", _profile.getEmail ());
+                    user.put ("auth_token", authToken);
+                    user.put ("auth_type", "facebook");
+                    user.put ("imeiNum", Util.getIEMINumber (mContext));
+                    user.put ("deviceid", Util.getDeviceId (mContext));
+
+                    String name = _profile.getFirstName () + " " + _profile.getLastName ();
+
+                    if(TextUtils.isEmpty (name)){
+                        if(!TextUtils.isEmpty (_profile.getName ())){
+                            name = _profile.getName ();
+                        }else{
+                            name = "";
+                        }
+                    }
+
+                    user.put ("name", name);
+                    user.put ("age", "");
+
+                    if(!TextUtils.isEmpty (_profile.getPicture ())) {
+                        user.put ("profile_pic", _profile.getPicture ());
+                    }else {
+                        user.put ("profile_pic", "");
+                    }
+
+                    user.put ("address", "");
+                    user.put ("phone", "0000000000");
+
+                    registerUser (mContext, user);
+
+                }catch(JSONException jsonEx){
+                    Snackbar.make(mFlOuterWrapper, "JSON Parsing Error",Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -320,9 +391,40 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
             Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable),Snackbar.LENGTH_SHORT).show();
             return;
         }
-        //Prepare json object by getting required user info from InstagramUser object
+        //Prepare json object by getting required user info from GoogleUser object
         JSONObject user = new JSONObject ();
-        registerUser (mContext, user);
+
+        try{
+
+            user.put ("email", _instagramUser.getUserName ());
+            user.put ("auth_token", _authToken);
+            user.put ("auth_type", "instagram");
+            user.put ("imeiNum", Util.getIEMINumber (mContext));
+            user.put ("deviceid", Util.getDeviceId (mContext));
+
+            String name = _instagramUser.getFullName ();
+
+            if(TextUtils.isEmpty (name)){
+                name = "";
+            }
+
+            user.put ("name", name);
+            user.put ("age", "");
+
+            if(!TextUtils.isEmpty (_instagramUser.getProfilePicture ())) {
+                user.put ("profile_pic", _instagramUser.getProfilePicture ());
+            }else {
+                user.put ("profile_pic", "");
+            }
+
+            user.put ("address", "");
+            user.put ("phone", "0000000000");
+
+            registerUser (mContext, user);
+
+        }catch(JSONException jsonEx){
+            Snackbar.make(mFlOuterWrapper, "JSON Parsing Error",Snackbar.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -403,18 +505,66 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
     /**
      * Register User using Social Login
      */
-    private void registerUser(Context _context, JSONObject _user){
+    private void registerUser(Context _context, final JSONObject _user){
         //Start Progress dialog
-        /*dismissDialog();
+        dismissDialog();
 
-        mProgressDialog = Util.showProgressDialog (_context, null, getString (R.string.msg_registering_user), false);
+        mProgressDialog = Util.showProgressDialog (mCurrentActivity, null, getString (R.string.msg_registering_user), false);
+
+        /*if(mProgressDialog != null && !mProgressDialog.isShowing ()){
+            mProgressDialog.show();
+        }*/
 
         BaseModel<JSONObject> baseModel = new BaseModel<JSONObject> (_context) {
             @Override
-            public void onSuccess (int statusCode, Map<String, String> headers, JSONObject response) {
+            public void onSuccess (int _statusCode, Map<String, String> _headers, JSONObject _response) {
                 //CLose Progress dialog
                 dismissDialog();
+                if(_response != null){
+                    try{
+                        if(_response.getString ("status").equalsIgnoreCase ("1")){
+                            UserPreference.setAccessToken (_response.getString ("token"));
+                            if(_user.getString ("auth_type").equalsIgnoreCase ("google")){
+                                UserPreference.setLoginMethod (AppConstant.LOGIN_TYPE.GOOGLE.ordinal ());
 
+                            }else if(_user.getString ("auth_type").equalsIgnoreCase ("facebook")){
+                                UserPreference.setLoginMethod (AppConstant.LOGIN_TYPE.FACEBOOK.ordinal ());
+
+                            }else if(_user.getString ("auth_type").equalsIgnoreCase ("instagram")){
+                                UserPreference.setLoginMethod (AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal ());
+                            }else{
+                                UserPreference.setLoginMethod (AppConstant.LOGIN_TYPE.CUSTOM.ordinal ());
+                            }
+
+                            JSONObject customer = _response.getJSONObject ("customer_details");
+
+                            if(customer != null){
+                                UserPreference.setUserEmail (customer.getString ("email"));
+                                UserPreference.setUserFirstName (customer.getString ("first_name"));
+                                UserPreference.setUserLastName (customer.getString ("last_name"));
+                                UserPreference.setUserAddress1 (customer.getString ("add1"));
+                                UserPreference.setUserAddress2 (customer.getString ("add2"));
+                                UserPreference.setUserCity (customer.getString ("city"));
+                                UserPreference.setUserState (customer.getString ("state"));
+                                UserPreference.setUserCountry (customer.getString ("country"));
+                                UserPreference.setUserPin (customer.getString ("PIN"));
+                                UserPreference.setUserAddress1 (customer.getString ("Phone"));
+                                UserPreference.setProfilePic (customer.getString ("profile_img"));
+                            }
+
+                            //Redirect to Dashboard
+                            showDashboard ();
+
+                        }else{
+                            Snackbar.make(mFlOuterWrapper, getString (R.string.msg_user_not_registered),Snackbar.LENGTH_SHORT).show();
+                        }
+
+                    }catch (JSONException jsEx){
+                        Snackbar.make(mFlOuterWrapper, jsEx.getMessage (),Snackbar.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Snackbar.make(mFlOuterWrapper, "No response from server",Snackbar.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -455,11 +605,7 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
             baseModel.executePostJsonRequest(url,_user,TAG);
         }else{
             Snackbar.make(mFlOuterWrapper, getResources ().getString (R.string.msg_reg_user_missing_input),Snackbar.LENGTH_SHORT).show();
-        }*/
-
-
-        //This method to be called on Success of API call
-        showDashboard();
+        }
 
     }
 
@@ -495,12 +641,29 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
                     Log.i (TAG,"Location: Lat"+String.valueOf (_location.getLatitude ())+", Lon: "+String.valueOf (_location.getLongitude ()));
                     UserPreference.setLatitude (_location.getLatitude ());
                     UserPreference.setLongitude (_location.getLongitude ());
+
                 }
 
                 @Override
                 public void gotLocation (Location location, Bundle _addresses) {
                     Log.i (TAG,"Location: Address"+ _addresses.getString (LocationApiConstants.RESULT_DATA_MSG_KEY));
                     UserPreference.setAddress (_addresses.getString (LocationApiConstants.RESULT_DATA_MSG_KEY));
+
+                    // Check if user is already logged-in && address is
+                    // obtained then redirects to User Dashboard
+
+                    if(!TextUtils.isEmpty (UserPreference.getAccessToken ())){
+                        //Revalidate the auth token based on type of login
+                        if(UserPreference.getLoginMethod () == AppConstant.LOGIN_TYPE.FACEBOOK.ordinal ()){
+                            mFacebookHelper.performSignIn(mCurrentActivity);
+
+                        }else if(UserPreference.getLoginMethod () == AppConstant.LOGIN_TYPE.GOOGLE.ordinal ()){
+                            mGoogleHelper.performSignIn (mCurrentActivity);
+
+                        }else if(UserPreference.getLoginMethod () == AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal ()){
+                            mInstagramHelper.performSignIn ();
+                        }
+                    }
                 }
 
                 @Override

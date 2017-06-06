@@ -30,18 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.facebook.CustomTabActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data android:scheme="@string/fb_app_id"/>
-            </intent-filter>
-        </activity>
         <activity
             android:name=".dashboard.Dashboard"
             android:label="@string/title_activity_dashboard"
@@ -49,6 +38,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
         </activity>
+
         <activity
             android:name=".ProductDetail.ProductDetailActivity"
             android:label="@string/title_activity_product_detail"
@@ -57,6 +47,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
         </activity>
+
         <activity
             android:name=".cart.CartActivity"
             android:label="@string/title_activity_cart"
@@ -65,6 +56,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
         </activity>
+
         <activity
             android:name=".delivery.AddressActivity"
             android:label="@string/title_activity_address"
@@ -89,6 +81,19 @@
             android:parentActivityName=".dashboard.Dashboard"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
+        </activity>
+
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="@string/fb_app_id"/>
+            </intent-filter>
         </activity>
 
         <service

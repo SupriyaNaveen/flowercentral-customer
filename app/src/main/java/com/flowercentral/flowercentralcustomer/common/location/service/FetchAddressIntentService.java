@@ -48,11 +48,11 @@ public class FetchAddressIntentService extends IntentService {
                     addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                 } catch (IOException ioException) {
                     // Catch network or other I/O problems.
-                    mErrorMessage = LocationApiConstants.geocoder_service_not_available;
+                    mErrorMessage = LocationApiConstants.GEOCODER_SERVICE_NOT_AVAILABLE;
                     Log.e(TAG, mErrorMessage, ioException);
                 } catch (IllegalArgumentException illegalArgumentException) {
                     // Catch invalid latitude or longitude values.
-                    mErrorMessage = LocationApiConstants.invalid_lat_long_used;
+                    mErrorMessage = LocationApiConstants.INVALID_LAT_LNG_USED;
                     Log.e(TAG, mErrorMessage + ". " + "Latitude = " + location.getLatitude() +
                             ", Longitude = " + location.getLongitude(), illegalArgumentException);
                 }
@@ -62,7 +62,7 @@ public class FetchAddressIntentService extends IntentService {
             // Handle case where no address was found.
             if (addresses == null || addresses.size()  == 0) {
                 if (mErrorMessage.isEmpty()) {
-                    mErrorMessage = LocationApiConstants.no_address_found;
+                    mErrorMessage = LocationApiConstants.NO_ADDRESS_FOUND;
                     Log.e(TAG, mErrorMessage);
                 }
                 deliverResultToReceiver(LocationApiConstants.FAILURE_RESULT, 0d, 0d, mErrorMessage);
@@ -75,7 +75,7 @@ public class FetchAddressIntentService extends IntentService {
                 for(int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
                     addressFragments.add(address.getAddressLine(i));
                 }
-                Log.i(TAG, LocationApiConstants.address_found);
+                Log.i(TAG, LocationApiConstants.ADDRESS_FOUND);
                 deliverResultToReceiver(LocationApiConstants.SUCCESS_RESULT, location.getLatitude (), location.getLongitude (), TextUtils.join (",",addressFragments));
             }
 

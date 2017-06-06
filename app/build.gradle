@@ -21,13 +21,13 @@ android {
         development {
             buildConfigField("String", "BUILD_MODE", "\"DEVELOPMENT\"")
             buildConfigField("boolean", "IS_PRODUCTION", "false")
-            buildConfigField("String", "SERVER", "\"http://52.50.219.163:90/\"")
+            buildConfigField("String", "SERVER", "\"https://private-63c01-divye.apiary-mock.com/\"")
         }
 
         production {
             buildConfigField("String", "BUILD_MODE", "\"PRODUCTION\"")
             buildConfigField("boolean", "IS_PRODUCTION", "true")
-            buildConfigField("String", "SERVER", "\"http://52.50.219.163:90/\"")
+            buildConfigField("String", "SERVER", "\"https://private-63c01-divye.apiary-mock.com/\"")
 
         }
     }

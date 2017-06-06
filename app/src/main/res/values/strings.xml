@@ -101,6 +101,7 @@
     <string name="lbl_gender">Gender</string>
     <string name="lbl_male">Male</string>
     <string name="lbl_female">Female</string>
+    <string name="msg_user_not_registered">Unable to register user.</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -26,6 +26,14 @@ public class UserPreference extends PreferenceActivity {
     private final static String LOGGED_IN_USER_FNAME = "logged_in_user_fname";
     private final static String LOGGED_IN_USER_LNAME = "logged_in_user_lname";
     private final static String LOGGED_IN_USER_PIC = "logged_in_user_pic";
+    private final static String LOGGED_IN_USER_ADDR1 = "user_address1";
+    private final static String LOGGED_IN_USER_ADDR2 = "user_address2";
+    private final static String LOGGED_IN_USER_CITY = "user_city";
+    private final static String LOGGED_IN_USER_STATE = "user_state";
+    private final static String LOGGED_IN_USER_PIN = "user_pin";
+    private final static String LOGGED_IN_USER_PHONE = "user_phone";
+    private final static String LOGGED_IN_USER_COUNTRY = "user_country";
+
     private final static String LOG_IN_METHOD = "login_method";
 
     private final static String CURR_LATITUDE = "latitude";
@@ -168,12 +176,69 @@ public class UserPreference extends PreferenceActivity {
         return readString (mContext, LOGGED_IN_USER_LNAME, null);
     }
 
-    public static void setProfilePic(String _lname){
-        writeString (mContext, LOGGED_IN_USER_LNAME, _lname);
+    public static String getUserAddress1(){
+        return readString (mContext, LOGGED_IN_USER_ADDR1, null);
+    }
+
+    public static void setUserAddress1(String _addr1){
+        writeString (mContext, LOGGED_IN_USER_ADDR1, _addr1);
+    }
+
+    public static String getUserAddress2(){
+        return readString (mContext, LOGGED_IN_USER_ADDR2, null);
+    }
+
+    public static void setUserAddress2(String _addr2){
+        writeString (mContext, LOGGED_IN_USER_ADDR2, _addr2);
+    }
+
+    public static String getUserCity(){
+        return readString (mContext, LOGGED_IN_USER_CITY, null);
+    }
+
+    public static void setUserCity(String _city){
+        writeString (mContext, LOGGED_IN_USER_CITY, _city);
+    }
+
+    public static String getUserState(){
+        return readString (mContext, LOGGED_IN_USER_STATE, null);
+    }
+
+    public static void setUserState(String _state){
+        writeString (mContext, LOGGED_IN_USER_STATE, _state);
+    }
+
+    public static String getUserCountry(){
+        return readString (mContext, LOGGED_IN_USER_COUNTRY, null);
+    }
+
+    public static void setUserCountry(String _country){
+        writeString (mContext, LOGGED_IN_USER_COUNTRY, _country);
+    }
+
+    public static String getUserPin(){
+        return readString (mContext, LOGGED_IN_USER_PIN, null);
+    }
+
+    public static void setUserPin(String _pin){
+        writeString (mContext, LOGGED_IN_USER_PIN, _pin);
+    }
+
+    public static String getUserPhone(){
+        return readString (mContext, LOGGED_IN_USER_PHONE, null);
+    }
+
+    public static void setUserPhone(String _phone){
+        writeString (mContext, LOGGED_IN_USER_PHONE, _phone);
     }
 
     public static String getProfilePic(){
-        return readString (mContext, LOGGED_IN_USER_LNAME, null);
+        return readString (mContext, LOGGED_IN_USER_PIC, null);
+    }
+
+
+    public static void setProfilePic(String _profilePic){
+        writeString (mContext, LOGGED_IN_USER_PIC, _profilePic);
     }
 
     public static void setLoginMethod(int _loginType){
@@ -204,6 +269,12 @@ public class UserPreference extends PreferenceActivity {
         setUserFirstName (null);
         setUserLastName (null);
         setProfilePic (null);
+        setUserAddress1 (null);
+        setUserAddress2 (null);
+        setUserCity (null);
+        setUserState (null);
+        setUserPin (null);
+        setUserCountry (null);
         setLoginMethod (-1);
     }
 

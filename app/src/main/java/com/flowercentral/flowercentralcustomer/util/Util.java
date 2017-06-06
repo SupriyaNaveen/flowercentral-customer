@@ -446,11 +446,11 @@ public class Util {
 
     }
 
-    public static MaterialDialog showProgressDialog(Context _context, String _title, String _message, boolean _cancellable) {
+    public static MaterialDialog showProgressDialog(Activity _activity, String _title, String _message, boolean _cancellable) {
 
         MaterialDialog progressDialog;
 
-        MaterialDialog.Builder builder =  new MaterialDialog.Builder(_context);
+        MaterialDialog.Builder builder =  new MaterialDialog.Builder(_activity);
         if(_title !=null){
             builder.title(_title);
         }
@@ -469,7 +469,7 @@ public class Util {
             }
         });
 
-        if (!progressDialog.isShowing())
+        if (!progressDialog.isShowing() && _activity.hasWindowFocus ())
             progressDialog.show();
 
         return progressDialog;
