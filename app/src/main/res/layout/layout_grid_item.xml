@@ -59,7 +59,7 @@
                     android:id="@+id/img_item_cart"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_add_to_cart_demo"
+                    android:src="@drawable/ic_add_product_cart_svg"
                     android:clickable="true"
                     android:layout_marginEnd="@dimen/dp5"
                     android:foreground="?android:attr/selectableItemBackground"/>

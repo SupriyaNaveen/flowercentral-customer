@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
-                android:src="@drawable/ic_favorite_like" />
+                android:src="@drawable/ic_product_like_svg" />
 
             <com.viewpagerindicator.CirclePageIndicator
                 android:id="@+id/indicator"

@@ -1,16 +1,14 @@
 package com.flowercentral.flowercentralcustomer.ProductDetail;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -117,9 +115,9 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         priceTextView.setText(String.format("$%s", mProduct.getPrice()));
 
         if(mProduct.isLiked() == 1) {
-            mBtnLike.setImageResource(R.drawable.ic_favorite_like);
+            mBtnLike.setImageResource(R.drawable.ic_product_like_svg);
         } else {
-            mBtnLike.setImageResource(R.drawable.ic_favorite_dislike);
+            mBtnLike.setImageResource(R.drawable.ic_product_dislike_svg);
         }
 
         //Setup toolbar

@@ -1,7 +1,6 @@
 package com.flowercentral.flowercentralcustomer.dashboard.adapter;
 
 import android.content.Context;
-import android.media.Image;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -168,9 +167,9 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             gridViewHolder.txtPrice.setText(String.format("$%s", product.getPrice()));
 
             if (product.isLiked() == 0) {
-                gridViewHolder.imgLike.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite_dislike));
+                gridViewHolder.imgLike.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_product_dislike_svg));
             } else {
-                gridViewHolder.imgLike.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite_like));
+                gridViewHolder.imgLike.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_product_like_svg));
             }
 
             if (!TextUtils.isEmpty(product.getImage())) {
@@ -231,9 +230,9 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             listViewHolder.txtPrice.setText(String.format("$%S", product.getPrice()));
 
             if (product.isLiked() == 0) {
-                listViewHolder.imgLike.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite_dislike));
+                listViewHolder.imgLike.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_product_dislike_svg));
             } else {
-                listViewHolder.imgLike.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite_like));
+                listViewHolder.imgLike.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_product_like_svg));
             }
 
             if (!TextUtils.isEmpty(product.getImage())) {
