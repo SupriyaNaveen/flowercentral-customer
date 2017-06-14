@@ -25,9 +25,9 @@ import java.util.List;
  * Created by Ashish Upadhyay on 5/21/17.
  */
 
-public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final String TAG = ProductViewAdapter.class.getSimpleName ();
+    private final String TAG = ProductViewAdapter.class.getSimpleName();
 
     private static final int VIEW_TYPE_EMPTY_LIST = 0;
     private static final int VIEW_TYPE_NON_EMPTY_LIST = 1;
@@ -37,7 +37,7 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<Product> mProductList;
     private OnItemClickListener mItemClickListener;
 
-    public ProductViewAdapter(Context _context, int _selView, List<Product> _productList, OnItemClickListener _itemClicklister){
+    public ProductViewAdapter(Context _context, int _selView, List<Product> _productList, OnItemClickListener _itemClicklister) {
         mContext = _context;
         mSelectedView = _selView;
         mProductList = _productList;
@@ -60,31 +60,31 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemCount() {
         int size = 0;
-        if(mProductList != null && mProductList.size() > 0){
+        if (mProductList != null && mProductList.size() > 0) {
             size = mProductList.size();
         }
         return size;
     }
 
-    public Product getItemAtPosition(int _position){
+    public Product getItemAtPosition(int _position) {
         Product product = null;
-        if(mProductList != null && _position > 0){
-            if(_position < mProductList.size()){
+        if (mProductList != null && _position > 0) {
+            if (_position < mProductList.size()) {
                 product = mProductList.get(_position);
             }
         }
         return product;
     }
 
-    public void clear(){
-        if(mProductList!=null && mProductList.size()>0){
+    public void clear() {
+        if (mProductList != null && mProductList.size() > 0) {
             mProductList.clear();
             this.notifyDataSetChanged();
         }
     }
 
     public void addAll(List<Product> _list) {
-        if(mProductList == null){
+        if (mProductList == null) {
             mProductList = new ArrayList<Product>();
         }
         mProductList.clear();
@@ -93,7 +93,7 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public void addAt(Product item, int _position) {
-        if(mProductList == null){
+        if (mProductList == null) {
             mProductList = new ArrayList<Product>();
         }
         if (item != null && _position >= 0) {
@@ -102,20 +102,20 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    public void removeAt(int _position){
-        if(mProductList != null && (_position >= 0 && _position < mProductList.size())){
+    public void removeAt(int _position) {
+        if (mProductList != null && (_position >= 0 && _position < mProductList.size())) {
             mProductList.remove(_position);
             this.notifyItemRemoved(_position);
             this.notifyItemRangeChanged(_position, mProductList.size());
 
-            if(mItemClickListener != null){
-                mItemClickListener.onItemDeleted (_position, mProductList.get(_position));
+            if (mItemClickListener != null) {
+                mItemClickListener.onItemDeleted(_position, mProductList.get(_position));
             }
         }
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder (ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         RecyclerView.ViewHolder viewHolder = null;
         View view = null;
@@ -131,15 +131,15 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             case VIEW_TYPE_NON_EMPTY_LIST:
 
-                if(mSelectedView == AppConstant.VIEW_TYPE.GRID.ordinal ()){
+                if (mSelectedView == AppConstant.VIEW_TYPE.GRID.ordinal()) {
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_grid_item, parent, false);
                     view.setTag("VIEW_GRID_LIST");
                     viewHolder = new ViewGridHolder(view);
-                }else if(mSelectedView == AppConstant.VIEW_TYPE.LIST.ordinal ()){
+                } else if (mSelectedView == AppConstant.VIEW_TYPE.LIST.ordinal()) {
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_list_item, parent, false);
                     view.setTag("VIEW_LIST");
                     viewHolder = new ViewListHolder(view);
-                }else{
+                } else {
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_grid_item, parent, false);
                     view.setTag("VIEW_GRID_LIST");
                     viewHolder = new ViewGridHolder(view);
@@ -153,150 +153,150 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder (RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         Product product = null;
-        if(mProductList != null && mProductList.size ()>0){
-            product = mProductList.get (position);
-        }else{
+        if (mProductList != null && mProductList.size() > 0) {
+            product = mProductList.get(position);
+        } else {
             Log.i(TAG, "Product lis is empty");
         }
 
-        if(holder instanceof ViewGridHolder){
+        if (holder instanceof ViewGridHolder) {
             ViewGridHolder gridViewHolder = (ViewGridHolder) holder;
-            gridViewHolder.txtTitle.setText (product.getTitle ());
-            gridViewHolder.txtDesc.setText (product.getDescription ());
-            gridViewHolder.txtPrice.setText (String.valueOf (product.getPrice ()));
+            gridViewHolder.txtTitle.setText(product.getTitle());
+            gridViewHolder.txtDesc.setText(product.getDescription());
+            gridViewHolder.txtPrice.setText(String.format("$%s", product.getPrice()));
 
-            if(product.isLiked ()==0){
-                gridViewHolder.imgLike.setImageDrawable (mContext.getResources().getDrawable (R.drawable.ic_product_dislike_svg));
-            }else{
-                gridViewHolder.imgLike.setImageDrawable (mContext.getResources().getDrawable (R.drawable.ic_product_like_svg));
+            if (product.isLiked() == 0) {
+                gridViewHolder.imgLike.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite_dislike));
+            } else {
+                gridViewHolder.imgLike.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite_like));
             }
 
-            if(!TextUtils.isEmpty (product.getImage ())){
-                Picasso.with(mContext).load(product.getImage ()).into(gridViewHolder.imgProduct);
-            }else{
+            if (!TextUtils.isEmpty(product.getImage())) {
+                Picasso.with(mContext).load(product.getImage()).into(gridViewHolder.imgProduct);
+            } else {
                 //Todo add default image
             }
 
-            gridViewHolder.cv_wrapperLayout.setOnClickListener (new View.OnClickListener () {
+            gridViewHolder.cv_wrapperLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("item", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
+                public void onClick(View v) {
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onItemClicked("item", position, mProductList.get(position));
+                    } else {
+                        Log.e(TAG, "Item Click Listener is not implemented");
                     }
                 }
             });
 
-            gridViewHolder.txtBuyNow.setOnClickListener (new View.OnClickListener () {
+            gridViewHolder.txtBuyNow.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("buy_now", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
+                public void onClick(View v) {
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onItemClicked("buy_now", position, mProductList.get(position));
+                    } else {
+                        Log.e(TAG, "Item Click Listener is not implemented");
                     }
                 }
             });
 
-            gridViewHolder.imgLike.setOnClickListener (new View.OnClickListener () {
+            gridViewHolder.imgLike.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("like", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
+                public void onClick(View v) {
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onItemClicked("like", position, mProductList.get(position));
+                    } else {
+                        Log.e(TAG, "Item Click Listener is not implemented");
                     }
                 }
             });
 
-            gridViewHolder.imgCart.setOnClickListener (new View.OnClickListener () {
+            gridViewHolder.imgCart.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("cart", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
+                public void onClick(View v) {
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onItemClicked("cart", position, mProductList.get(position));
+                    } else {
+                        Log.e(TAG, "Item Click Listener is not implemented");
                     }
                 }
             });
 
 
-        }else if(holder instanceof ViewListHolder){
+        } else if (holder instanceof ViewListHolder) {
             ViewListHolder listViewHolder = (ViewListHolder) holder;
-            listViewHolder.txtTitle.setText (product.getTitle ());
-            listViewHolder.txtDesc.setText (product.getDescription ());
-            listViewHolder.txtPrice.setText (String.valueOf (product.getPrice ()));
+            listViewHolder.txtTitle.setText(product.getTitle());
+            listViewHolder.txtDesc.setText(product.getDescription());
+            listViewHolder.txtPrice.setText(String.format("$%S", product.getPrice()));
 
-            if(product.isLiked ()==0){
-                listViewHolder.imgLike.setImageDrawable (mContext.getResources().getDrawable (R.drawable.ic_product_dislike_svg));
-            }else{
-                listViewHolder.imgLike.setImageDrawable (mContext.getResources().getDrawable (R.drawable.ic_product_like_svg));
+            if (product.isLiked() == 0) {
+                listViewHolder.imgLike.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite_dislike));
+            } else {
+                listViewHolder.imgLike.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_favorite_like));
             }
 
-            if(!TextUtils.isEmpty (product.getImage ())){
-                Picasso.with(mContext).load(product.getImage ()).into(listViewHolder.imgProduct);
-            }else{
+            if (!TextUtils.isEmpty(product.getImage())) {
+                Picasso.with(mContext).load(product.getImage()).into(listViewHolder.imgProduct);
+            } else {
 
             }
 
-            listViewHolder.cv_wrapperLayout.setOnClickListener (new View.OnClickListener () {
+            listViewHolder.cv_wrapperLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("item", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
+                public void onClick(View v) {
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onItemClicked("item", position, mProductList.get(position));
+                    } else {
+                        Log.e(TAG, "Item Click Listener is not implemented");
                     }
                 }
             });
 
-            listViewHolder.txtBuyNow.setOnClickListener (new View.OnClickListener () {
+            listViewHolder.txtBuyNow.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("buy_now", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
+                public void onClick(View v) {
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onItemClicked("buy_now", position, mProductList.get(position));
+                    } else {
+                        Log.e(TAG, "Item Click Listener is not implemented");
                     }
                 }
             });
 
-            listViewHolder.imgLike.setOnClickListener (new View.OnClickListener () {
+            listViewHolder.imgLike.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("like", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
+                public void onClick(View v) {
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onItemClicked("like", position, mProductList.get(position));
+                    } else {
+                        Log.e(TAG, "Item Click Listener is not implemented");
                     }
                 }
             });
 
-            listViewHolder.imgCart.setOnClickListener (new View.OnClickListener () {
+            listViewHolder.imgCart.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("cart", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
+                public void onClick(View v) {
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onItemClicked("cart", position, mProductList.get(position));
+                    } else {
+                        Log.e(TAG, "Item Click Listener is not implemented");
                     }
                 }
             });
 
-        }else if(holder instanceof EmptyListViewHolder){
+        } else if (holder instanceof EmptyListViewHolder) {
             //Empty view holder
 
-        }else{
+        } else {
             // God knows
             Log.i(TAG, "Unknown View Holder");
         }
 
     }
 
-    private class ViewGridHolder extends RecyclerView.ViewHolder{
+    private class ViewGridHolder extends RecyclerView.ViewHolder {
 
         ImageView imgProduct;
         ImageView imgCart;
@@ -312,19 +312,19 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public ViewGridHolder(View itemView) {
             super(itemView);
 
-            cv_wrapperLayout = (CardView) itemView.findViewById (R.id.product_outer_wrapper);
-            txtTitle = (TextView) itemView.findViewById (R.id.txt_item_title);
-            txtDesc = (TextView) itemView.findViewById (R.id.txt_item_desc);
-            txtPrice = (TextView) itemView.findViewById (R.id.txt_item_price);
-            txtBuyNow = (TextView) itemView.findViewById (R.id.txt_item_buy_now);
-            imgProduct = (ImageView) itemView.findViewById (R.id.img_item_image);
-            imgCart = (ImageView) itemView.findViewById (R.id.img_item_cart);
-            imgLike = (ImageView) itemView.findViewById (R.id.img_item_like);
+            cv_wrapperLayout = (CardView) itemView.findViewById(R.id.product_outer_wrapper);
+            txtTitle = (TextView) itemView.findViewById(R.id.txt_item_title);
+            txtDesc = (TextView) itemView.findViewById(R.id.txt_item_desc);
+            txtPrice = (TextView) itemView.findViewById(R.id.txt_item_price);
+            txtBuyNow = (TextView) itemView.findViewById(R.id.txt_item_buy_now);
+            imgProduct = (ImageView) itemView.findViewById(R.id.img_item_image);
+            imgCart = (ImageView) itemView.findViewById(R.id.img_item_cart);
+            imgLike = (ImageView) itemView.findViewById(R.id.img_item_like);
 
         }
     }
 
-    private class ViewListHolder extends RecyclerView.ViewHolder{
+    private class ViewListHolder extends RecyclerView.ViewHolder {
 
         ImageView imgProduct;
         ImageView imgCart;
@@ -339,18 +339,18 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public ViewListHolder(View itemView) {
             super(itemView);
-            cv_wrapperLayout = (CardView) itemView.findViewById (R.id.product_outer_wrapper);
-            txtTitle = (TextView) itemView.findViewById (R.id.txt_item_title);
-            txtDesc = (TextView) itemView.findViewById (R.id.txt_item_desc);
-            txtPrice = (TextView) itemView.findViewById (R.id.txt_item_price);
-            txtBuyNow = (TextView) itemView.findViewById (R.id.txt_item_buy_now);
-            imgProduct = (ImageView) itemView.findViewById (R.id.img_item_image);
-            imgCart = (ImageView) itemView.findViewById (R.id.img_item_cart);
-            imgLike = (ImageView) itemView.findViewById (R.id.img_item_like);
+            cv_wrapperLayout = (CardView) itemView.findViewById(R.id.product_outer_wrapper);
+            txtTitle = (TextView) itemView.findViewById(R.id.txt_item_title);
+            txtDesc = (TextView) itemView.findViewById(R.id.txt_item_desc);
+            txtPrice = (TextView) itemView.findViewById(R.id.txt_item_price);
+            txtBuyNow = (TextView) itemView.findViewById(R.id.txt_item_buy_now);
+            imgProduct = (ImageView) itemView.findViewById(R.id.img_item_image);
+            imgCart = (ImageView) itemView.findViewById(R.id.img_item_cart);
+            imgLike = (ImageView) itemView.findViewById(R.id.img_item_like);
         }
     }
 
-    private class EmptyListViewHolder extends RecyclerView.ViewHolder{
+    private class EmptyListViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imgNoItemFound;
         TextView txtNoItemFound;
