@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/dp10"
-    card_view:contentPadding="@dimen/dp5"
+    card_view:contentPadding="@dimen/dp10"
     card_view:cardBackgroundColor="@color/colorWhite"
     card_view:cardPreventCornerOverlap="false"
     card_view:cardCornerRadius="@dimen/cardview_default_corner_radius"
@@ -88,17 +88,14 @@
                 android:background="@color/colorPrimaryLight"
                 android:gravity="center">
 
-
-                <TextView
+                <Button
                     android:id="@+id/btn_minus"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:text="@string/action_minus"
                     android:textColor="@color/colorWhite"
-                    android:padding="@dimen/dp10"
                     android:textSize="@dimen/sp15"
-                    android:gravity="center"
-                    android:layout_marginRight="@dimen/dp20"
+                    android:layout_marginEnd="@dimen/dp20"
                     android:background="@drawable/rounded_corner_border_white"/>
 
 
@@ -108,19 +105,17 @@
                     android:layout_height="36dp"
                     android:text="3"
                     android:textColor="@color/colorWhite"
-                    android:padding="@dimen/dp10"
+                    android:layout_gravity="center_vertical"
                     android:gravity="center"/>
 
-                <TextView
+                <Button
                     android:id="@+id/btn_plus"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:text="@string/action_plus"
                     android:textColor="@color/colorWhite"
-                    android:padding="@dimen/dp10"
                     android:textSize="@dimen/sp15"
-                    android:gravity="center"
-                    android:layout_marginLeft="@dimen/dp20"
+                    android:layout_marginStart="@dimen/dp20"
                     android:background="@drawable/rounded_corner_border_white"/>
 
             </LinearLayout>
@@ -139,7 +134,7 @@
                     android:text="@string/btn_remove"
                     android:textColor="@color/colorWhite"
                     android:gravity="center"
-                    style="@style/AppTheme.Normal"/>
+                    style="@style/AppTheme.Title1"/>
 
             </LinearLayout>
 

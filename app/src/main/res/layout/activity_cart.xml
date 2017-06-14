@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,8 +8,8 @@
 
     <!-- Set toolbar -->
     <include
-        layout="@layout/toolbar_default"
-        android:id="@+id/toolbar_default"/>
+        android:id="@+id/toolbar_default"
+        layout="@layout/toolbar_default" />
 
 
     <RelativeLayout
@@ -25,41 +24,43 @@
             android:id="@+id/rl_summary_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginEnd="@dimen/dp5"
             android:layout_marginStart="@dimen/dp5"
-            android:layout_marginEnd="@dimen/dp5">
+            android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/txt_cart_summary"
+                style="@style/AppTheme.Title1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/lbl_cart_summary"
-                android:gravity="center"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                style="@style/AppTheme.Title1"/>
+                android:gravity="center"
+                android:text="@string/lbl_cart_summary" />
 
             <TextView
                 android:id="@+id/txt_total_cart_item"
+                style="@style/AppTheme.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/txt_cart_summary"
-                android:text="3"
-                android:gravity="center"
                 android:layout_centerVertical="true"
-                android:drawableLeft="@drawable/ic_cart_svg"
+                android:layout_toEndOf="@+id/txt_cart_summary"
+                android:drawableStart="@drawable/ic_cart_svg"
                 android:drawablePadding="@dimen/dp5"
-                style="@style/AppTheme.Title1"/>
+                android:gravity="center"
+                android:text="3" />
+
             <TextView
                 android:id="@+id/txt_total_price"
+                style="@style/AppTheme.Title1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="700"
-                android:textColor="@color/colorAccent"
-                android:gravity="center"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:drawablePadding="@dimen/dp5"
-                style="@style/AppTheme.Title1"/>
+                android:gravity="center"
+                android:text="$700"
+                android:textColor="@color/colorAccent" />
 
         </RelativeLayout>
 
@@ -68,9 +69,9 @@
             android:id="@+id/rl_wrapper_cart_items"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dp10"
+            android:layout_above="@+id/rl_button_wrapper"
             android:layout_below="@+id/rl_summary_header"
-            android:layout_above="@+id/rl_button_wrapper">
+            android:layout_marginTop="@dimen/dp10">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_cart_item_list"
@@ -86,17 +87,15 @@
             android:id="@+id/rl_button_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp10"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="@dimen/dp10">
 
-            <Button
+            <ImageView
+                android:id="@+id/btn_checkout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_checkout"
-                android:text="@string/lbl_btn_checkout"
-                android:letterSpacing=".1"
                 android:layout_centerInParent="true"
-                style="@style/Widget.AppCompat.Button.Colored"/>
+                android:src="@drawable/ic_buy_now" />
 
         </RelativeLayout>
 

@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -102,7 +103,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
         TextView txtCartItem = (TextView) findViewById (R.id.txt_total_cart_item);
         TextView txtTotalItemPrice = (TextView) findViewById (R.id.txt_total_price);
 
-        Button btnCheckout = (Button) findViewById (R.id.btn_checkout);
+        ImageView btnCheckout = (ImageView) findViewById (R.id.btn_checkout);
 
         mRVCartItemList = (RecyclerView) findViewById (R.id.rv_cart_item_list);
 
