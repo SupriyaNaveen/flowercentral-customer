@@ -10,7 +10,7 @@ import com.flowercentral.flowercentralcustomer.BuildConfig;
 public final class AppConstant {
 
     public final static String APP_NAME = "FlowerCentral";
-    public static final String LOCAL_DB_NAME = "florist.db";
+    public static final String LOCAL_DB_NAME = "flower_central.db";
     public static final int DB_VERSION = 1;
     public static final int REQUEST_CODE_LOCATION_PERMISSIONS = 100;
 
@@ -38,5 +38,6 @@ public final class AppConstant {
 
     public enum  LOGIN_TYPE{FACEBOOK, GOOGLE, INSTAGRAM, CUSTOM};
     public enum VIEW_TYPE {LIST, GRID};
+    public enum SORTING_OPTION {BY_CATEGORY, BY_PRICE};
 
 }

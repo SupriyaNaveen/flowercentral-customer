@@ -1,7 +1,6 @@
 package com.flowercentral.flowercentralcustomer.dashboard.adapter;
 
 import android.content.Context;
-import android.media.Image;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -9,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ import java.util.List;
  * Created by Ashish Upadhyay on 5/21/17.
  */
 
-public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
 
     private final String TAG = ProductViewAdapter.class.getSimpleName ();
 
@@ -35,12 +36,14 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context mContext;
     private int mSelectedView;
     private List<Product> mProductList;
+    private List<Product> mFilteredProductList;
     private OnItemClickListener mItemClickListener;
 
     public ProductViewAdapter(Context _context, int _selView, List<Product> _productList, OnItemClickListener _itemClicklister){
         mContext = _context;
         mSelectedView = _selView;
         mProductList = _productList;
+        mFilteredProductList = _productList;
         mItemClickListener = _itemClicklister;
 
     }
@@ -62,6 +65,9 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         int size = 0;
         if(mProductList != null && mProductList.size() > 0){
             size = mProductList.size();
+        }else{
+            //To show empty view in case product not found
+            size = 1;
         }
         return size;
     }
@@ -81,6 +87,11 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             mProductList.clear();
             this.notifyDataSetChanged();
         }
+    }
+
+    public void setData(List<Product> _products){
+        mProductList = _products;
+        this.notifyDataSetChanged ();
     }
 
     public void addAll(List<Product> _list) {
@@ -163,7 +174,7 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if(holder instanceof ViewGridHolder){
             ViewGridHolder gridViewHolder = (ViewGridHolder) holder;
-            gridViewHolder.txtTitle.setText (product.getTitle ());
+            gridViewHolder.txtTitle.setText (product.getFlowerName ());
             gridViewHolder.txtDesc.setText (product.getDescription ());
             gridViewHolder.txtPrice.setText (String.valueOf (product.getPrice ()));
 
@@ -225,8 +236,9 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
         }else if(holder instanceof ViewListHolder){
+
             ViewListHolder listViewHolder = (ViewListHolder) holder;
-            listViewHolder.txtTitle.setText (product.getTitle ());
+            listViewHolder.txtTitle.setText (product.getFlowerName ());
             listViewHolder.txtDesc.setText (product.getDescription ());
             listViewHolder.txtPrice.setText (String.valueOf (product.getPrice ()));
 
@@ -294,6 +306,47 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             Log.i(TAG, "Unknown View Holder");
         }
 
+    }
+
+    @Override
+    public Filter getFilter () {
+        return new Filter () {
+            @Override
+            protected FilterResults performFiltering (CharSequence constraint) {
+                String matchingText = constraint.toString();
+
+                if (matchingText.isEmpty()) {
+
+                    mProductList = mFilteredProductList;
+
+                } else {
+
+                    ArrayList<Product> filteredList = new ArrayList<Product>();
+
+                    for (Product product : mProductList) {
+                        ArrayList<String> tags = product.getTags ();
+                        for(String tag : tags){
+                            if(tag.toLowerCase().contains(matchingText.toLowerCase ())){
+                                filteredList.add(product);
+                                break;
+                            }
+                        }
+                    }
+
+                    mProductList = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = mProductList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults (CharSequence constraint, FilterResults results) {
+                mProductList = (ArrayList<Product>) results.values;
+                notifyDataSetChanged ();
+            }
+        };
     }
 
     private class ViewGridHolder extends RecyclerView.ViewHolder{

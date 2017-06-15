@@ -75,7 +75,7 @@ public class ProfileActivity extends BaseActivity {
         setSupportActionBar (mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getSupportActionBar().setTitle(getString (R.string.title_activity_cart));
+        //getSupportActionBar().setFlower(getString (R.string.title_activity_cart));
 
         initCollapsingToolbar();
 

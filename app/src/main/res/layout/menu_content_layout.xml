@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:text="S"
+                android:textSize="@dimen/sp14"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:layout_margin="@dimen/dp10"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/circle_fill_grey"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"/>
+
+            <TextView
+                android:layout_width="45dip"
+                android:layout_height="45dip"
+                android:text="M"
+                android:textSize="@dimen/sp17"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:layout_margin="@dimen/dp10"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/circle_fill_grey"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"/>
+
+            <TextView
+                android:layout_width="50dip"
+                android:layout_height="50dip"
+                android:text="L"
+                android:textSize="@dimen/sp20"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:layout_margin="@dimen/dp10"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/circle_fill_grey"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"/>
+
+            <TextView
+                android:layout_width="55dip"
+                android:layout_height="55dip"
+                android:text="XL"
+                android:textSize="@dimen/sp22"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:layout_margin="@dimen/dp10"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/circle_fill_grey"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"/>
+
+            <TextView
+                android:layout_width="60dip"
+                android:layout_height="60dip"
+                android:text="XXL"
+                android:textSize="@dimen/sp24"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:layout_margin="@dimen/dp10"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/circle_fill_grey"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"/>
+
+            <TextView
+                android:layout_width="65dip"
+                android:layout_height="65dip"
+                android:text="ALL"
+                android:textSize="@dimen/sp24"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:layout_margin="@dimen/dp10"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/circle_fill_grey"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:clickable="true"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

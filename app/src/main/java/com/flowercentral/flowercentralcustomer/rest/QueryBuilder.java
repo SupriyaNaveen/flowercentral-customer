@@ -27,4 +27,12 @@ public class QueryBuilder {
         return sb.toString();
     }
 
+    public static String getProducts()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BuildConfig.SERVER);
+        sb.append("show_product");
+        return sb.toString();
+    }
+
 }

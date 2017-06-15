@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,12 +21,23 @@ import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnFragmentInteractionListener;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnItemClickListener;
 import com.flowercentral.flowercentralcustomer.common.model.Product;
+import com.flowercentral.flowercentralcustomer.dao.LocalDAO;
 import com.flowercentral.flowercentralcustomer.dashboard.adapter.ProductViewAdapter;
+import com.flowercentral.flowercentralcustomer.rest.BaseModel;
+import com.flowercentral.flowercentralcustomer.rest.QueryBuilder;
 import com.flowercentral.flowercentralcustomer.setting.AppConstant;
 import com.flowercentral.flowercentralcustomer.util.Util;
+import com.flowercentral.flowercentralcustomer.volley.ErrorData;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONArray;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class ProductGridFragment extends Fragment implements OnItemClickListener{
 
@@ -99,10 +111,19 @@ public class ProductGridFragment extends Fragment implements OnItemClickListener
             mGridLayoutManager = new GridLayoutManager (mContext,2);
             mRVProductList.setLayoutManager(mGridLayoutManager);
 
+
         }
         mRVProductList.setHasFixedSize(true);
         mRVProductList.setAdapter (mProductViewAdapter);
         mProductViewAdapter.notifyDataSetChanged ();
+
+        //Refresh product on Refresh
+        mProductRefreshLayout.setOnRefreshListener (new SwipeRefreshLayout.OnRefreshListener () {
+            @Override
+            public void onRefresh () {
+                getProductsFromServer(mContext);
+            }
+        });
 
     }
 
@@ -147,6 +168,132 @@ public class ProductGridFragment extends Fragment implements OnItemClickListener
     @Override
     public void onItemDeleted (int _position, Object _data) {
         Toast.makeText (mContext, "Delete is clicked", Toast.LENGTH_SHORT).show ();
+    }
+
+    //Sort product list by category or price
+    public void sort(int _sortingOption){
+        if(AppConstant.SORTING_OPTION.BY_CATEGORY.ordinal () == _sortingOption){
+            Collections.sort (mProductList, Product.sortByCategory);
+
+        }else if(AppConstant.SORTING_OPTION.BY_PRICE.ordinal () == _sortingOption) {
+            Collections.sort (mProductList, Product.sortByPrice);
+        }else {
+
+        }
+        mProductViewAdapter.notifyDataSetChanged ();
+    }
+
+    //Get product by selected category
+    private List<Product> getProductListByCategory(List<Product> _products, String _category){
+        List<Product> productsByCategory = null;
+        if(_products != null){
+            productsByCategory = new ArrayList<Product> ();
+            for(Product p : _products){
+                if(p.getCategory ().equalsIgnoreCase (_category)){
+                    productsByCategory.add (p);
+                }
+            }
+        }
+
+        return productsByCategory;
+    }
+
+    //Show product by selected category
+    public void showProductByCategory(String _selectedCategory){
+        List<Product> productsByCategory = null;
+        if(_selectedCategory == null){
+            productsByCategory = mProductList;
+        }else{
+            productsByCategory = getProductListByCategory (mProductList, _selectedCategory);
+        }
+
+        mProductViewAdapter.setData (productsByCategory);
+
+    }
+
+    //Update product list
+    public void updateProductList (List<Product> _productList){
+        if(_productList != null){
+            mProductList = _productList;
+            mProductViewAdapter.notifyDataSetChanged ();
+        }
+    }
+
+    private void getProductsFromServer (final Context _context) {
+
+        BaseModel<JSONArray> baseModel = new BaseModel<JSONArray> (_context) {
+
+            @Override
+            public void onSuccess (int statusCode, Map<String, String> headers, JSONArray _response) {
+
+                if (_response != null & _response.length ()>0) {
+                    try {
+
+                        LocalDAO localDAO = new LocalDAO (_context);
+                        localDAO.addProducts (_response, false);
+
+                        //update product list
+                        JSONArray jsonArrayProducts = localDAO.getProducts ();
+                        Gson gson = new Gson ();
+                        Type listType = new TypeToken<ArrayList<Product>> () {}.getType();
+                        ArrayList<Product> products = gson.fromJson(_response.toString(), listType);
+                        mProductList = products;
+                        mProductViewAdapter.addAll (mProductList);
+                        mProductRefreshLayout.setRefreshing (false);
+
+                    } catch (Exception ex) {
+                        Snackbar.make (mProductWrapper, ex.getMessage (), Snackbar.LENGTH_SHORT).show ();
+                    }
+                } else {
+                    Snackbar.make (mProductWrapper, "No response from server", Snackbar.LENGTH_SHORT).show ();
+                }
+
+            }
+
+            @Override
+            public void onError (ErrorData error) {
+
+                mProductRefreshLayout.setRefreshing (false);
+                
+                if (error != null) {
+
+                    switch (error.getErrorType ()) {
+                        case NETWORK_NOT_AVAILABLE:
+                            Snackbar.make (mProductWrapper, getResources ().getString (R.string.msg_internet_unavailable), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                        case INTERNAL_SERVER_ERROR:
+                            Snackbar.make (mProductWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                        case CONNECTION_TIMEOUT:
+                            Snackbar.make (mProductWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                        case APPLICATION_ERROR:
+                            Snackbar.make (mProductWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                        case INVALID_INPUT_SUPPLIED:
+                            Snackbar.make (mProductWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                        case AUTHENTICATION_ERROR:
+                            Snackbar.make (mProductWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                        case UNAUTHORIZED_ERROR:
+                            Snackbar.make (mProductWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                    }
+                }
+            }
+        };
+
+        String url = QueryBuilder.getProducts ();
+        baseModel.executeGetJsonArrayRequest (url, TAG);
+
+    }
+
+    public void searchItem(String _searchText){
+        if(mProductViewAdapter != null){
+            mProductViewAdapter.getFilter ().filter (_searchText);
+        }
+
     }
 
 }

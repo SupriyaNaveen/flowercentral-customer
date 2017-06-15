@@ -2,7 +2,6 @@ package com.flowercentral.flowercentralcustomer.cart;
 
 import android.content.Intent;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
@@ -142,7 +140,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
 
         Product p1 = new Product ();
         p1.setID (1);
-        p1.setTitle ("Splendid Purple Orchids");
+        p1.setFlowerName ("Splendid Purple Orchids");
         p1.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
         p1.setImage ("https://i4.fnp.com/images/pr/l/enigmatic-8-red-roses_1.jpg");
         p1.setPrice (700d);
@@ -153,7 +151,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
 
         Product p2 = new Product ();
         p2.setID (2);
-        p2.setTitle ("Splendid Purple Orchids");
+        p2.setFlowerName ("Splendid Purple Orchids");
         p2.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
         p2.setImage ("https://i4.fnp.com/images/pr/l/asiatic-lilies-standard_1.jpg");
         p2.setPrice (700d);
@@ -164,7 +162,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
 
         Product p3 = new Product ();
         p3.setID (3);
-        p3.setTitle ("Splendid Purple Orchids");
+        p3.setFlowerName ("Splendid Purple Orchids");
         p3.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
         p3.setImage ("https://i4.fnp.com/images/pr/l/enigmatic-8-red-roses_1.jpg");
         p3.setPrice (700d);
@@ -175,7 +173,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
 
         Product p4 = new Product ();
         p4.setID (4);
-        p4.setTitle ("Splendid Purple Orchids");
+        p4.setFlowerName ("Splendid Purple Orchids");
         p4.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
         p4.setImage ("https://i4.fnp.com/images/pr/l/perfection_1.jpg");
         p4.setPrice (700d);
@@ -186,7 +184,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
 
         Product p5 = new Product ();
         p5.setID (5);
-        p5.setTitle ("Splendid Purple Orchids");
+        p5.setFlowerName ("Splendid Purple Orchids");
         p5.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
         p5.setImage ("https://i4.fnp.com/images/pr/l/asiatic-lilies-standard_1.jpg");
         p5.setPrice (700d);
@@ -197,7 +195,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
 
         Product p6 = new Product ();
         p6.setID (6);
-        p6.setTitle ("Splendid Purple Orchids");
+        p6.setFlowerName ("Splendid Purple Orchids");
         p6.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
         p6.setImage ("https://i4.fnp.com/images/pr/l/enigmatic-8-red-roses_1.jpg");
         p6.setPrice (700d);
@@ -208,7 +206,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
 
         Product p7 = new Product ();
         p7.setID (7);
-        p7.setTitle ("Splendid Purple Orchids");
+        p7.setFlowerName ("Splendid Purple Orchids");
         p7.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
         p7.setImage ("https://i4.fnp.com/images/pr/l/perfection_1.jpg");
         p7.setPrice (700d);
@@ -218,7 +216,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
 
         Product p8 = new Product ();
         p8.setID (8);
-        p8.setTitle ("Splendid Purple Orchids");
+        p8.setFlowerName ("Splendid Purple Orchids");
         p8.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
         p8.setImage ("https://i4.fnp.com/images/pr/l/asiatic-lilies-standard_1.jpg");
         p8.setPrice (700d);

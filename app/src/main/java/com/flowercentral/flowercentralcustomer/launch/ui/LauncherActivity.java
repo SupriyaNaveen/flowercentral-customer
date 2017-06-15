@@ -32,9 +32,12 @@ import com.binarysoft.sociallogin.google.GoogleUser;
 import com.binarysoft.sociallogin.instagram.InstagramUser;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
+import com.flowercentral.flowercentralcustomer.common.interfaces.NotifyDataChangeListener;
 import com.flowercentral.flowercentralcustomer.common.location.LocationApi;
 import com.flowercentral.flowercentralcustomer.common.location.LocationApiConstants;
 import com.flowercentral.flowercentralcustomer.common.location.service.FetchAddressIntentService;
+import com.flowercentral.flowercentralcustomer.common.model.Product;
+import com.flowercentral.flowercentralcustomer.dao.LocalDAO;
 import com.flowercentral.flowercentralcustomer.dashboard.Dashboard;
 import com.flowercentral.flowercentralcustomer.preference.UserPreference;
 import com.flowercentral.flowercentralcustomer.rest.BaseModel;
@@ -43,10 +46,12 @@ import com.flowercentral.flowercentralcustomer.setting.AppConstant;
 import com.flowercentral.flowercentralcustomer.util.Util;
 import com.flowercentral.flowercentralcustomer.volley.ErrorData;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -54,7 +59,7 @@ import java.util.Map;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class LauncherActivity extends BaseActivity implements View.OnClickListener{
+public class LauncherActivity extends BaseActivity implements View.OnClickListener {
 
     private final String TAG = LauncherActivity.class.getSimpleName ();
     /**
@@ -92,6 +97,10 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
     private MaterialDialog mDialog;
 
     private Activity mCurrentActivity;
+    private List<Product> mProductList;
+    private boolean mDataDownloaded;
+    private boolean mUserRegistered;
+    private boolean mLocationFound;
 
     @Override
     protected void onCreate (Bundle savedInstanceState){
@@ -100,6 +109,10 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
 
         mContext = this;
         mCurrentActivity = this;
+
+        mDataDownloaded = false;
+        mUserRegistered = false;
+        mLocationFound = false;
 
         mVisible = true;
 
@@ -116,6 +129,8 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
         mBtnFacebook.setOnClickListener (this);
         mBtnGoogle.setOnClickListener (this);
         mBtnInstagram.setOnClickListener (this);
+
+        mProgressDialog = Util.showProgressDialog (mCurrentActivity, null, getString (R.string.msg_please_wait), false);
 
         initializeActivity(mContext);
 
@@ -440,6 +455,9 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
             //Initialize social plugins
             initSocialPlugins();
 
+            //Get data from server
+            getProductsFromServer(_context);
+
         }else{
             mFlNoInternet.setVisibility (View.VISIBLE);
             mllLoginWrapper.setVisibility (View.GONE);
@@ -511,10 +529,6 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
 
         mProgressDialog = Util.showProgressDialog (mCurrentActivity, null, getString (R.string.msg_registering_user), false);
 
-        /*if(mProgressDialog != null && !mProgressDialog.isShowing ()){
-            mProgressDialog.show();
-        }*/
-
         BaseModel<JSONObject> baseModel = new BaseModel<JSONObject> (_context) {
             @Override
             public void onSuccess (int _statusCode, Map<String, String> _headers, JSONObject _response) {
@@ -552,8 +566,12 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
                                 UserPreference.setProfilePic (customer.getString ("profile_img"));
                             }
 
+                            mUserRegistered = true;
                             //Redirect to Dashboard
-                            showDashboard ();
+                            if(mLocationFound = true && mUserRegistered == true && mDataDownloaded == true){
+                                showDashboard ();
+                            }
+
 
                         }else{
                             Snackbar.make(mFlOuterWrapper, getString (R.string.msg_user_not_registered),Snackbar.LENGTH_SHORT).show();
@@ -648,21 +666,13 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
                 public void gotLocation (Location location, Bundle _addresses) {
                     Log.i (TAG,"Location: Address"+ _addresses.getString (LocationApiConstants.RESULT_DATA_MSG_KEY));
                     UserPreference.setAddress (_addresses.getString (LocationApiConstants.RESULT_DATA_MSG_KEY));
+                    mLocationFound = true;
 
-                    // Check if user is already logged-in && address is
-                    // obtained then redirects to User Dashboard
+                    if(mLocationFound == true && mDataDownloaded == true){
+                        dismissDialog ();
 
-                    if(!TextUtils.isEmpty (UserPreference.getAccessToken ())){
-                        //Revalidate the auth token based on type of login
-                        if(UserPreference.getLoginMethod () == AppConstant.LOGIN_TYPE.FACEBOOK.ordinal ()){
-                            mFacebookHelper.performSignIn(mCurrentActivity);
-
-                        }else if(UserPreference.getLoginMethod () == AppConstant.LOGIN_TYPE.GOOGLE.ordinal ()){
-                            mGoogleHelper.performSignIn (mCurrentActivity);
-
-                        }else if(UserPreference.getLoginMethod () == AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal ()){
-                            mInstagramHelper.performSignIn ();
-                        }
+                        //Validate access token and store the fresh token
+                        validateAccessToken ();
                     }
                 }
 
@@ -686,6 +696,21 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
+    private void validateAccessToken () {
+        if(!TextUtils.isEmpty (UserPreference.getAccessToken ())){
+            //Revalidate the auth token based on type of login
+            if(UserPreference.getLoginMethod () == AppConstant.LOGIN_TYPE.FACEBOOK.ordinal ()){
+                mFacebookHelper.performSignIn(mCurrentActivity);
+
+            }else if(UserPreference.getLoginMethod () == AppConstant.LOGIN_TYPE.GOOGLE.ordinal ()){
+                mGoogleHelper.performSignIn (mCurrentActivity);
+
+            }else if(UserPreference.getLoginMethod () == AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal ()){
+                mInstagramHelper.performSignIn ();
+            }
+        }
+    }
+
     private MaterialDialog showDialog(Context _context, String _title, String _content, boolean _cancellable,
         boolean _autoDismiss, String _positiveText, String _negativeText, Drawable _icon){
 
@@ -703,6 +728,78 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
 
         mDialog = builder.build();
         return mDialog;
+    }
+
+    private void getProductsFromServer (final Context _context) {
+
+        BaseModel<JSONArray> baseModel = new BaseModel<JSONArray> (_context) {
+
+            @Override
+            public void onSuccess (int statusCode, Map<String, String> headers, JSONArray _response) {
+                //CLose Progress dialog
+
+                if(mLocationFound == true && mDataDownloaded == true){
+                    dismissDialog ();
+                }
+
+                if (_response != null & _response.length ()>0) {
+                    try {
+
+                        LocalDAO localDAO = new LocalDAO (_context);
+                        localDAO.addProducts (_response, false);
+                        mDataDownloaded = true;
+
+                        if(mUserRegistered == true && mDataDownloaded == true){
+                            //Validate access token and store the fresh token
+                            validateAccessToken ();
+                        }
+
+                    } catch (Exception ex) {
+                        Snackbar.make (mFlOuterWrapper, ex.getMessage (), Snackbar.LENGTH_SHORT).show ();
+                    }
+                } else {
+                    Snackbar.make (mFlOuterWrapper, "No response from server", Snackbar.LENGTH_SHORT).show ();
+                }
+
+            }
+
+            @Override
+            public void onError (ErrorData error) {
+                //Close Progress dialog
+                dismissDialog ();
+
+                if (error != null) {
+
+                    switch (error.getErrorType ()) {
+                        case NETWORK_NOT_AVAILABLE:
+                            Snackbar.make (mFlOuterWrapper, getResources ().getString (R.string.msg_internet_unavailable), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                        case INTERNAL_SERVER_ERROR:
+                            Snackbar.make (mFlOuterWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                        case CONNECTION_TIMEOUT:
+                            Snackbar.make (mFlOuterWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                        case APPLICATION_ERROR:
+                            Snackbar.make (mFlOuterWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                        case INVALID_INPUT_SUPPLIED:
+                            Snackbar.make (mFlOuterWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                        case AUTHENTICATION_ERROR:
+                            Snackbar.make (mFlOuterWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                        case UNAUTHORIZED_ERROR:
+                            Snackbar.make (mFlOuterWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            break;
+                    }
+                }
+            }
+        };
+
+        String url = QueryBuilder.getProducts ();
+        baseModel.executeGetJsonArrayRequest (url, TAG);
+
     }
 
 }

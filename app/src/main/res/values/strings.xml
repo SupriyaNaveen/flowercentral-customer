@@ -102,6 +102,10 @@
     <string name="lbl_male">Male</string>
     <string name="lbl_female">Female</string>
     <string name="msg_user_not_registered">Unable to register user.</string>
+    <string name="msg_finding_products">Please wait, looking for products.</string>
+    <string name="msg_please_wait">Please wait...</string>
+    <string name="title_filter_by">Filter By</string>
+    <string name="btn_choose">Choose</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

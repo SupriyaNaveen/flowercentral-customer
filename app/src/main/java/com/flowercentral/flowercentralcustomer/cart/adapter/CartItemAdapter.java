@@ -173,7 +173,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }else{
                 //Default image
             }
-            viewListHolder.title.setText (product.getTitle ());
+            viewListHolder.title.setText (product.getFlowerName ());
             viewListHolder.description.setText (product.getDescription ());
             viewListHolder.price.setText (String.valueOf (product.getPrice ()));
 
