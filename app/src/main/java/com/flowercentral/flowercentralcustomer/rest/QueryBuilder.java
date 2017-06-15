@@ -27,4 +27,17 @@ public class QueryBuilder {
         return sb.toString();
     }
 
+    public static String getDeliveryAddressUrl() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BuildConfig.SERVER);
+        sb.append("delivery_address");
+        return sb.toString();
+    }
+
+    public static String getCheckDeliveryAddressUrl() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BuildConfig.SERVER);
+        sb.append("checkdelivery_address");
+        return sb.toString();
+    }
 }

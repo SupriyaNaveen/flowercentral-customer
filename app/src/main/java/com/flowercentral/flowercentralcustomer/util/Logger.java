@@ -17,6 +17,7 @@ import java.util.Calendar;
 public class Logger {
     /**
      * used to log an information to  LogCat.
+     *
      * @param className : Name of the class file
      * @param methodName : Name of the method
      * @param info : Information to be print in LogCat.
@@ -26,17 +27,14 @@ public class Logger {
     public static boolean print_log_to_console = true;
     public static boolean print_log_to_file = false;
 
-    public static void log(String className, String methodName, String info, int logLevel)
-    {
-        if(print_log_to_console)
-        {
-            String log="Method: "+methodName+" | ";
-            log=log+"Info: "+info;
-            if(print_log_to_file)
-            {
+    public static void log(String className, String methodName, String info, int logLevel) {
+        if (print_log_to_console) {
+            String log = "Method: " + methodName + " | ";
+            log = log + "Info: " + info;
+            if (print_log_to_file) {
                 printLogToFile(log);
             }
-            switch (logLevel){
+            switch (logLevel) {
                 case AppConstant.LOG_LEVEL_ERR:
                     Log.e(className, log);
                     break;
@@ -55,75 +53,69 @@ public class Logger {
 
     /**
      * used to log an error to SD-card and LogCat.
-     * @param className : Name of the class file
+     *
+     * @param className  : Name of the class file
      * @param methodName : Name of the method
-     * @param errorMsg : Error Message
+     * @param errorMsg   : Error Message
      * @return Void
      */
-    public static void logError(String className, String methodName, String errorMsg)
-    {
-        String log="Class: "+className+" | ";
-        log=log+"Method: "+methodName+" | ";
-        log=log+"Error: "+errorMsg;
-        if(print_log_to_console)
-        {
-            Log.e(className,log);
+    public static void logError(String className, String methodName, String errorMsg) {
+        String log = "Class: " + className + " | ";
+        log = log + "Method: " + methodName + " | ";
+        log = log + "Error: " + errorMsg;
+        if (print_log_to_console) {
+            Log.e(className, log);
         }
-        if(print_log_to_file)
-        {
+        if (print_log_to_file) {
             printLogToFile(log);
         }
     }
 
-    public static void printLogToFile(String message)
-    {
+    public static void printLogToFile(String message) {
         // write log info to file
 
         // check for SD-card mounted or not
-        if(Util.hasStorage(true)){
+        if (Util.hasStorage(true)) {
 
-            String folderPath = Environment.getExternalStorageDirectory().getPath()+"/"+AppConstant.APP_NAME+"/";
-            String filePath = folderPath+"log.txt";
+            String folderPath = Environment.getExternalStorageDirectory().getPath() + "/" + AppConstant.APP_NAME + "/";
+            String filePath = folderPath + "log.txt";
             File directory = new File(folderPath);
-            directory.mkdirs();
-            File logFile = new File(filePath);
-            if (!logFile.exists())
-            {
-                try
-                {
-                    logFile.createNewFile();
+            boolean mkdirs = directory.mkdirs();
+            if (mkdirs) {
+                File logFile = new File(filePath);
+                if (!logFile.exists()) {
+                    try {
+                        boolean newFile = logFile.createNewFile();
+                        if (newFile) {
+                            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+                            buf.append(AppConstant.APP_NAME);
+                            buf.newLine();
+                            buf.close();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //fetch system date and time and append it to the error text
+                final Calendar c = Calendar.getInstance();
+                int mYear = c.get(Calendar.YEAR);
+                int mMonth = c.get(Calendar.MONTH);
+                int mDay = c.get(Calendar.DAY_OF_MONTH);
+                int mHour = c.get(Calendar.HOUR_OF_DAY);
+                int mMinute = c.get(Calendar.MINUTE);
+                int mSecond = c.get(Calendar.SECOND);
+                String text = mDay + "/" + mMonth + "/" + mYear + " - " + mHour + " : " + mMinute + " : " + mSecond + " :: " + message;
+                try {
+                    //BufferedWriter for performance, true to set append to file flag
                     BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
-                    buf.append(AppConstant.APP_NAME);
+                    buf.append(text);
                     buf.newLine();
                     buf.close();
-
-                }
-                catch (IOException e)
-                {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-
-            //fetch system date and time and append it to the error text
-            final Calendar c = Calendar.getInstance();
-            int mYear = c.get(Calendar.YEAR);
-            int mMonth = c.get(Calendar.MONTH);
-            int mDay = c.get(Calendar.DAY_OF_MONTH);
-            int mHour = c.get(Calendar.HOUR_OF_DAY);
-            int mMinute = c.get(Calendar.MINUTE);
-            int mSecond = c.get(Calendar.SECOND);
-            String text = mDay + "/"+ mMonth + "/" + mYear + " - " + mHour + " : " + mMinute + " : " + mSecond + " :: " + message;
-            try
-            {
-                //BufferedWriter for performance, true to set append to file flag
-                BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
-                buf.append(text);
-                buf.newLine();
-                buf.close();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
             }
         }
     }

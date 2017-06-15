@@ -1,256 +1,174 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_alignParentStart="true"
-    android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:fadeScrollbars="false"
+    android:padding="@dimen/dp16">
 
-    <TextView
-        android:id="@+id/txt_header"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_padding_16"
-        android:layout_marginLeft="@dimen/activity_horizontal_padding_16"
-        android:layout_marginRight="@dimen/activity_horizontal_padding_16"
-        android:layout_marginTop="@dimen/dp32"
-        android:gravity="center"
-        android:padding="@dimen/dp5"
-        android:text="@string/lbl_delivery_address"
-        android:textAllCaps="true"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="@dimen/sp14"/>
+        android:orientation="vertical"
+        android:padding="@dimen/dp16">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/btn_register"
-        android:layout_below="@+id/txt_header"
-        android:fadeScrollbars="false">
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_customer_name">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_customer_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/dp10"
+                android:drawableStart="@drawable/ic_user"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_address">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_customer_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/dp10"
+                android:drawableStart="@drawable/ic_location_grey"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/dp16">
+            android:orientation="horizontal">
 
-            <LinearLayout
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp5"
-                android:orientation="vertical">
+                android:hint="@string/hint_city">
 
-                <android.support.design.widget.TextInputLayout
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edt_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/hint_name">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_customer_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_person_outline_pink_24dp"
-                        android:drawablePadding="@dimen/dp10"
-                        android:imeOptions="actionNext"
-                        android:inputType="textPersonName|textCapWords"
-                        android:lines="1"
-                        android:singleLine="true"/>
-
-                </android.support.design.widget.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/txt_err_customer_name"
-                    style="@style/AppTheme.Error"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp5"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.9"
-                        android:hint="@string/hint_address">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/edt_customer_address"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:drawablePadding="@dimen/dp10"
-                            android:drawableStart="@drawable/ic_person_outline_pink_24dp"
-                            android:imeOptions="actionNext"
-                            android:inputType="textCapSentences"
-                            android:lines="1"
-                            android:singleLine="true"/>
-                    </android.support.design.widget.TextInputLayout>
-
-                    <ImageView
-                        android:id="@+id/img_view_locate"
-                        android:layout_width="30dip"
-                        android:layout_height="30dip"
-                        android:layout_gravity="end|center_vertical"
-                        android:clickable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        android:src="@drawable/ic_location_pink_24dp"/>
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/txt_err_customer_addr"
-                    style="@style/AppTheme.Error"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp5"
-                android:orientation="vertical">
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_city">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_city"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp32"
-                        android:drawablePadding="@dimen/dp10"
-                        android:imeOptions="actionNext"
-                        android:inputType="textCapSentences"
-                        android:lines="1"
-                        android:singleLine="true"/>
-
-                </android.support.design.widget.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/txt_err_city"
-                    style="@style/AppTheme.Error"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp32"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp5"
-                android:orientation="vertical">
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_state">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_state"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp32"
-                        android:imeOptions="actionNext"
-                        android:inputType="textCapSentences"
-                        android:lines="1"
-                        android:singleLine="true"/>
-
-                </android.support.design.widget.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/txt_err_state"
-                    style="@style/AppTheme.Error"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp32"/>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp5"
-                android:orientation="vertical">
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_zip">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_zip"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp32"
-                        android:imeOptions="actionNext"
-                        android:inputType="numberSigned"
-                        android:lines="1"
-                        android:singleLine="true"/>
-
-                </android.support.design.widget.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/txt_err_zip"
-                    style="@style/AppTheme.Error"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/dp32"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp5"
-                android:orientation="vertical">
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_phone">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/edt_phone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_phone_pink_24dp"
-                        android:drawablePadding="@dimen/dp10"
-                        android:imeOptions="actionDone"
-                        android:inputType="number"
-                        android:lines="1"/>
-
-                </android.support.design.widget.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/txt_err_phone"
-                    style="@style/AppTheme.Error"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
+                    android:drawablePadding="@dimen/dp10"
+                    android:drawableStart="@drawable/ic_store"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPostalAddress"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
 
         </LinearLayout>
 
-    </ScrollView>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_state">
 
-    <Button
-        android:id="@+id/btn_register"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="@dimen/dp10"
-        android:text="@string/lbl_register"/>
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp32"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:maxLines="1" />
 
-</RelativeLayout>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_zip">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_zip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp32"
+                android:imeOptions="actionNext"
+                android:inputType="number"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_phone1">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_phone1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/dp10"
+                android:drawableStart="@drawable/ic_phone"
+                android:imeOptions="actionNext"
+                android:inputType="phone"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_phone2">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edt_phone2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp32"
+                android:imeOptions="actionNext"
+                android:inputType="phone"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_check_on_delivery_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp16"
+            android:drawableEnd="@drawable/ic_check_on_delivery"
+            android:drawablePadding="@dimen/dp10"
+            android:gravity="end"
+            android:text="Check on Delivery" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp16"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/btn_continue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dp10"
+                android:layout_weight="1"
+                android:background="@drawable/button_transparent"
+                android:text="@string/btn_continue" />
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp10"
+                android:layout_weight="1"
+                android:background="@drawable/button_transparent"
+                android:text="@string/btn_cancel" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
