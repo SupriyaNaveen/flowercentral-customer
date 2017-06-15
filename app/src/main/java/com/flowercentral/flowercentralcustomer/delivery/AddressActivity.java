@@ -54,6 +54,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
 
     private static final int REQUEST_CODE_MAP = 1000;
     private static final String TAG = AddressActivity.class.getSimpleName();
+    private static final Object BLANK_SPACE = " ";
     private TextInputEditText mCustomerName;
     private TextInputEditText mCustomerAddress;
     private TextInputEditText mCustomerCity;
@@ -149,6 +150,13 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         mBtnCancel.setOnClickListener(this);
         mCheckOnDeliveryAddress.setOnClickListener(this);
 
+        mCustomerName.setText(UserPreference.getUserFirstName());
+        mCustomerAddress.setText(UserPreference.getAddress());
+        mCustomerCity.setText(UserPreference.getUserCity());
+        mCustomerState.setText(UserPreference.getUserState());
+        mCustomerZip.setText(UserPreference.getUserPin());
+        mCustomerPhone.setText(UserPreference.getUserPhone());
+
         mLatitude = UserPreference.getLatitude();
         mLongitude = UserPreference.getLongitude();
 
@@ -216,9 +224,9 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
                 try {
                     if (response.getInt(getString(R.string.api_res_status)) == 1) {
                         Snackbar.make(mRootLayout, "Success", Snackbar.LENGTH_SHORT).show();
-                        locateAddress(mCustomerAddress.getText().toString()
-                                + mCustomerCity.getText()
-                                + mCustomerState.getText());
+                        locateAddress(mCustomerAddress.getText().toString() + BLANK_SPACE +
+                                mCustomerCity.getText() + BLANK_SPACE +
+                                mCustomerState.getText());
                         setMap();
                     } else {
                         Snackbar.make(mRootLayout, "Fail", Snackbar.LENGTH_SHORT).show();
@@ -473,10 +481,20 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
      */
     private void requestPermission() {
         if (PermissionUtil.hasPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            setMap();
+            initMap();
         } else {
             PermissionUtil.requestPermission(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PermissionUtil.REQUEST_CODE_LOCATION);
         }
+    }
+
+    private void initMap() {
+        //Show the pin in map.
+        if (UserPreference.getAddress() != null) {
+            locateAddress(mCustomerAddress.getText().toString() + BLANK_SPACE +
+                    mCustomerCity.getText() + BLANK_SPACE +
+                    mCustomerState.getText());
+        }
+        setMap();
     }
 
     private void setMap() {
@@ -517,7 +535,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         switch (requestCode) {
             case PermissionUtil.REQUEST_CODE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    setMap();
+                    initMap();
                 } else {
                     if (PermissionUtil.showRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                         snackBarRequestPermission();
