@@ -176,7 +176,7 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ViewGridHolder gridViewHolder = (ViewGridHolder) holder;
             gridViewHolder.txtTitle.setText (product.getFlowerName ());
             gridViewHolder.txtDesc.setText (product.getDescription ());
-            gridViewHolder.txtPrice.setText (String.valueOf (product.getPrice ()));
+            gridViewHolder.txtPrice.setText (String.format ("$%s", product.getPrice ()));
 
             if(product.isLiked ()==0){
                 gridViewHolder.imgLike.setImageDrawable (mContext.getResources().getDrawable (R.drawable.ic_product_dislike_svg));
@@ -240,7 +240,7 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ViewListHolder listViewHolder = (ViewListHolder) holder;
             listViewHolder.txtTitle.setText (product.getFlowerName ());
             listViewHolder.txtDesc.setText (product.getDescription ());
-            listViewHolder.txtPrice.setText (String.valueOf (product.getPrice ()));
+            listViewHolder.txtPrice.setText (String.format ("$%s", product.getPrice ()));
 
             if(product.isLiked ()==0){
                 listViewHolder.imgLike.setImageDrawable (mContext.getResources().getDrawable (R.drawable.ic_product_dislike_svg));

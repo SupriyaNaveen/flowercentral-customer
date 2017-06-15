@@ -1,16 +1,16 @@
 package com.flowercentral.flowercentralcustomer.ProductDetail;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.ProductDetail.adapter.SlidingImageAdapter;
@@ -34,8 +34,9 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
     private static int currentPage = 0;
     private static int NUM_PAGES = 0;
-    private Button mBtnCart;
-    private Button mBtnBuyNow;
+    private ImageView mBtnCart;
+    private ImageView mBtnBuyNow;
+    private ImageView mBtnLike;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -103,8 +104,21 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         mSlidingImagePager = (ViewPager) findViewById (R.id.pager);
 
         //Action Buttons
-        mBtnCart = (Button) findViewById (R.id.btn_add_cart);
-        mBtnBuyNow = (Button) findViewById (R.id.btn_buy_now);
+        mBtnCart = (ImageView) findViewById (R.id.btn_add_cart);
+        mBtnBuyNow = (ImageView) findViewById (R.id.btn_buy_now);
+        mBtnLike = (ImageView) findViewById(R.id.image_view_product_like);
+
+        TextView infoTextView = (TextView) findViewById(R.id.txt_product_info);
+        infoTextView.setText(mProduct.getTitle());
+
+        TextView priceTextView = (TextView) findViewById(R.id.txt_product_price);
+        priceTextView.setText(String.format("$%s", mProduct.getPrice()));
+
+        if(mProduct.isLiked() == 1) {
+            mBtnLike.setImageResource(R.drawable.ic_product_like_svg);
+        } else {
+            mBtnLike.setImageResource(R.drawable.ic_product_dislike_svg);
+        }
 
         //Setup toolbar
         setSupportActionBar (mToolbar);

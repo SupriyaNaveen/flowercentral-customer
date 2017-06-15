@@ -229,7 +229,8 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
                 }
 
                 mLoginMethod = AppConstant.LOGIN_TYPE.FACEBOOK.ordinal ();
-                mFacebookHelper.performSignIn(this);
+                //mFacebookHelper.performSignIn(this);
+                showDashboard();
 
                 break;
 

@@ -88,6 +88,7 @@
     <string name="instagram_callback_url">http://flowercentral.com</string>
     <string name="msg_reg_user_missing_input">Required parameters are missing. Please check and try again!</string>
     <string name="msg_registering_user">Please wait, saving information.</string>
+    <string name="msg_check_address">Please wait, validating address.</string>
     <string name="msg_logout_success">You have been Successfully logged out.</string>
     <string name="err_empty_text">Can not be empty.</string>
     <string name="title_location_permission">Location Access</string>
@@ -106,7 +107,29 @@
     <string name="msg_please_wait">Please wait...</string>
     <string name="title_filter_by">Filter By</string>
     <string name="btn_choose">Choose</string>
+    <string name="btn_continue">Continue</string>
 
+    <string name="hint_customer_name">Full Name</string>
+    <string name="hint_phone1">Phone1</string>
+    <string name="hint_phone2">Phone2</string>
+
+    <string name="s_required_permission_location">Grant permission to access location</string>
+    <string name="s_action_request_again">Request</string>
+    <string name="s_required_permission_settings">Grant permission in setting.</string>
+    <string name="s_action_redirect_settings">Settings</string>
+
+    <string name="key_latitude">latitude</string>
+    <string name="key_longitude">longitude</string>
+    <string name="key_address">address</string>
+    <string name="key_is_draggable">isDraggable</string>
+    <string name="map_error_unable_locate_address">Unable to locate the address.</string>
+    <string name="api_key_name">name</string>
+    <string name="api_key_address">address</string>
+    <string name="api_key_city">city</string>
+    <string name="api_key_state">state</string>
+    <string name="api_key_pin">pin</string>
+    <string name="api_key_phone1">mobile_no</string>
+    <string name="api_res_status">status</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,37 +8,67 @@
     tools:context="com.flowercentral.flowercentralcustomer.ProductDetail.ProductDetailActivity">
 
     <include
-        layout="@layout/toolbar_default"
-        android:id="@+id/toolbar_default"/>
+        android:id="@+id/toolbar_default"
+        layout="@layout/toolbar_default" />
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/product_detail_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/button_wrapper"
         android:layout_below="@+id/toolbar_default"
-        android:padding="@dimen/dp10"
-        android:orientation="vertical"
-        android:weightSum="1"
-        android:layout_above="@+id/button_wrapper">
+        android:padding="@dimen/dp16">
 
-        <TextView
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/edit_text_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="10 Roses Flower - XL"
-            android:gravity="center"
-            style="@style/AppTheme.Title"/>
+            android:layout_alignParentBottom="true"
+            android:hint="Enter your message"
+            android:imeOptions="actionDone"
+            android:inputType="textMultiLine"
+            android:lines="3"
+            android:maxLines="3" />
+
+        <LinearLayout
+            android:id="@+id/details_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/edit_text_message"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_product_info"
+                style="@android:style/TextAppearance.DeviceDefault.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp10"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/txt_product_price"
+                style="@android:style/TextAppearance.DeviceDefault.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp5"
+                android:gravity="center"
+                android:textColor="@color/colorPrimary" />
+        </LinearLayout>
 
         <!-- Top Sliding Banners -->
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".4">
+            android:layout_height="match_parent"
+            android:layout_above="@id/details_wrapper">
 
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+            <ImageView
+                android:id="@+id/image_view_product_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/ic_product_like_svg" />
 
             <com.viewpagerindicator.CirclePageIndicator
                 android:id="@+id/indicator"
@@ -48,75 +77,46 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:gravity="bottom"
-                android:padding="10dip"
                 app:centered="true"
                 app:fillColor="@color/colorPrimary"
                 app:pageColor="@color/colorAccent"
                 app:snap="false" />
-        </RelativeLayout>
-        <!-- End of slider Banners-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".4"
-            android:layout_marginTop="@dimen/dp10">
-            <TextView
-                android:id="@+id/txt_lbl_message_occasion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/lbl_message_for_occasion"
-                android:letterSpacing=".1"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"/>
 
-            <TextView
-                android:id="@+id/txt_product_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="700"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:textColor="@color/colorAccent"/>
-
-            <EditText
-                android:id="@+id/edt_order_message"
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dp10"
-                android:background="@drawable/rounded_corner_border_pink"
-                android:layout_below="@+id/txt_lbl_message_occasion"/>
-
+                android:layout_above="@id/indicator"
+                android:layout_below="@+id/image_view_product_like"
+                android:layout_marginBottom="@dimen/dp16"
+                android:padding="@dimen/dp5" />
 
         </RelativeLayout>
-    </LinearLayout>
+        <!-- End of slider Banners-->
+
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/button_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="1"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/dp10"
+        android:weightSum="1">
 
-        <Button
-            android:id="@+id/btn_add_cart"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:padding="@dimen/dp5"
-            android:layout_marginRight="1dp"
-            android:text="@string/btn_add_to_cart"
-            android:letterSpacing=".1"
-            style="@style/Widget.AppCompat.Button.Colored"/>
-
-        <Button
+        <ImageView
             android:id="@+id/btn_buy_now"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".5"
-            android:padding="@dimen/dp5"
-            android:layout_marginLeft="1dp"
-            android:text="@string/btn_buy_now"
-            android:letterSpacing=".1"
-            style="@style/Widget.AppCompat.Button.Colored"/>
+            android:layout_weight="0.5"
+            android:src="@drawable/ic_buy_now" />
+
+        <ImageView
+            android:id="@+id/btn_add_cart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:src="@drawable/ic_add_to_cart" />
 
     </LinearLayout>
 </RelativeLayout>
