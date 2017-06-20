@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorWhite"
+            android:background="@color/colorSecondaryText"
             android:layout_toLeftOf="@+id/lbl_app_rgistration"
             android:layout_centerVertical="true"/>
 
@@ -27,13 +27,14 @@
             android:layout_height="wrap_content"
             android:text="@string/lbl_or"
             android:textSize="11sp"
+            android:textColor="@color/colorSecondaryText"
             android:layout_centerInParent="true"
             style="@style/AppTheme.Label"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorWhite"
+            android:background="@color/colorSecondaryText"
             android:layout_toRightOf="@+id/lbl_app_rgistration"
             android:layout_centerVertical="true"/>
 
@@ -44,6 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/lbl_need_flower_central_account"
+        android:textColor="@color/colorAccent"
         android:textSize="15sp"
         style="@style/AppTheme.Label"
         android:layout_gravity="center_horizontal"

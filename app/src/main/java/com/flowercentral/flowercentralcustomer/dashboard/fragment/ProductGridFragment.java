@@ -148,20 +148,23 @@ public class ProductGridFragment extends Fragment implements OnItemClickListener
 
     @Override
     public void onItemClicked (String _type, int _position, Object _data) {
+        int action = -1;
         if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("item")){
-            Product product = (Product) _data;
-            if(mListener != null){
-                Bundle args = new Bundle ();
-                args.putInt ("action", AppConstant.ACTIONS.PRODUCT_DETAILS.ordinal ());
-                args.putParcelable ("data", product);
-                mListener.onFragmentInteraction (args);
-            }
-        }else if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("item")){
+            action = AppConstant.ACTIONS.PRODUCT_DETAILS.ordinal ();
+        }else if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("buy_now")){
+            action = AppConstant.ACTIONS.BUY_NOW.ordinal ();
+        }else if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("like")){
+            action = AppConstant.ACTIONS.LIKE.ordinal ();
+        }else if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("cart")){
+            action = AppConstant.ACTIONS.ADD_TO_CART.ordinal ();
+        }
 
-        }else if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("item")){
-
-        }else if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("item")){
-
+        Product product = (Product) _data;
+        if(mListener != null){
+            Bundle args = new Bundle ();
+            args.putInt ("action", action);
+            args.putParcelable ("data", product);
+            mListener.onFragmentInteraction (args);
         }
     }
 

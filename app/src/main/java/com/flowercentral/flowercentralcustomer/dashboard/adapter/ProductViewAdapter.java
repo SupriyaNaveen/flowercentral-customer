@@ -190,6 +190,7 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 //Todo add default image
             }
 
+            //Item Clicked
             gridViewHolder.cv_wrapperLayout.setOnClickListener (new View.OnClickListener () {
                 @Override
                 public void onClick (View v) {
@@ -201,36 +202,39 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             });
 
+            //Buy now button clicked
             gridViewHolder.txtBuyNow.setOnClickListener (new View.OnClickListener () {
                 @Override
                 public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("buy_now", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
-                    }
+                if(mItemClickListener != null){
+                    mItemClickListener.onItemClicked ("buy_now", position, mProductList.get(position));
+                }else{
+                    Log.e (TAG, "Item Click Listener is not implemented");
+                }
                 }
             });
 
+            //Like/Unlike button clicked
             gridViewHolder.imgLike.setOnClickListener (new View.OnClickListener () {
                 @Override
                 public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("like", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
-                    }
+                if(mItemClickListener != null){
+                    mItemClickListener.onItemClicked ("like", position, mProductList.get(position));
+                }else{
+                    Log.e (TAG, "Item Click Listener is not implemented");
+                }
                 }
             });
 
+            // Cart button clicked
             gridViewHolder.imgCart.setOnClickListener (new View.OnClickListener () {
                 @Override
                 public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("cart", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
-                    }
+                if(mItemClickListener != null){
+                    mItemClickListener.onItemClicked ("cart", position, mProductList.get(position));
+                }else{
+                    Log.e (TAG, "Item Click Listener is not implemented");
+                }
                 }
             });
 
@@ -254,47 +258,51 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             }
 
+            //Item clicked
             listViewHolder.cv_wrapperLayout.setOnClickListener (new View.OnClickListener () {
                 @Override
                 public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("item", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
-                    }
+                if(mItemClickListener != null){
+                    mItemClickListener.onItemClicked ("item", position, mProductList.get(position));
+                }else{
+                    Log.e (TAG, "Item Click Listener is not implemented");
+                }
                 }
             });
 
+            //Buy now button clicked
             listViewHolder.txtBuyNow.setOnClickListener (new View.OnClickListener () {
                 @Override
                 public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("buy_now", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
-                    }
+                if(mItemClickListener != null){
+                    mItemClickListener.onItemClicked ("buy_now", position, mProductList.get(position));
+                }else{
+                    Log.e (TAG, "Item Click Listener is not implemented");
+                }
                 }
             });
 
+            //Like/unlike button clicked
             listViewHolder.imgLike.setOnClickListener (new View.OnClickListener () {
                 @Override
                 public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("like", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
-                    }
+                if(mItemClickListener != null){
+                    mItemClickListener.onItemClicked ("like", position, mProductList.get(position));
+                }else{
+                    Log.e (TAG, "Item Click Listener is not implemented");
+                }
                 }
             });
 
+            //Cart button clicked
             listViewHolder.imgCart.setOnClickListener (new View.OnClickListener () {
                 @Override
                 public void onClick (View v) {
-                    if(mItemClickListener != null){
-                        mItemClickListener.onItemClicked ("cart", position, mProductList.get(position));
-                    }else{
-                        Log.e (TAG, "Item Click Listener is not implemented");
-                    }
+                if(mItemClickListener != null){
+                    mItemClickListener.onItemClicked ("cart", position, mProductList.get(position));
+                }else{
+                    Log.e (TAG, "Item Click Listener is not implemented");
+                }
                 }
             });
 
@@ -325,10 +333,15 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                     for (Product product : mProductList) {
                         ArrayList<String> tags = product.getTags ();
-                        for(String tag : tags){
-                            if(tag.toLowerCase().contains(matchingText.toLowerCase ())){
-                                filteredList.add(product);
-                                break;
+                        if(tags != null && tags.size ()>0){
+                            for(String tag : tags){
+                                if(!TextUtils.isEmpty (tag)){
+                                    if(tag.toLowerCase().contains(matchingText.toLowerCase ())){
+                                        filteredList.add(product);
+                                        break;
+                                    }
+                                }
+
                             }
                         }
                     }

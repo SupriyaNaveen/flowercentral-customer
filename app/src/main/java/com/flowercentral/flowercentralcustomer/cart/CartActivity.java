@@ -63,7 +63,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater ().inflate (R.menu.dashboard, menu);
 
-        MenuItem menuItemSearch = menu.findItem (R.id.action_search);
+        /*MenuItem menuItemSearch = menu.findItem (R.id.action_search);
         MenuItem menuItemCart = menu.findItem (R.id.action_search);
 
         if(menuItemSearch != null){
@@ -71,7 +71,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
         }
         if(menuItemCart != null){
             menuItemCart.setVisible (false);
-        }
+        }*/
 
         return true;
     }

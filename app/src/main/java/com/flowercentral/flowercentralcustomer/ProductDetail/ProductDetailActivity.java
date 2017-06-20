@@ -69,10 +69,10 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     public boolean onCreateOptionsMenu (Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater ().inflate (R.menu.dashboard, menu);
-        MenuItem menuItem = menu.findItem (R.id.action_search);
+       /* MenuItem menuItem = menu.findItem (R.id.action_search);
         if(menuItem != null){
             menuItem.setVisible (false);
-        }
+        }*/
         return true;
     }
 
@@ -109,7 +109,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         mBtnLike = (ImageView) findViewById(R.id.image_view_product_like);
 
         TextView infoTextView = (TextView) findViewById(R.id.txt_product_info);
-        infoTextView.setText(mProduct.getTitle());
+        infoTextView.setText(mProduct.getFlowerName ());
 
         TextView priceTextView = (TextView) findViewById(R.id.txt_product_price);
         priceTextView.setText(String.format("$%s", mProduct.getPrice()));

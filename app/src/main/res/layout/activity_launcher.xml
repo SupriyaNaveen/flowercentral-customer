@@ -3,7 +3,7 @@
     android:id="@+id/outer_wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_background"
+    android:background="@drawable/flower_customer_bg"
     tools:context="com.flowercentral.flowercentralcustomer.launch.ui.LauncherActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
@@ -24,13 +24,14 @@
             android:layout_weight=".5"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:paddingTop="@dimen/dp75">
+            android:layout_marginTop="@dimen/dp30">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/logo03"
-                android:scaleType="fitXY"/>
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/flower"
+                android:scaleType="fitXY"
+                android:layout_gravity="center_horizontal"/>
 
             <!--<TextView
                 android:layout_width="wrap_content"
@@ -44,7 +45,9 @@
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_app_tag"
                 android:textSize="17sp"
-                style="@style/AppTheme.Label"/>
+                android:textColor="@color/colorSecondaryText"
+                style="@style/AppTheme.Label"
+                android:layout_gravity="center_horizontal"/>
 
         </LinearLayout>
 

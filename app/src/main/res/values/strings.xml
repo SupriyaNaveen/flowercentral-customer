@@ -130,6 +130,7 @@
     <string name="api_key_pin">pin</string>
     <string name="api_key_phone1">mobile_no</string>
     <string name="api_res_status">status</string>
+    <string name="lbl_query_hint">Enter Search Keywords</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

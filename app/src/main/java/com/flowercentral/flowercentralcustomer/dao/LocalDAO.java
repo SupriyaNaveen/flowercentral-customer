@@ -6,14 +6,18 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.flowercentral.flowercentralcustomer.common.model.Product;
+import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
 import com.flowercentral.flowercentralcustomer.setting.AppConstant;
 import com.flowercentral.flowercentralcustomer.util.Logger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 
 /**
@@ -278,5 +282,235 @@ public class LocalDAO {
         return status;
 
     }
+
+    // ================= For Shopping Cart =================
+
+    public boolean addItemsToCart(ArrayList<ShoppingCart> _cartItems){
+        boolean isAdded = false;
+
+        if(_cartItems != null && _cartItems.size ()>0){
+            for(ShoppingCart cartItem : _cartItems){
+
+                try{
+                    boolean isItemExists = isItemExistsinCart (cartItem.getProductID ());
+                    if(isItemExists == true){
+                        //if product exists then update the quanitity
+                        updateItemQuantity (cartItem);
+
+                    }else {
+                        //Else Add product
+                        addItemToCart (cartItem);
+
+                    }
+                }catch(Exception ex){
+                    ex.printStackTrace ();
+                    isAdded = false;
+                }
+
+            }
+        }
+
+        return isAdded;
+    }
+
+    public boolean addItemToCart(ShoppingCart _cartItem){
+        boolean isAdded = false;
+        if(_cartItem != null){
+            try{
+                ContentValues contentValues = new ContentValues();
+                contentValues.put ("productID", _cartItem.getProductID ());
+                contentValues.put("productName", _cartItem.getProductName ());
+                contentValues.put ("productCategory", _cartItem.getProductCategory ());
+                contentValues.put("productQty", _cartItem.getProductQuantity ());
+                contentValues.put ("productPrice", _cartItem.getProductPrice ());
+                contentValues.put("cartQuantity", _cartItem.getShoppingCartQuantity ());
+                contentValues.put ("userMessage", _cartItem.getUserMessage ());
+                contentValues.put("status", _cartItem.getStatus ());
+
+                if (mFlowerCenterDB == null) {
+                    mFlowerCenterDB = mDBHelper.getDatabase();
+                }
+
+                long rowID = mFlowerCenterDB.insert("ShoppingCart", null, contentValues);
+
+                if (rowID == -1) {
+                    isAdded = false;
+                } else {
+                    isAdded = true;
+                }
+
+            }catch (SQLException sqlEx){
+                sqlEx.printStackTrace ();
+                isAdded = false;
+            }catch(Exception ex){
+                ex.printStackTrace ();
+                isAdded = false;
+            }
+        }
+        return isAdded;
+    }
+
+    public boolean isItemExistsinCart(int _productID){
+        boolean isExists = false;
+        Cursor cursor = null;
+
+        String sqlQuery = "SELECT * FROM ShoppingCart where productID = "+_productID+"";
+
+        if (mFlowerCenterDB == null) {
+            mFlowerCenterDB = mDBHelper.getDatabase();
+        }
+
+        cursor = mFlowerCenterDB.rawQuery(sqlQuery, null);
+        if(cursor != null && cursor.getCount () > 0){
+            isExists = true;
+        }
+        return isExists;
+    }
+
+    public ShoppingCart getCartItem(int _productID){
+        ShoppingCart cartItem = null;
+        Cursor cursor = null;
+
+        String sqlQuery = "SELECT productID, productName, productCategory, productQty, productPrice, cartQuantity, " +
+                "userMessage, status  FROM ShoppingCart where productID = "+_productID+"";
+
+        if (mFlowerCenterDB == null) {
+            mFlowerCenterDB = mDBHelper.getDatabase();
+        }
+
+        try{
+            cursor = mFlowerCenterDB.rawQuery(sqlQuery, null);
+            if(cursor != null && cursor.getCount () > 0){
+                cartItem = new ShoppingCart ();
+                cursor.moveToFirst();
+                while (cursor.isAfterLast() == false) {
+                    cartItem.setProductID (cursor.getInt (cursor.getColumnIndex ("productID")));
+                    cartItem.setProductName (cursor.getString (cursor.getColumnIndex ("productName")));
+                    cartItem.setProductCategory (cursor.getString (cursor.getColumnIndex ("productCategory")));
+                    cartItem.setProductQuantity (cursor.getInt (cursor.getColumnIndex ("productQty")));
+                    cartItem.setProductPrice (cursor.getDouble (cursor.getColumnIndex ("productPrice")));
+                    cartItem.setShoppingCartQuantity (cursor.getInt (cursor.getColumnIndex ("cartQuantity")));
+                    cartItem.setUserMessage (cursor.getString (cursor.getColumnIndex ("userMessage")));
+                    cartItem.setStatus (cursor.getInt (cursor.getColumnIndex ("status")));
+
+                    cursor.moveToNext ();
+                }
+            }else{
+                Log.i(TAG, "No item in the cart");
+            }
+        }catch(SQLException sqlEx){
+            sqlEx.printStackTrace ();
+            cartItem = null;
+        }catch (Exception ex){
+            ex.printStackTrace ();
+            cartItem = null;
+        }
+
+        return cartItem;
+    }
+
+    public boolean updateItemQuantity(ShoppingCart _cartItem){
+        boolean isUpdated = false;
+        int qunatityTobeUpdated = 0;
+
+        if(_cartItem != null){
+            ShoppingCart cartItem = getCartItem (_cartItem.getProductID ());
+            if(cartItem != null){
+                qunatityTobeUpdated = _cartItem.getShoppingCartQuantity () + cartItem.getShoppingCartQuantity ();
+            }
+            String sqlQuery = "UPDATE ShoppingCart SET cartQuantity = "+qunatityTobeUpdated+" WHRE productID = "+_cartItem.getProductID ();
+            if (mFlowerCenterDB == null) {
+                mFlowerCenterDB = mDBHelper.getDatabase();
+            }
+
+            Cursor cursor = mFlowerCenterDB.rawQuery(sqlQuery, null);
+            isUpdated = true;
+            if(cursor != null && cursor.getCount () > 0){
+                Log.i (TAG, "item quantity has been updatd.");
+            }
+
+        }
+        return isUpdated;
+    }
+
+
+    public ArrayList<ShoppingCart> getCartItems(){
+        ArrayList<ShoppingCart> cartItems = null;
+        ShoppingCart cartItem = null;
+        Cursor cursor = null;
+
+        String sqlQuery = "SELECT productID, productName, productCategory, productQty, productPrice, cartQuantity, " +
+                "userMessage, status  FROM ShoppingCart";
+
+        if (mFlowerCenterDB == null) {
+            mFlowerCenterDB = mDBHelper.getDatabase();
+        }
+
+        try{
+            cursor = mFlowerCenterDB.rawQuery(sqlQuery, null);
+            if(cursor != null && cursor.getCount () > 0){
+                cartItems = new ArrayList<ShoppingCart> ();
+
+                cursor.moveToFirst();
+                while (cursor.isAfterLast() == false) {
+                    cartItem = new ShoppingCart ();
+
+                    cartItem.setProductID (cursor.getInt (cursor.getColumnIndex ("productID")));
+                    cartItem.setProductName (cursor.getString (cursor.getColumnIndex ("productName")));
+                    cartItem.setProductCategory (cursor.getString (cursor.getColumnIndex ("productCategory")));
+                    cartItem.setProductQuantity (cursor.getInt (cursor.getColumnIndex ("productQty")));
+                    cartItem.setProductPrice (cursor.getDouble (cursor.getColumnIndex ("productPrice")));
+                    cartItem.setShoppingCartQuantity (cursor.getInt (cursor.getColumnIndex ("cartQuantity")));
+                    cartItem.setUserMessage (cursor.getString (cursor.getColumnIndex ("userMessage")));
+                    cartItem.setStatus (cursor.getInt (cursor.getColumnIndex ("status")));
+
+                    cartItems.add (cartItem);
+
+                    cursor.moveToNext ();
+                }
+            }else{
+                Log.i(TAG, "No item in the cart");
+            }
+        }catch(SQLException sqlEx){
+            sqlEx.printStackTrace ();
+            cartItem = null;
+        }catch (Exception ex){
+            ex.printStackTrace ();
+            cartItem = null;
+        }
+        return cartItems;
+    }
+
+    public boolean deleteItem(int _productID){
+        boolean isDeleted = false;
+        String sqlQuery = "";
+        try{
+            if(_productID>0){
+                sqlQuery = "DELETE FROM ShoppingCart WHERE productID = "+_productID;
+            }else{
+                sqlQuery = "DELETE FROM ShoppingCart";
+            }
+
+            if(mFlowerCenterDB == null){
+                mFlowerCenterDB = mDBHelper.getDatabase();
+            }
+            mFlowerCenterDB.execSQL(sqlQuery);
+            isDeleted = true;
+        }catch (SQLException sqlEx){
+            Logger.log(TAG, "deleteItem", sqlEx.getMessage(), AppConstant.LOG_LEVEL_ERR);
+            isDeleted = false;
+        }catch (Exception ex){
+            Logger.log(TAG, "deleteItem", ex.getMessage(), AppConstant.LOG_LEVEL_ERR);
+            isDeleted = false;
+        }finally {
+            if(mFlowerCenterDB != null && mFlowerCenterDB.isOpen()){
+                //mFlowerCenterDB.close();
+                //mFlowerCenterDB = null;
+            }
+        }
+
+        return isDeleted;
+    }
+
 
 }

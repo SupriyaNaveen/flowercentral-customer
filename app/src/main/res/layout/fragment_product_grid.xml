@@ -3,6 +3,7 @@
     android:id="@+id/ll_product_list_wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context="com.flowercentral.flowercentralcustomer.dashboard.fragment.ProductGridFragment">
 
     <android.support.v4.widget.SwipeRefreshLayout

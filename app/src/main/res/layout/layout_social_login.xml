@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:text="@string/lbl_lets_connect"
         android:textSize="15sp"
+        android:textColor="@color/colorSecondaryText"
         style="@style/AppTheme.Label"
         android:gravity="center"/>
 
@@ -27,21 +28,21 @@
             android:id="@+id/btn_fb"
             android:layout_width="66dp"
             android:layout_height="66dp"
-            android:background="@drawable/ic_facebook_svg"
+            android:background="@drawable/ic_facebook_grey"
             android:layout_margin="@dimen/dp10"/>
 
         <Button
             android:id="@+id/btn_google"
             android:layout_width="66dp"
             android:layout_height="66dp"
-            android:background="@drawable/ic_google_plus_svg"
+            android:background="@drawable/ic_google_plus_grey"
             android:layout_margin="@dimen/dp10"/>
 
         <Button
             android:id="@+id/btn_instagram"
             android:layout_width="66dp"
             android:layout_height="66dp"
-            android:background="@drawable/ic_pinterest_svg"
+            android:background="@drawable/ic_pinterest_grey"
             android:layout_margin="@dimen/dp10"/>
 
     </LinearLayout>

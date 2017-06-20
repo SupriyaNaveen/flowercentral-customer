@@ -1,6 +1,7 @@
 package com.flowercentral.flowercentralcustomer.dashboard;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -63,6 +64,7 @@ public class Dashboard extends BaseActivity
     private CircleImageView mUserProfilePic;
     private TextView mUserName;
     private TextView mUserEmail;
+    private SearchView mProductSearch;
 
     private enum OPTIONS {DEFAULT, PROFILE, DELIVERY_TIME, ORDER, HELP};
 
@@ -150,9 +152,9 @@ public class Dashboard extends BaseActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater ().inflate (R.menu.dashboard, menu);
 
-        MenuItem search = menu.findItem(R.id.action_search);
+        /*MenuItem search = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
-        search(searchView);
+        search(searchView);*/
 
         return true;
     }
@@ -167,9 +169,9 @@ public class Dashboard extends BaseActivity
             case R.id.action_cart:
                 showCart ();
                 break;
-            case R.id.action_search:
+            /*case R.id.action_search:
 
-                break;
+                break;*/
         }
 
         return super.onOptionsItemSelected (item);
@@ -255,8 +257,22 @@ public class Dashboard extends BaseActivity
     public void onFragmentInteraction (Bundle _bundle) {
         if (_bundle != null) {
             int action = _bundle.getInt ("action");
-            Product product = (Product) _bundle.getParcelable ("data");
-            displayProductDetails (AppConstant.ACTIONS.PRODUCT_DETAILS.name (), product);
+            if(action == AppConstant.ACTIONS.PRODUCT_DETAILS.ordinal ()){
+                Product product = (Product) _bundle.getParcelable ("data");
+                displayProductDetails (AppConstant.ACTIONS.PRODUCT_DETAILS.name (), product);
+            }else if(action == AppConstant.ACTIONS.BUY_NOW.ordinal ()){
+                Toast.makeText (mContext,"Buy Now", Toast.LENGTH_SHORT).show ();
+
+            }else if(action == AppConstant.ACTIONS.ADD_TO_CART.ordinal ()){
+                Toast.makeText (mContext,"ADD TO CART", Toast.LENGTH_SHORT).show ();
+
+            }else if(action == AppConstant.ACTIONS.LIKE.ordinal ()){
+                Toast.makeText (mContext,"LIKE", Toast.LENGTH_SHORT).show ();
+
+            }else if(action == AppConstant.ACTIONS.UNLIKE.ordinal ()){
+                Toast.makeText (mContext,"UNLIKE", Toast.LENGTH_SHORT).show ();
+
+            }
 
         }
     }
@@ -282,7 +298,9 @@ public class Dashboard extends BaseActivity
         mUserProfilePic = (CircleImageView) header.findViewById (R.id.user_profile_pic);
         mUserName = (TextView) header.findViewById (R.id.user_name);
         mUserEmail = (TextView) header.findViewById (R.id.user_email);
+        mProductSearch = (SearchView) findViewById (R.id.sv_productSearchInput);
 
+        //Adding a name, email and profile pic to the left navigation drawer
         String profilePic = UserPreference.getProfilePic ();
         if(!TextUtils.isEmpty (profilePic)){
             Picasso.with(mContext).load(profilePic).into(mUserProfilePic);
@@ -305,6 +323,9 @@ public class Dashboard extends BaseActivity
         if(!TextUtils.isEmpty (UserPreference.getUserEmail ())){
             mUserEmail.setText (UserPreference.getUserEmail ());
         }
+
+        //UI Search Implementation
+        search (mProductSearch);
 
     }
 

@@ -12,10 +12,10 @@
         android:color="@color/colorDivider" />
 
     <!-- add padding -->
-    <padding android:top="@dimen/dp10"
-        android:right="@dimen/dp10"
-        android:bottom="@dimen/dp10"
-        android:left="@dimen/dp10" />
+    <padding android:top="@dimen/dp5"
+        android:right="@dimen/dp5"
+        android:bottom="@dimen/dp5"
+        android:left="@dimen/dp5" />
 
     <!-- corner radius -->
     <corners android:radius="4dp" />
