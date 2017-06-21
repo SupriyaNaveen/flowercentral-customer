@@ -40,4 +40,11 @@ public class QueryBuilder {
         sb.append("checkdelivery_address");
         return sb.toString();
     }
+
+    public static String getProfileUpdateUrl() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BuildConfig.SERVER);
+        sb.append("personal_info");
+        return sb.toString();
+    }
 }
