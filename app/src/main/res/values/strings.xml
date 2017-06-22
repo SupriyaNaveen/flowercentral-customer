@@ -131,6 +131,7 @@
     <string name="api_key_phone1">mobile_no</string>
     <string name="api_res_status">status</string>
     <string name="lbl_query_hint">Enter Search Keywords</string>
+    <string name="msg_item_added_cart">Product is added to your cart.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -30,6 +31,7 @@ import com.flowercentral.flowercentralcustomer.cart.CartActivity;
 import com.flowercentral.flowercentralcustomer.common.component.NavigationDrawerToggle;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnFragmentInteractionListener;
 import com.flowercentral.flowercentralcustomer.common.model.Product;
+import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
 import com.flowercentral.flowercentralcustomer.dao.LocalDAO;
 import com.flowercentral.flowercentralcustomer.dashboard.fragment.ProductGridFragment;
 import com.flowercentral.flowercentralcustomer.launch.ui.LauncherActivity;
@@ -257,14 +259,22 @@ public class Dashboard extends BaseActivity
     public void onFragmentInteraction (Bundle _bundle) {
         if (_bundle != null) {
             int action = _bundle.getInt ("action");
+            boolean status = false;
+            Product product = (Product) _bundle.getParcelable ("data");
             if(action == AppConstant.ACTIONS.PRODUCT_DETAILS.ordinal ()){
-                Product product = (Product) _bundle.getParcelable ("data");
                 displayProductDetails (AppConstant.ACTIONS.PRODUCT_DETAILS.name (), product);
+
             }else if(action == AppConstant.ACTIONS.BUY_NOW.ordinal ()){
-                Toast.makeText (mContext,"Buy Now", Toast.LENGTH_SHORT).show ();
+                status = addToCart (product);
+                if(status == true){
+                    showCart ();
+                }
 
             }else if(action == AppConstant.ACTIONS.ADD_TO_CART.ordinal ()){
-                Toast.makeText (mContext,"ADD TO CART", Toast.LENGTH_SHORT).show ();
+                status = addToCart (product);
+                if(status == true){
+                    Snackbar.make (mContentWrapper, getString (R.string.msg_item_added_cart), Snackbar.LENGTH_SHORT).show ();
+                }
 
             }else if(action == AppConstant.ACTIONS.LIKE.ordinal ()){
                 Toast.makeText (mContext,"LIKE", Toast.LENGTH_SHORT).show ();
@@ -275,6 +285,23 @@ public class Dashboard extends BaseActivity
             }
 
         }
+    }
+
+    private boolean addToCart (Product _product) {
+        ShoppingCart shoppingCart = new ShoppingCart ();
+        shoppingCart.setProductID (Integer.valueOf (_product.getProductID ()));
+        shoppingCart.setProductName (_product.getFlowerName ());
+        shoppingCart.setProductCategory (_product.getCategory ());
+        shoppingCart.setProductImage (_product.getImage ());
+        shoppingCart.setProductQuantity (_product.getQty ());
+        shoppingCart.setProductPrice (_product.getPrice ());
+        shoppingCart.setUserMessage ("");
+        shoppingCart.setShoppingCartQuantity (1);
+        shoppingCart.setStatus (1);
+
+        LocalDAO localDAO = new LocalDAO (mContext);
+        boolean status = localDAO.addItemToCart (shoppingCart);
+        return status;
     }
 
     private void displayProductDetails (String _action, Product _product) {

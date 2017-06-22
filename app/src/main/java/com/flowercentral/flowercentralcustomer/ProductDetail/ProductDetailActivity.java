@@ -3,6 +3,7 @@ package com.flowercentral.flowercentralcustomer.ProductDetail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flowercentral.flowercentralcustomer.BaseActivity;
@@ -17,6 +19,8 @@ import com.flowercentral.flowercentralcustomer.ProductDetail.adapter.SlidingImag
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.cart.CartActivity;
 import com.flowercentral.flowercentralcustomer.common.model.Product;
+import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
+import com.flowercentral.flowercentralcustomer.dao.LocalDAO;
 import com.flowercentral.flowercentralcustomer.setting.AppConstant;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -26,6 +30,7 @@ import java.util.TimerTask;
 
 public class ProductDetailActivity extends BaseActivity implements View.OnClickListener {
 
+    private RelativeLayout mOuterWrapper;
     private Toolbar mToolbar;
     private String mAction;
     private Product mProduct;
@@ -100,6 +105,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     private void initializeView () {
+        mOuterWrapper = (RelativeLayout) findViewById (R.id.rl_outer_wrapper);
         mToolbar = (Toolbar) findViewById (R.id.toolbar);
         mSlidingImagePager = (ViewPager) findViewById (R.id.pager);
 
@@ -195,17 +201,42 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
     @Override
     public void onClick (View v) {
+        boolean status = false;
         int id = v.getId ();
         switch (id){
             case R.id.btn_add_cart:
-
+                status = addToCart(mProduct);
+                if(status == true){
+                    Snackbar.make (mOuterWrapper, getString (R.string.msg_item_added_cart), Snackbar.LENGTH_SHORT).show ();
+                }
                 break;
             case R.id.btn_buy_now:
                 //Display cart screen
-                showCart ();
+                status = addToCart(mProduct);
+                if(status == true){
+                    showCart ();
+                }
                 break;
         }
     }
+
+    private boolean addToCart (Product _product) {
+        ShoppingCart shoppingCart = new ShoppingCart ();
+        shoppingCart.setProductID (Integer.valueOf (_product.getProductID ()));
+        shoppingCart.setProductName (_product.getFlowerName ());
+        shoppingCart.setProductCategory (_product.getCategory ());
+        shoppingCart.setProductImage (_product.getImage ());
+        shoppingCart.setProductQuantity (_product.getQty ());
+        shoppingCart.setProductPrice (_product.getPrice ());
+        shoppingCart.setUserMessage ("");
+        shoppingCart.setShoppingCartQuantity (1);
+        shoppingCart.setStatus (1);
+
+        LocalDAO localDAO = new LocalDAO (mContext);
+        boolean status = localDAO.addItemToCart (shoppingCart);
+        return status;
+    }
+
 
     private void showCart(){
         Intent intent = new Intent (mContext, CartActivity.class);

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnItemClickListener;
 import com.flowercentral.flowercentralcustomer.common.model.Product;
+import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -31,10 +32,11 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int VIEW_TYPE_NON_EMPTY_LIST = 1;
 
     private Context mContext;
-    private ArrayList<Product> mCartItems;
+    //private ArrayList<Product> mCartItems;
+    private ArrayList<ShoppingCart> mCartItems;
     private OnItemClickListener mItemClickListener;
 
-    public CartItemAdapter(Context _context, ArrayList<Product> _cartItems, OnItemClickListener _itemClickListener) {
+    public CartItemAdapter(Context _context, ArrayList<ShoppingCart> _cartItems, OnItemClickListener _itemClickListener) {
         mContext = _context;
         mCartItems = _cartItems;
         mItemClickListener = _itemClickListener;
@@ -62,14 +64,15 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return size;
     }
 
-    public Product getItemAtPosition(int _position) {
-        Product product = null;
+    public ShoppingCart getItemAtPosition(int _position) {
+        //Product product = null;
+        ShoppingCart cartItem = null;
         if (mCartItems != null && _position > 0) {
             if (_position < mCartItems.size()) {
-                product = mCartItems.get(_position);
+                cartItem = mCartItems.get(_position);
             }
         }
-        return product;
+        return cartItem;
     }
 
     public void clear() {
@@ -79,18 +82,18 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public void addAll(List<Product> _list) {
+    public void addAll(List<ShoppingCart> _list) {
         if (mCartItems == null) {
-            mCartItems = new ArrayList<Product>();
+            mCartItems = new ArrayList<ShoppingCart>();
         }
         mCartItems.clear();
         mCartItems.addAll(_list);
         this.notifyDataSetChanged();
     }
 
-    public void addAt(Product item, int _position) {
+    public void addAt(ShoppingCart item, int _position) {
         if (mCartItems == null) {
-            mCartItems = new ArrayList<Product>();
+            mCartItems = new ArrayList<ShoppingCart>();
         }
         if (item != null && _position >= 0) {
             mCartItems.add(_position, item);
@@ -100,13 +103,13 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void updateQuantity(String _type, int _position, int _qty) {
         if (mCartItems != null && mCartItems.size() > _position) {
-            int qty = mCartItems.get(_position).getQty();
+            int qty = mCartItems.get(_position).getShoppingCartQuantity ();
             if (!TextUtils.isEmpty(_type) && _type.trim().equalsIgnoreCase("plus")) {
-                mCartItems.get(_position).setQty(qty + _qty);
+                mCartItems.get(_position).setShoppingCartQuantity (qty + _qty);
                 this.notifyDataSetChanged();
             } else if (!TextUtils.isEmpty(_type) && _type.trim().equalsIgnoreCase("minus")) {
                 if (qty > 0) {
-                    mCartItems.get(_position).setQty(qty - _qty);
+                    mCartItems.get(_position).setShoppingCartQuantity (qty - _qty);
                     this.notifyDataSetChanged();
                 }
             } else {
@@ -158,9 +161,9 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-        Product product = null;
+        ShoppingCart cartItem = null;
         if (mCartItems != null && mCartItems.size() > 0) {
-            product = mCartItems.get(position);
+            cartItem = mCartItems.get(position);
         } else {
             Log.i(TAG, "Product lis is empty");
         }
@@ -168,24 +171,24 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (holder instanceof ViewListHolder) {
 
             ViewListHolder viewListHolder = (ViewListHolder) holder;
-            if (product.getImage() != null) {
-                Picasso.with(mContext).load(product.getImage()).into(viewListHolder.imgProduct);
+            if (cartItem.getProductImage () != null) {
+                Picasso.with(mContext).load(cartItem.getProductImage ()).into(viewListHolder.imgProduct);
             } else {
                 //Default image
             }
 
 
-            if(product.getQty ()>0){
-                viewListHolder.qty.setText (String.valueOf (product.getQty()));
+            if(cartItem.getShoppingCartQuantity ()>0){
+                viewListHolder.qty.setText (String.valueOf (cartItem.getShoppingCartQuantity ()));
             }else {
                 viewListHolder.qty.setText (String.valueOf (0));
             }
-            viewListHolder.title.setText(product.getFlowerName ());
-            viewListHolder.description.setText(product.getDescription());
-            viewListHolder.price.setText(String.format("$%S", product.getPrice()));
+            viewListHolder.title.setText(cartItem.getProductName ());
+            viewListHolder.description.setText("");
+            viewListHolder.price.setText(String.format("$%S", cartItem.getProductPrice ()));
 
-            if (product.getQty() > 0) {
-                viewListHolder.qty.setText(String.valueOf(product.getQty()));
+            if (cartItem.getShoppingCartQuantity () > 0) {
+                viewListHolder.qty.setText(String.valueOf(cartItem.getShoppingCartQuantity ()));
             } else {
                 viewListHolder.qty.setText(String.valueOf(0));
 

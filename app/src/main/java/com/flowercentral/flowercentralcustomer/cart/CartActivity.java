@@ -19,6 +19,8 @@ import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.cart.adapter.CartItemAdapter;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnItemClickListener;
 import com.flowercentral.flowercentralcustomer.common.model.Product;
+import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
+import com.flowercentral.flowercentralcustomer.dao.LocalDAO;
 import com.flowercentral.flowercentralcustomer.delivery.AddressActivity;
 import com.flowercentral.flowercentralcustomer.setting.AppConstant;
 
@@ -32,6 +34,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
     private CartItemAdapter mCartItemAdapter;
     private RecyclerView mRVCartItemList;
     private LinearLayoutManager mLinearLayoutManager;
+    private ArrayList<ShoppingCart> mCartItems;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -62,17 +65,6 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
     public boolean onCreateOptionsMenu (Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater ().inflate (R.menu.dashboard, menu);
-
-        /*MenuItem menuItemSearch = menu.findItem (R.id.action_search);
-        MenuItem menuItemCart = menu.findItem (R.id.action_search);
-
-        if(menuItemSearch != null){
-            menuItemSearch.setVisible (false);
-        }
-        if(menuItemCart != null){
-            menuItemCart.setVisible (false);
-        }*/
-
         return true;
     }
 
@@ -105,7 +97,13 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
 
         mRVCartItemList = (RecyclerView) findViewById (R.id.rv_cart_item_list);
 
+        //Todo remove below method calls
         preparingProductList();
+        //==============================
+
+        //Get items from local db
+        LocalDAO localDAO = new LocalDAO (mContext);
+        mCartItems = localDAO.getCartItems ();
 
         //Setup toolbar
         setSupportActionBar (mToolbar);
@@ -114,7 +112,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
         getSupportActionBar().setTitle(getString (R.string.title_activity_cart));
 
         //Setup recycler view
-        mCartItemAdapter = new CartItemAdapter (mContext, mProductList, this);
+        mCartItemAdapter = new CartItemAdapter (mContext, mCartItems, this);
         mLinearLayoutManager = new LinearLayoutManager (mContext);
         mRVCartItemList.setLayoutManager (mLinearLayoutManager);
         mRVCartItemList.setHasFixedSize (true);

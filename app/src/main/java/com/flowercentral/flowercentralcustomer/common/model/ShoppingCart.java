@@ -14,6 +14,7 @@ public class ShoppingCart implements Parcelable {
     private int mProductID;
     private String mProductName;
     private String mProductCategory;
+    private String mProductImage;
     private int mProductQuantity;
     private double mProductPrice;
     private int mShoppingCartQuantity;
@@ -30,6 +31,7 @@ public class ShoppingCart implements Parcelable {
         mProductID = in.readInt ();
         mProductName = in.readString ();
         mProductCategory = in.readString ();
+        mProductImage = in.readString ();
         mProductQuantity = in.readInt ();
         mProductPrice = in.readDouble ();
         mShoppingCartQuantity = in.readInt ();
@@ -43,6 +45,7 @@ public class ShoppingCart implements Parcelable {
         dest.writeInt (mProductID);
         dest.writeString (mProductName);
         dest.writeString (mProductCategory);
+        dest.writeString (mProductImage);
         dest.writeInt (mProductQuantity);
         dest.writeDouble (mProductPrice);
         dest.writeInt (mShoppingCartQuantity);
@@ -93,6 +96,14 @@ public class ShoppingCart implements Parcelable {
         mProductCategory = productCategory;
     }
 
+    public String getProductImage () {
+        return mProductImage;
+    }
+
+    public void setProductImage (String productImage) {
+        mProductImage = productImage;
+    }
+
     public int getProductQuantity () {
         return mProductQuantity;
     }
@@ -137,6 +148,13 @@ public class ShoppingCart implements Parcelable {
         return mCartItems;
     }
 
+    public void AddToCart(ArrayList<ShoppingCart> _items){
+        if(mCartItems == null){
+            mCartItems = new ArrayList<ShoppingCart> ();
+        }
+        mCartItems.addAll (_items);
+    }
+
     public boolean AddToCart(ShoppingCart _cartItem){
         boolean status = false;
         if(mCartItems == null){
@@ -153,9 +171,7 @@ public class ShoppingCart implements Parcelable {
             //Add Product into cart
             mCartItems.add (_cartItem);
             status = true;
-
         }
-
         return status;
     }
 
