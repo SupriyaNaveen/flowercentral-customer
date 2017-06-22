@@ -54,18 +54,17 @@
                         android:layout_height="@dimen/profile_image_height"/>
 
                     <TextView
-                        android:id="@+id/user_name"
+                        android:id="@+id/title_user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ashish upadhyay"
                         android:textColor="@color/colorPrimaryLight"
                         android:textSize="@dimen/sp24"
                         android:textAllCaps="true"/>
 
                     <TextView
+                        android:id="@+id/title_email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ashishupadhyay76@gmail.com"
                         android:textColor="@color/colorPrimaryLight"
                         android:textSize="@dimen/sp14" />
 

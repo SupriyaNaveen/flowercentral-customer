@@ -132,6 +132,10 @@
     <string name="api_res_status">status</string>
     <string name="lbl_query_hint">Enter Search Keywords</string>
     <string name="msg_item_added_cart">Product is added to your cart.</string>
+    <string name="btn_update">Update</string>
+    <string name="api_key_firstname">first_name</string>
+    <string name="api_key_lastname">last_name</string>
+    <string name="api_key_gender">gender</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 
