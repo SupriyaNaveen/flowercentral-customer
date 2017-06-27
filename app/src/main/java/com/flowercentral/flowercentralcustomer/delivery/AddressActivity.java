@@ -213,6 +213,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         return Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -566,16 +567,16 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    public JSONObject getDeliveryAddress () {
-        JSONObject deliveryAddress = new JSONObject ();
-        try{
-            deliveryAddress.put ("customer_name", mCustomerName.getText ().toString ());
-            deliveryAddress.put ("address", mCustomerAddress.getText ().toString ());
-            deliveryAddress.put ("city", mCustomerCity.getText ().toString ());
-            deliveryAddress.put ("state", mCustomerState.getText ().toString ());
-            deliveryAddress.put ("zip", mCustomerZip.getText ().toString ());
-            deliveryAddress.put ("primary_phone", mCustomerPrimaryPhone.getText ().toString ());
-            deliveryAddress.putOpt ("alternate_phone", mCustomerAlternatePhone.getText ().toString ());
+    public JSONObject getDeliveryAddress() {
+        JSONObject deliveryAddress = new JSONObject();
+        try {
+            deliveryAddress.put("customer_name", mCustomerName.getText().toString());
+            deliveryAddress.put("address", mCustomerAddress.getText().toString());
+            deliveryAddress.put("city", mCustomerCity.getText().toString());
+            deliveryAddress.put("state", mCustomerState.getText().toString());
+            deliveryAddress.put("zip", mCustomerZip.getText().toString());
+            deliveryAddress.put("primary_phone", mCustomerPrimaryPhone.getText().toString());
+            deliveryAddress.putOpt("alternate_phone", mCustomerAlternatePhone.getText().toString());
 
         } catch (JSONException jsonEx) {
             deliveryAddress = null;
