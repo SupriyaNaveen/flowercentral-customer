@@ -13,19 +13,31 @@
         android:background="@drawable/flower_customer_bg"
         android:orientation="vertical">
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.MapFragment"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.3" />
+            android:layout_weight="0.4">
+
+            <ImageView
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:indeterminate="true"
+                android:visibility="gone"/>
+        </RelativeLayout>
 
         <include
             android:id="@+id/address_wrapper"
             layout="@layout/layout_address"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.7">
+            android:layout_weight="0.6">
 
         </include>
 
