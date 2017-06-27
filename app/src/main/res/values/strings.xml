@@ -26,7 +26,7 @@
     <string name="lbl_password">Password</string>
     <string name="lbl_not_created_account">Not created account yet?</string>
     <string name="lbl_message_for_occasion">Message for occasion</string>
-    <string name="lbl_cart_summary">Cart Summary:</string>
+    <string name="lbl_cart_summary">Cart Summary</string>
     <string name="lbl_btn_checkout">Checkout</string>
     <string name="lbl_register">Register</string>
     <string name="lbl_delivery_address">Please enter your delivery address.</string>
@@ -136,6 +136,12 @@
     <string name="api_key_firstname">first_name</string>
     <string name="api_key_lastname">last_name</string>
     <string name="api_key_gender">gender</string>
+    <string name="msg_err_delivery_address">Please check your delivery carefully before submitting your order.</string>
+    <string name="msg_err_cart_items">Please add product into your cart before submitting order.</string>
+    <string name="msg_order_success">Your order has been placed successfully.</string>
+    <string name="msg_order_fail">Oops! we have encountered some problem. Please try again!</string>
+    <string name="msg_registering_order">Placing your order.</string>
+    <string name="title_activity_order">My Order</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

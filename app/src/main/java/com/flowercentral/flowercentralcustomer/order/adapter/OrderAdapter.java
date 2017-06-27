@@ -1,8 +1,7 @@
-package com.flowercentral.flowercentralcustomer.cart.adapter;
+package com.flowercentral.flowercentralcustomer.order.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flowercentral.flowercentralcustomer.R;
+import com.flowercentral.flowercentralcustomer.cart.adapter.CartItemAdapter;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnItemClickListener;
-import com.flowercentral.flowercentralcustomer.common.model.Product;
+import com.flowercentral.flowercentralcustomer.common.model.Order;
 import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
 import com.squareup.picasso.Picasso;
 
@@ -21,33 +21,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Ashish Upadhyay on 5/25/17.
+ * Created by Ashish Upadhyay on 6/26/17.
  */
 
-public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final String TAG = CartItemAdapter.class.getSimpleName();
+    private final static String TAG = OrderAdapter.class.getSimpleName ();
 
     private static final int VIEW_TYPE_EMPTY_LIST = 0;
     private static final int VIEW_TYPE_NON_EMPTY_LIST = 1;
 
     private Context mContext;
-    //private ArrayList<Product> mCartItems;
-    private ArrayList<ShoppingCart> mCartItems;
+    private ArrayList<Order> mMyOrders;
     private OnItemClickListener mItemClickListener;
 
-    public CartItemAdapter(Context _context, ArrayList<ShoppingCart> _cartItems, OnItemClickListener _itemClickListener) {
+    public OrderAdapter(Context _context, ArrayList<Order> _orders, OnItemClickListener _itemClickListener){
         mContext = _context;
-        mCartItems = _cartItems;
+        mMyOrders = _orders;
         mItemClickListener = _itemClickListener;
+    }
 
+    @Override
+    public int getItemCount () {
+        int size = 1;
+        if(mMyOrders != null && mMyOrders.size ()>0){
+            size = mMyOrders.size ();
+        }
+        return size;
     }
 
     @Override
     public int getItemViewType(int position) {
         //return super.getItemViewType(position);
         int viewType;
-        if (mCartItems != null && mCartItems.size() > 0) {
+        if (mMyOrders != null && mMyOrders.size() > 0) {
             viewType = VIEW_TYPE_NON_EMPTY_LIST;
         } else {
             viewType = VIEW_TYPE_EMPTY_LIST;
@@ -55,74 +62,48 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return viewType;
     }
 
-    @Override
-    public int getItemCount() {
-        int size = 1;
-        if (mCartItems != null && mCartItems.size() > 0) {
-            size = mCartItems.size();
-        }
-        return size;
-    }
+    public Order getItemAtPosition(int _position) {
 
-    public ShoppingCart getItemAtPosition(int _position) {
-        //Product product = null;
-        ShoppingCart cartItem = null;
-        if (mCartItems != null && _position > 0) {
-            if (_position < mCartItems.size()) {
-                cartItem = mCartItems.get(_position);
+        Order order = null;
+        if (mMyOrders != null && _position > 0) {
+            if (_position < mMyOrders.size()) {
+                order = mMyOrders.get(_position);
             }
         }
-        return cartItem;
+        return order;
     }
 
     public void clear() {
-        if (mCartItems != null && mCartItems.size() > 0) {
-            mCartItems.clear();
+        if (mMyOrders != null && mMyOrders.size() > 0) {
+            mMyOrders.clear();
             this.notifyDataSetChanged();
         }
     }
 
-    public void addAll(List<ShoppingCart> _list) {
-        if (mCartItems == null) {
-            mCartItems = new ArrayList<ShoppingCart>();
+    public void addAll(List<Order> _list) {
+        if (mMyOrders == null) {
+            mMyOrders = new ArrayList<Order>();
         }
-        mCartItems.clear();
-        mCartItems.addAll(_list);
+        mMyOrders.clear();
+        mMyOrders.addAll(_list);
         this.notifyDataSetChanged();
     }
 
-    public void addAt(ShoppingCart item, int _position) {
-        if (mCartItems == null) {
-            mCartItems = new ArrayList<ShoppingCart>();
+    public void addAt(Order item, int _position) {
+        if (mMyOrders == null) {
+            mMyOrders = new ArrayList<Order>();
         }
         if (item != null && _position >= 0) {
-            mCartItems.add(_position, item);
+            mMyOrders.add(_position, item);
             this.notifyDataSetChanged();
-        }
-    }
-
-    public void updateQuantity(String _type, int _position, int _qty) {
-        if (mCartItems != null && mCartItems.size() > _position) {
-            int qty = mCartItems.get(_position).getShoppingCartQuantity ();
-            if (!TextUtils.isEmpty(_type) && _type.trim().equalsIgnoreCase("plus")) {
-                mCartItems.get(_position).setShoppingCartQuantity (qty + _qty);
-                this.notifyDataSetChanged();
-            } else if (!TextUtils.isEmpty(_type) && _type.trim().equalsIgnoreCase("minus")) {
-                if (qty > 1) {
-                    mCartItems.get(_position).setShoppingCartQuantity (qty - _qty);
-                    this.notifyDataSetChanged();
-                }
-            } else {
-                // Do nothing
-            }
         }
     }
 
     public void removeAt(int _position) {
-        if (mCartItems != null && (_position >= 0 && _position < mCartItems.size())) {
-            mCartItems.remove(_position);
+        if (mMyOrders != null && (_position >= 0 && _position < mMyOrders.size())) {
+            mMyOrders.remove(_position);
             this.notifyItemRemoved(_position);
-            this.notifyItemRangeChanged(_position, mCartItems.size());
+            this.notifyItemRangeChanged(_position, mMyOrders.size());
         }
     }
 
@@ -134,17 +115,17 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         switch (viewType) {
             case VIEW_TYPE_EMPTY_LIST:
 
-                View viewEmptyList = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_no_cart_item, parent, false);
+                View viewEmptyList = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_no_order_item, parent, false);
                 viewEmptyList.setTag("VIEW_EMPTY_LIST");
-                viewHolder = new CartItemAdapter.EmptyListViewHolder(viewEmptyList);
+                viewHolder = new OrderAdapter.EmptyListViewHolder(viewEmptyList);
 
                 break;
 
             case VIEW_TYPE_NON_EMPTY_LIST:
 
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_cart_item, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_order_item, parent, false);
                 view.setTag("VIEW_LIST");
-                viewHolder = new CartItemAdapter.ViewListHolder(view);
+                viewHolder = new OrderAdapter.ViewListHolder(view);
 
                 break;
 
@@ -154,20 +135,20 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-
-        ShoppingCart cartItem = null;
-        if (mCartItems != null && mCartItems.size() > 0) {
-            cartItem = mCartItems.get(position);
+    public void onBindViewHolder (RecyclerView.ViewHolder holder, int position) {
+        Order orderItem = null;
+        if (mMyOrders != null && mMyOrders.size() > 0) {
+            orderItem = mMyOrders.get(position);
         } else {
-            Log.i(TAG, "Product lis is empty");
+            Log.i(TAG, "Order list is empty");
         }
 
-        if (holder instanceof ViewListHolder) {
+        if (holder instanceof OrderAdapter.ViewListHolder) {
 
-            ViewListHolder viewListHolder = (ViewListHolder) holder;
-            if (cartItem.getProductImage () != null) {
-                Picasso.with(mContext).load(cartItem.getProductImage ()).into(viewListHolder.imgProduct);
+            OrderAdapter.ViewListHolder viewListHolder = (OrderAdapter.ViewListHolder) holder;
+
+            /*if (orderItem.getProductImage () != null) {
+                Picasso.with(mContext).load(orderItem.getProductImage ()).into(viewListHolder.imgProduct);
             } else {
                 //Default image
             }
@@ -214,49 +195,50 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         mItemClickListener.onItemDeleted(position, mCartItems.get(position));
                     }
                 }
-            });
+            });*/
 
 
-        } else if (holder instanceof EmptyListViewHolder) {
-            EmptyListViewHolder emptyListViewHolder = (EmptyListViewHolder) holder;
+        } else if (holder instanceof OrderAdapter.EmptyListViewHolder) {
+            OrderAdapter.EmptyListViewHolder emptyListViewHolder = (OrderAdapter.EmptyListViewHolder) holder;
 
         } else {
 
         }
-
     }
 
+
+    //================= View Holder =================
     private class EmptyListViewHolder extends RecyclerView.ViewHolder {
         ImageView imgNoItemFound;
 
         public EmptyListViewHolder(View itemView) {
             super(itemView);
-            imgNoItemFound = (ImageView) itemView.findViewById(R.id.img_no_item_found);
+            imgNoItemFound = (ImageView) itemView.findViewById(R.id.img_no_order_item_found);
 
         }
     }
 
     private class ViewListHolder extends RecyclerView.ViewHolder {
 
-        ImageView imgProduct;
+        /*ImageView imgProduct;
         TextView title;
         TextView description;
         TextView price;
         Button plus;
         TextView qty;
         Button minus;
-        TextView remove;
+        TextView remove;*/
 
         public ViewListHolder(View itemView) {
             super(itemView);
-            imgProduct = (ImageView) itemView.findViewById(R.id.img_product);
+            /*imgProduct = (ImageView) itemView.findViewById(R.id.img_product);
             title = (TextView) itemView.findViewById(R.id.txt_item_title);
             description = (TextView) itemView.findViewById(R.id.txt_item_desc);
             price = (TextView) itemView.findViewById(R.id.txt_item_price);
             plus = (Button) itemView.findViewById(R.id.btn_plus);
             minus = (Button) itemView.findViewById(R.id.btn_minus);
             qty = (TextView) itemView.findViewById(R.id.txt_qty);
-            remove = (TextView) itemView.findViewById(R.id.btn_remove);
+            remove = (TextView) itemView.findViewById(R.id.btn_remove);*/
 
         }
     }

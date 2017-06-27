@@ -1,6 +1,9 @@
 package com.flowercentral.flowercentralcustomer.cart;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,8 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.cart.adapter.CartItemAdapter;
@@ -22,11 +28,22 @@ import com.flowercentral.flowercentralcustomer.common.model.Product;
 import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
 import com.flowercentral.flowercentralcustomer.dao.LocalDAO;
 import com.flowercentral.flowercentralcustomer.delivery.AddressActivity;
+import com.flowercentral.flowercentralcustomer.rest.BaseModel;
+import com.flowercentral.flowercentralcustomer.rest.QueryBuilder;
 import com.flowercentral.flowercentralcustomer.setting.AppConstant;
+import com.flowercentral.flowercentralcustomer.util.Util;
+import com.flowercentral.flowercentralcustomer.volley.ErrorData;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class CartActivity extends BaseActivity implements View.OnClickListener, OnItemClickListener{
+
+    private static final String TAG = CartActivity.class.getSimpleName ();
 
     private Toolbar mToolbar;
     private String mAction;
@@ -35,6 +52,12 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
     private RecyclerView mRVCartItemList;
     private LinearLayoutManager mLinearLayoutManager;
     private ArrayList<ShoppingCart> mCartItems;
+    private RelativeLayout mButtonWrapper;
+    private TextView txtCartItem;
+    private TextView txtTotalItemPrice;
+    private ImageView btnCheckout;
+    private MaterialDialog mProgressDialog;
+    private RelativeLayout mOuterWrapper;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -88,22 +111,27 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
 
 
     private void initializeView () {
+        mOuterWrapper = (RelativeLayout) findViewById (R.id.rl_outer_wrapper);
         mToolbar = (Toolbar) findViewById (R.id.toolbar);
 
-        TextView txtCartItem = (TextView) findViewById (R.id.txt_total_cart_item);
-        TextView txtTotalItemPrice = (TextView) findViewById (R.id.txt_total_price);
+        txtCartItem = (TextView) findViewById (R.id.txt_total_cart_item);
+        txtTotalItemPrice = (TextView) findViewById (R.id.txt_total_price);
+        mButtonWrapper = (RelativeLayout) findViewById (R.id.rl_button_wrapper);
 
-        ImageView btnCheckout = (ImageView) findViewById (R.id.btn_checkout);
+        btnCheckout = (ImageView) findViewById (R.id.btn_checkout);
 
         mRVCartItemList = (RecyclerView) findViewById (R.id.rv_cart_item_list);
 
-        //Todo remove below method calls
-        preparingProductList();
-        //==============================
 
         //Get items from local db
         LocalDAO localDAO = new LocalDAO (mContext);
         mCartItems = localDAO.getCartItems ();
+
+        if(mCartItems == null || mCartItems.size () == 0){
+            mButtonWrapper.setVisibility (View.GONE);
+        }else{
+            mButtonWrapper.setVisibility (View.VISIBLE);
+        }
 
         //Setup toolbar
         setSupportActionBar (mToolbar);
@@ -120,108 +148,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
 
         //Add listener
         btnCheckout.setOnClickListener (this);
-
-    }
-
-    // List of product for Temporary use
-    private void preparingProductList(){
-
-        ArrayList<String> relatedImages = new ArrayList<String> ();
-        relatedImages.add ("https://i4.fnp.com/images/pr/l/enigmatic-8-red-roses_1.jpg");
-        relatedImages.add ("https://i4.fnp.com/images/pr/l/asiatic-lilies-standard_1.jpg");
-        relatedImages.add ("https://i4.fnp.com/images/pr/l/enigmatic-8-red-roses_1.jpg");
-        relatedImages.add ("https://i4.fnp.com/images/pr/l/perfection_1.jpg");
-        relatedImages.add ("https://i4.fnp.com/images/pr/l/asiatic-lilies-standard_1.jpg");
-        relatedImages.add ("https://i4.fnp.com/images/pr/l/enigmatic-8-red-roses_1.jpg");
-        relatedImages.add ("https://i4.fnp.com/images/pr/l/asiatic-lilies-standard_1.jpg");
-
-        mProductList = new ArrayList<Product> ();
-
-        Product p1 = new Product ();
-        p1.setID (1);
-        p1.setFlowerName ("Splendid Purple Orchids");
-        p1.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
-        p1.setImage ("https://i4.fnp.com/images/pr/l/enigmatic-8-red-roses_1.jpg");
-        p1.setPrice (700d);
-        p1.setLiked (1);
-        p1.setRelatedImages (relatedImages);
-
-        mProductList.add (p1);
-
-        Product p2 = new Product ();
-        p2.setID (2);
-        p2.setFlowerName ("Splendid Purple Orchids");
-        p2.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
-        p2.setImage ("https://i4.fnp.com/images/pr/l/asiatic-lilies-standard_1.jpg");
-        p2.setPrice (700d);
-        p2.setLiked (0);
-        p2.setRelatedImages (relatedImages);
-
-        mProductList.add (p2);
-
-        Product p3 = new Product ();
-        p3.setID (3);
-        p3.setFlowerName ("Splendid Purple Orchids");
-        p3.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
-        p3.setImage ("https://i4.fnp.com/images/pr/l/enigmatic-8-red-roses_1.jpg");
-        p3.setPrice (700d);
-        p3.setLiked (1);
-        p3.setRelatedImages (relatedImages);
-
-        mProductList.add (p3);
-
-        Product p4 = new Product ();
-        p4.setID (4);
-        p4.setFlowerName ("Splendid Purple Orchids");
-        p4.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
-        p4.setImage ("https://i4.fnp.com/images/pr/l/perfection_1.jpg");
-        p4.setPrice (700d);
-        p4.setLiked (1);
-        p4.setRelatedImages (relatedImages);
-
-        mProductList.add (p4);
-
-        Product p5 = new Product ();
-        p5.setID (5);
-        p5.setFlowerName ("Splendid Purple Orchids");
-        p5.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
-        p5.setImage ("https://i4.fnp.com/images/pr/l/asiatic-lilies-standard_1.jpg");
-        p5.setPrice (700d);
-        p5.setLiked (0);
-        p5.setRelatedImages (relatedImages);
-
-        mProductList.add (p5);
-
-        Product p6 = new Product ();
-        p6.setID (6);
-        p6.setFlowerName ("Splendid Purple Orchids");
-        p6.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
-        p6.setImage ("https://i4.fnp.com/images/pr/l/enigmatic-8-red-roses_1.jpg");
-        p6.setPrice (700d);
-        p6.setLiked (1);
-        p6.setRelatedImages (relatedImages);
-
-        mProductList.add (p6);
-
-        Product p7 = new Product ();
-        p7.setID (7);
-        p7.setFlowerName ("Splendid Purple Orchids");
-        p7.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
-        p7.setImage ("https://i4.fnp.com/images/pr/l/perfection_1.jpg");
-        p7.setPrice (700d);
-        p7.setLiked (0);
-        p7.setRelatedImages (relatedImages);
-        mProductList.add (p7);
-
-        Product p8 = new Product ();
-        p8.setID (8);
-        p8.setFlowerName ("Splendid Purple Orchids");
-        p8.setDescription ("Add glamour and elegance to the day for someone by sending a bunch of tropical beauties from Ferns N Petals. Gift a bunch of 6 Purple Orchids wrapped beautifully in pink paper packaging and a pink ribbon bow. This is definitely a perfect gift for friends and family on the special occasions.");
-        p8.setImage ("https://i4.fnp.com/images/pr/l/asiatic-lilies-standard_1.jpg");
-        p8.setPrice (700d);
-        p8.setLiked (0);
-        p8.setRelatedImages (relatedImages);
-        mProductList.add (p8);
+        updateCartSummary(mCartItems);
 
     }
 
@@ -237,14 +164,22 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     public void onItemClicked (String _type, int _position, Object _data) {
+        ShoppingCart cartItem = null;
+        LocalDAO localDAO = new LocalDAO (mContext);
         if(mRVCartItemList != null){
             CartItemAdapter cartItemAdapter = (CartItemAdapter) mRVCartItemList.getAdapter ();
+            if(mCartItems != null && mCartItems.size ()>0){
+                cartItem = mCartItems.get (_position);
+            }
+
             if(cartItemAdapter != null){
                 if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("plus")){
                     cartItemAdapter.updateQuantity(_type, _position, 1);
+                    localDAO.updateItemQuantity (cartItem.getProductID (), 1);
 
                 }else if(!TextUtils.isEmpty (_type) && _type.trim ().equalsIgnoreCase ("minus")){
                     cartItemAdapter.updateQuantity(_type, _position, 1);
+                    localDAO.updateItemQuantity (cartItem.getProductID (), -1);
 
                 }else{
                     //Nothing
@@ -259,8 +194,44 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
         if(mRVCartItemList != null){
             CartItemAdapter cartItemAdapter = (CartItemAdapter) mRVCartItemList.getAdapter ();
             if(cartItemAdapter != null){
+
+                //Delete item from local database
+                LocalDAO localDAO = new LocalDAO (mContext);
+                ShoppingCart cartItem = mCartItems.get (_position);
+                localDAO.deleteItem (cartItem.getProductID ());
+
+                //Delete from list
                 cartItemAdapter.removeAt (_position);
+
+                if(mCartItems == null || mCartItems.size () == 0){
+                    mButtonWrapper.setVisibility (View.GONE);
+                }else{
+                    mButtonWrapper.setVisibility (View.VISIBLE);
+                }
+
+                updateCartSummary(mCartItems);
             }
+        }
+    }
+
+    private void updateCartSummary (ArrayList<ShoppingCart> _cartItems) {
+        if(_cartItems == null){
+            txtCartItem.setText ("0");
+            txtTotalItemPrice.setText (String.format("$%S", "0.00"));
+            return;
+        }
+        if(_cartItems.size ()==0){
+            txtCartItem.setText ("0");
+            txtTotalItemPrice.setText (String.format("$%S", "0.00"));
+
+        }else{
+            int itemCount = _cartItems.size ();
+            double price = 0.00;
+            for(ShoppingCart item : _cartItems){
+                price = price + (item.getShoppingCartQuantity () * item.getProductPrice ());
+            }
+            txtCartItem.setText (String.valueOf (itemCount));
+            txtTotalItemPrice.setText (String.format("$%S", String.valueOf (price)));
         }
     }
 
@@ -272,5 +243,89 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
         startActivity (intent);
     }
 
+    private void pullCartItemsFromServer(Context _context, Activity _activity, JSONObject _data){
+        //Start Progress dialog
+        dismissDialog();
+        mProgressDialog = Util.showProgressDialog(_activity, null, getString(R.string.msg_registering_user), false);
+
+        BaseModel<JSONObject> baseModel = new BaseModel<JSONObject>(_context) {
+            @Override
+            public void onSuccess(int statusCode, Map<String, String> headers, JSONObject response) {
+
+                //TODO Handle res
+                //CLose Progress dialog
+                dismissDialog();
+                try {
+                    if (response.getInt("status") == 1) {
+                        JSONArray products = response.getJSONArray ("products");
+
+
+                    } else {
+                        //Snackbar.make(mOuterWrapper, getString (R.string.msg_order_fail), Snackbar.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException jsonEx) {
+                    Snackbar.make(mOuterWrapper, jsonEx.getMessage (), Snackbar.LENGTH_SHORT).show();
+                }catch (Exception ex){
+                    Snackbar.make(mOuterWrapper, ex.getMessage (), Snackbar.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(ErrorData error) {
+                //Close Progress dialog
+                dismissDialog();
+
+                if (error != null) {
+                    error.setErrorMessage("Error while fetching cart items: " + error.getErrorMessage());
+
+                    switch (error.getErrorType()) {
+                        case NETWORK_NOT_AVAILABLE:
+                            Snackbar.make(mOuterWrapper, getResources().getString(R.string.msg_internet_unavailable), Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case INTERNAL_SERVER_ERROR:
+                            Snackbar.make(mOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case CONNECTION_TIMEOUT:
+                            Snackbar.make(mOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case APPLICATION_ERROR:
+                            Snackbar.make(mOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case INVALID_INPUT_SUPPLIED:
+                            Snackbar.make(mOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case AUTHENTICATION_ERROR:
+                            Snackbar.make(mOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case UNAUTHORIZED_ERROR:
+                            Snackbar.make(mOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Snackbar.make(mOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            break;
+                    }
+                }
+            }
+        };
+
+        String url = QueryBuilder.getCartItemUrl ();
+
+        if (_data != null) {
+            baseModel.executePostJsonRequest(url, _data, TAG);
+        } else {
+            Snackbar.make(mOuterWrapper, getResources().getString(R.string.msg_reg_user_missing_input), Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    public void dismissDialog() {
+        try {
+            if (mProgressDialog != null && mProgressDialog.isShowing() && !isFinishing()) {
+                mProgressDialog.dismiss();
+                mProgressDialog = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

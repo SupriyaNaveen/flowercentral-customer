@@ -1,10 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_order_outer_wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.flowercentral.flowercentralcustomer.order.OrderDetailActivity">
+    android:background="@drawable/flower_customer_bg"
+    tools:context="com.flowercentral.flowercentralcustomer.order.OrderActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <!-- Set toolbar -->
+    <include
+        android:id="@+id/toolbar_default"
+        layout="@layout/toolbar_default" />
+
+    <LinearLayout
+        android:id="@+id/ll_order_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/toolbar_default">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_order_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+</RelativeLayout>

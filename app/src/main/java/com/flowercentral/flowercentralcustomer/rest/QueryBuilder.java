@@ -10,6 +10,7 @@ import com.flowercentral.flowercentralcustomer.BuildConfig;
 public class QueryBuilder {
 
     private static String profileUpdateUrl;
+    private static String cartItemUrl;
 
     public static String getLoginUrl()
     {
@@ -27,7 +28,6 @@ public class QueryBuilder {
         return sb.toString();
     }
 
-
     public static String getProducts()
     {
         StringBuilder sb = new StringBuilder();
@@ -35,7 +35,6 @@ public class QueryBuilder {
         sb.append("show_product");
         return sb.toString();
     }
-
 
     public static String getDeliveryAddressUrl() {
         StringBuilder sb = new StringBuilder();
@@ -56,5 +55,20 @@ public class QueryBuilder {
         sb.append(BuildConfig.SERVER);
         sb.append("personal_info");
         return sb.toString();
+    }
+
+    public static String getSubmitOrderUrl() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BuildConfig.SERVER);
+        sb.append("submit_order");
+        return sb.toString();
+    }
+
+    public static String getCartItemUrl () {
+        StringBuilder sb = new StringBuilder();
+        sb.append(BuildConfig.SERVER);
+        sb.append("cart_item");
+        return sb.toString();
+
     }
 }

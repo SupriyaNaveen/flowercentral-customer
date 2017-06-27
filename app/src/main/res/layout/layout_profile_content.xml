@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorLightGrey"
     android:orientation="vertical">
 
     <LinearLayout
@@ -18,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp5"
-            app:cardBackgroundColor="@color/colorWhite"
+
             app:cardCornerRadius="@dimen/cardview_default_corner_radius"
             app:cardElevation="@dimen/cardview_default_elavation"
             app:cardPreventCornerOverlap="true"
@@ -51,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp5"
-            app:cardBackgroundColor="@color/colorWhite"
+
             app:cardCornerRadius="@dimen/cardview_default_corner_radius"
             app:cardElevation="@dimen/cardview_default_elavation"
             app:cardPreventCornerOverlap="true"
@@ -116,7 +115,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp5"
-            app:cardBackgroundColor="@color/colorWhite"
+            
             app:cardCornerRadius="@dimen/cardview_default_corner_radius"
             app:cardElevation="@dimen/cardview_default_elavation"
             app:cardPreventCornerOverlap="true"

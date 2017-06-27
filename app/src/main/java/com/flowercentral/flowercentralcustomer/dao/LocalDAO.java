@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.flowercentral.flowercentralcustomer.common.model.Order;
 import com.flowercentral.flowercentralcustomer.common.model.Product;
 import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
 import com.flowercentral.flowercentralcustomer.setting.AppConstant;
@@ -295,11 +296,11 @@ public class LocalDAO {
                     boolean isItemExists = isItemExistsinCart (cartItem.getProductID ());
                     if(isItemExists == true){
                         //if product exists then update the quanitity
-                        updateItemQuantity (cartItem);
+                        isAdded = updateItemQuantity (cartItem);
 
                     }else {
                         //Else Add product
-                        addItemToCart (cartItem);
+                        isAdded = addItemToCart (cartItem);
 
                     }
                 }catch(Exception ex){
@@ -323,6 +324,7 @@ public class LocalDAO {
                 contentValues.put ("productCategory", _cartItem.getProductCategory ());
                 contentValues.put("productQty", _cartItem.getProductQuantity ());
                 contentValues.put ("productPrice", _cartItem.getProductPrice ());
+                contentValues.put ("productImage", _cartItem.getProductImage ());
                 contentValues.put("cartQuantity", _cartItem.getShoppingCartQuantity ());
                 contentValues.put ("userMessage", _cartItem.getUserMessage ());
                 contentValues.put("status", _cartItem.getStatus ());
@@ -371,7 +373,7 @@ public class LocalDAO {
         ShoppingCart cartItem = null;
         Cursor cursor = null;
 
-        String sqlQuery = "SELECT productID, productName, productCategory, productQty, productPrice, cartQuantity, " +
+        String sqlQuery = "SELECT productID, productName, productCategory, productQty, productPrice, productImage, cartQuantity, " +
                 "userMessage, status  FROM ShoppingCart where productID = "+_productID+"";
 
         if (mFlowerCenterDB == null) {
@@ -389,6 +391,7 @@ public class LocalDAO {
                     cartItem.setProductCategory (cursor.getString (cursor.getColumnIndex ("productCategory")));
                     cartItem.setProductQuantity (cursor.getInt (cursor.getColumnIndex ("productQty")));
                     cartItem.setProductPrice (cursor.getDouble (cursor.getColumnIndex ("productPrice")));
+                    cartItem.setProductImage (cursor.getString (cursor.getColumnIndex ("productImage")));
                     cartItem.setShoppingCartQuantity (cursor.getInt (cursor.getColumnIndex ("cartQuantity")));
                     cartItem.setUserMessage (cursor.getString (cursor.getColumnIndex ("userMessage")));
                     cartItem.setStatus (cursor.getInt (cursor.getColumnIndex ("status")));
@@ -418,7 +421,33 @@ public class LocalDAO {
             if(cartItem != null){
                 qunatityTobeUpdated = _cartItem.getShoppingCartQuantity () + cartItem.getShoppingCartQuantity ();
             }
-            String sqlQuery = "UPDATE ShoppingCart SET cartQuantity = "+qunatityTobeUpdated+" WHRE productID = "+_cartItem.getProductID ();
+            String sqlQuery = "UPDATE ShoppingCart SET cartQuantity = "+qunatityTobeUpdated+" WHERE productID = "+_cartItem.getProductID ();
+            if (mFlowerCenterDB == null) {
+                mFlowerCenterDB = mDBHelper.getDatabase();
+            }
+
+            Cursor cursor = mFlowerCenterDB.rawQuery(sqlQuery, null);
+            isUpdated = true;
+            if(cursor != null && cursor.getCount () > 0){
+                Log.i (TAG, "item quantity has been updatd.");
+            }
+
+        }
+        return isUpdated;
+    }
+
+    public boolean updateItemQuantity(int _productID, int _qty){
+        boolean isUpdated = false;
+        int qunatityTobeUpdated = 0;
+
+        if(_productID > 0){
+            ShoppingCart cartItem = getCartItem (_productID);
+            if(cartItem != null){
+                qunatityTobeUpdated = cartItem.getShoppingCartQuantity () + _qty;
+            }
+
+            String sqlQuery = "UPDATE ShoppingCart SET cartQuantity = "+qunatityTobeUpdated+" WHERE productID = "+_productID;
+
             if (mFlowerCenterDB == null) {
                 mFlowerCenterDB = mDBHelper.getDatabase();
             }
@@ -439,7 +468,7 @@ public class LocalDAO {
         ShoppingCart cartItem = null;
         Cursor cursor = null;
 
-        String sqlQuery = "SELECT productID, productName, productCategory, productQty, productPrice, cartQuantity, " +
+        String sqlQuery = "SELECT productID, productName, productCategory, productQty, productPrice, productImage, cartQuantity, " +
                 "userMessage, status  FROM ShoppingCart";
 
         if (mFlowerCenterDB == null) {
@@ -460,6 +489,7 @@ public class LocalDAO {
                     cartItem.setProductCategory (cursor.getString (cursor.getColumnIndex ("productCategory")));
                     cartItem.setProductQuantity (cursor.getInt (cursor.getColumnIndex ("productQty")));
                     cartItem.setProductPrice (cursor.getDouble (cursor.getColumnIndex ("productPrice")));
+                    cartItem.setProductImage (cursor.getString (cursor.getColumnIndex ("productImage")));
                     cartItem.setShoppingCartQuantity (cursor.getInt (cursor.getColumnIndex ("cartQuantity")));
                     cartItem.setUserMessage (cursor.getString (cursor.getColumnIndex ("userMessage")));
                     cartItem.setStatus (cursor.getInt (cursor.getColumnIndex ("status")));
@@ -512,5 +542,8 @@ public class LocalDAO {
         return isDeleted;
     }
 
-
+    //======================= Order related queries =======================
+    public ArrayList<Order> getAllOrders (Context _context) {
+        return null;
+    }
 }

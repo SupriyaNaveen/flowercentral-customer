@@ -288,6 +288,7 @@ public class Dashboard extends BaseActivity
     }
 
     private boolean addToCart (Product _product) {
+        ArrayList<ShoppingCart> cartItem = new ArrayList<ShoppingCart> ();
         ShoppingCart shoppingCart = new ShoppingCart ();
         shoppingCart.setProductID (Integer.valueOf (_product.getProductID ()));
         shoppingCart.setProductName (_product.getFlowerName ());
@@ -299,8 +300,10 @@ public class Dashboard extends BaseActivity
         shoppingCart.setShoppingCartQuantity (1);
         shoppingCart.setStatus (1);
 
+        cartItem.add (shoppingCart);
+
         LocalDAO localDAO = new LocalDAO (mContext);
-        boolean status = localDAO.addItemToCart (shoppingCart);
+        boolean status = localDAO.addItemsToCart (cartItem);
         return status;
     }
 

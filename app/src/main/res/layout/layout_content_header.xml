@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_weight=".7"
         android:queryHint="@string/lbl_query_hint"
-        app:iconifiedByDefault="false">
+        app:iconifiedByDefault="false"
+        android:focusable="false">
 
     </android.support.v7.widget.SearchView>
 

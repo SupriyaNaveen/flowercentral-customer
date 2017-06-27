@@ -2,6 +2,7 @@ package com.flowercentral.flowercentralcustomer.delivery;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -15,6 +16,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,9 +29,13 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
+import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
+import com.flowercentral.flowercentralcustomer.dao.LocalDAO;
 import com.flowercentral.flowercentralcustomer.preference.UserPreference;
 import com.flowercentral.flowercentralcustomer.rest.BaseModel;
 import com.flowercentral.flowercentralcustomer.rest.QueryBuilder;
+import com.flowercentral.flowercentralcustomer.setting.AppConstant;
+import com.flowercentral.flowercentralcustomer.util.Logger;
 import com.flowercentral.flowercentralcustomer.util.MapActivity;
 import com.flowercentral.flowercentralcustomer.util.PermissionUtil;
 import com.flowercentral.flowercentralcustomer.util.Util;
@@ -42,10 +48,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -55,12 +63,15 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
     private static final int REQUEST_CODE_MAP = 1000;
     private static final String TAG = AddressActivity.class.getSimpleName();
     private static final Object BLANK_SPACE = " ";
+    private Activity mCurrentActivity;
+
     private TextInputEditText mCustomerName;
     private TextInputEditText mCustomerAddress;
     private TextInputEditText mCustomerCity;
     private TextInputEditText mCustomerState;
     private TextInputEditText mCustomerZip;
-    private TextInputEditText mCustomerPhone;
+    private TextInputEditText mCustomerPrimaryPhone;
+    private TextInputEditText mCustomerAlternatePhone;
 
     private double mLatitude;
     private double mLongitude;
@@ -69,6 +80,9 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
     private CoordinatorLayout mRootLayout;
     private Marker mMarker;
     private MaterialDialog mProgressDialog;
+    private String mAction;
+    private JSONObject mDeliveryAddress;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,14 +90,16 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         setContentView(R.layout.activity_address);
 
         mContext = this;
+        mCurrentActivity = this;
+
         //Get data from Intent
-//        Intent intent = getIntent();
-//        if (intent != null) {
-//            Bundle bundle = intent.getExtras();
-//            if (bundle != null) {
-//                String mAction = bundle.getString("action");
-//            }
-//        }
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                mAction = bundle.getString("action");
+            }
+        }
 
         //Initialize view elements
         initializeView();
@@ -130,7 +146,8 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         mCustomerCity = (TextInputEditText) findViewById(R.id.edt_city);
         mCustomerState = (TextInputEditText) findViewById(R.id.edt_state);
         mCustomerZip = (TextInputEditText) findViewById(R.id.edt_zip);
-        mCustomerPhone = (TextInputEditText) findViewById(R.id.edt_phone1);
+        mCustomerPrimaryPhone = (TextInputEditText) findViewById(R.id.edt_phone1);
+        mCustomerAlternatePhone = (TextInputEditText) findViewById(R.id.edt_phone2);
 
         ImageView mPickLocation = (ImageView) findViewById(R.id.img_view_locate);
         Button mBtnContinue = (Button) findViewById(R.id.btn_continue);
@@ -155,20 +172,19 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         mCustomerCity.setText(UserPreference.getUserCity());
         mCustomerState.setText(UserPreference.getUserState());
         mCustomerZip.setText(UserPreference.getUserPin());
-        mCustomerPhone.setText(UserPreference.getUserPhone());
+        mCustomerPrimaryPhone.setText(UserPreference.getUserPhone());
 
         mLatitude = UserPreference.getLatitude();
         mLongitude = UserPreference.getLongitude();
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager()
-                .findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
 
     @Override
-    public void onClick(View v) {
-        int id = v.getId();
+    public void onClick (View v) {
+        int id = v.getId ();
         switch (id) {
             case R.id.btn_continue:
                 /* Todo
@@ -176,9 +192,56 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
                  * Get order id
                  * Initiate Payment process
                  */
-                boolean isValidInput = isValidInput();
+                boolean isValidInput = isValidInput ();
                 if (isValidInput) {
-                    submitOrderDetailsToServer();
+
+                    try {
+                        //Get Order details
+                        JSONObject order = new JSONObject ();
+
+                        order.put ("order_date", Util.getCurrentDateTimeStamp ("MM-dd-YYYY"));
+                        order.put ("order_status", "New");
+
+                        //Get customer Details
+                        JSONObject user = new JSONObject ();
+                        if (TextUtils.isEmpty (UserPreference.getAccessToken ())) {
+                            Logger.log (TAG, "onClick - btnContinue: ", "Access token is null", AppConstant.LOG_LEVEL_ERR);
+                            //Todo Should redirect user to login page
+
+                            return;
+
+                        }
+                        user.put ("access_token", UserPreference.getAccessToken ());
+                        user.putOpt ("userID", UserPreference.getUserID ());
+                        user.putOpt ("email", UserPreference.getUserEmail ());
+
+                        order.put ("user", user);
+
+                        //Get Delivery Address
+                        JSONObject deliveryAddress = getDeliveryAddress ();
+                        if(deliveryAddress == null){
+                            Snackbar.make(mRootLayout, getString (R.string.msg_err_delivery_address), Snackbar.LENGTH_SHORT).show();
+                            return;
+                        }
+                        order.put ("delivery_address", deliveryAddress);
+
+                        //Get Cart Information
+                        JSONArray products = getCartItems(mContext);
+                        if(products == null){
+                            Snackbar.make(mRootLayout, getString (R.string.msg_err_cart_items), Snackbar.LENGTH_SHORT).show();
+                            return;
+                        }
+                        order.put ("products", products);
+
+                        submitOrderDetailsToServer (mContext, mCurrentActivity, order);
+
+                    } catch (JSONException jsonEx) {
+                        Logger.log (TAG, "onClick - btnContinue: ", jsonEx.getMessage (), AppConstant.LOG_LEVEL_ERR);
+
+                    } catch (Exception ex) {
+                        Logger.log (TAG, "onClick - btnContinue: ", ex.getMessage (), AppConstant.LOG_LEVEL_ERR);
+
+                    }
                 }
 
                 break;
@@ -186,24 +249,24 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
                 //Check the address, if there then locate the map based on that.
                 // Or else, locate the current address.
                 // On activity result change the map in this activity based on location.
-                if (mCustomerAddress.getText().length() > 0) {
-                    locateAddress(mCustomerAddress.getText().toString());
+                if (mCustomerAddress.getText ().length () > 0) {
+                    locateAddress (mCustomerAddress.getText ().toString ());
                 }
-                Intent mapIntent = new Intent(this, MapActivity.class);
-                mapIntent.putExtra(getString(R.string.key_latitude), mLatitude);
-                mapIntent.putExtra(getString(R.string.key_longitude), mLongitude);
-                mapIntent.putExtra(getString(R.string.key_address), mCustomerAddress.getText());
-                mapIntent.putExtra(getString(R.string.key_is_draggable), true);
-                startActivityForResult(mapIntent, REQUEST_CODE_MAP);
+                Intent mapIntent = new Intent (this, MapActivity.class);
+                mapIntent.putExtra (getString (R.string.key_latitude), mLatitude);
+                mapIntent.putExtra (getString (R.string.key_longitude), mLongitude);
+                mapIntent.putExtra (getString (R.string.key_address), mCustomerAddress.getText ());
+                mapIntent.putExtra (getString (R.string.key_is_draggable), true);
+                startActivityForResult (mapIntent, REQUEST_CODE_MAP);
                 break;
 
             case R.id.btn_cancel:
-                finish();
+                finish ();
                 break;
 
             case R.id.tv_check_on_delivery_address:
-                if (isValidInput()) {
-                    checkDeliveryAddress();
+                if (isValidInput ()) {
+                    checkDeliveryAddress ();
                 }
                 break;
         }
@@ -292,7 +355,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
             user.put(getString(R.string.api_key_city), mCustomerCity.getText());
             user.put(getString(R.string.api_key_state), mCustomerState.getText());
             user.put(getString(R.string.api_key_pin), mCustomerZip.getText());
-            user.put(getString(R.string.api_key_phone1), mCustomerPhone.getText());
+            user.put(getString(R.string.api_key_phone1), mCustomerPrimaryPhone.getText());
             return user;
         } catch (JSONException e) {
             Snackbar.make(mRootLayout, getResources().getString(R.string.msg_reg_user_missing_input), Snackbar.LENGTH_SHORT).show();
@@ -300,15 +363,16 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         return null;
     }
 
-    private void submitOrderDetailsToServer() {
-        registerAddress(this, constructJsonObject());
+    private void submitOrderDetailsToServer(Context _context, Activity _activity, JSONObject _data) {
+        submitOrder (_context, _activity, constructJsonObject());
+
     }
 
-    private void registerAddress(Activity _context, JSONObject _user) {
+    private void submitOrder(Context _context, Activity _activity, JSONObject _data) {
         //Start Progress dialog
         dismissDialog();
 
-        mProgressDialog = Util.showProgressDialog(_context, null, getString(R.string.msg_registering_user), false);
+        mProgressDialog = Util.showProgressDialog(_activity, null, getString(R.string.msg_registering_order), false);
 
         BaseModel<JSONObject> baseModel = new BaseModel<JSONObject>(_context) {
             @Override
@@ -319,9 +383,9 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
                 dismissDialog();
                 try {
                     if (response.getInt(getString(R.string.api_res_status)) == 1) {
-                        Snackbar.make(mRootLayout, "Success", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mRootLayout, getString (R.string.msg_order_success), Snackbar.LENGTH_SHORT).show();
                     } else {
-                        Snackbar.make(mRootLayout, "Fail", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mRootLayout, getString (R.string.msg_order_fail), Snackbar.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     Snackbar.make(mRootLayout, "Fail", Snackbar.LENGTH_SHORT).show();
@@ -366,9 +430,10 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
             }
         };
 
-        String url = QueryBuilder.getDeliveryAddressUrl();
-        if (_user != null) {
-            baseModel.executePostJsonRequest(url, _user, TAG);
+        String url = QueryBuilder.getSubmitOrderUrl ();
+
+        if (_data != null) {
+            baseModel.executePostJsonRequest(url, _data, TAG);
         } else {
             Snackbar.make(mRootLayout, getResources().getString(R.string.msg_reg_user_missing_input), Snackbar.LENGTH_SHORT).show();
         }
@@ -428,11 +493,11 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
             mCustomerZip.setError(null);
         }
 
-        if (mCustomerPhone.getText().toString().isEmpty()) {
-            mCustomerPhone.setError(getString(R.string.err_empty_text));
+        if (mCustomerPrimaryPhone.getText().toString().isEmpty()) {
+            mCustomerPrimaryPhone.setError(getString(R.string.err_empty_text));
             isValid = false;
         } else {
-            mCustomerPhone.setError(null);
+            mCustomerPrimaryPhone.setError(null);
         }
 
         return isValid;
@@ -581,4 +646,60 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
                 });
         snackbar.show();
     }
+
+    public JSONObject getDeliveryAddress () {
+        JSONObject deliveryAddress = new JSONObject ();
+        try{
+            deliveryAddress.put ("customer_name", mCustomerName.getText ().toString ());
+            deliveryAddress.put ("address", mCustomerAddress.getText ().toString ());
+            deliveryAddress.put ("city", mCustomerCity.getText ().toString ());
+            deliveryAddress.put ("state", mCustomerState.getText ().toString ());
+            deliveryAddress.put ("zip", mCustomerZip.getText ().toString ());
+            deliveryAddress.put ("primary_phone", mCustomerPrimaryPhone.getText ().toString ());
+            deliveryAddress.putOpt ("alternate_phone", mCustomerAlternatePhone.getText ().toString ());
+
+        }catch (JSONException jsonEx){
+            deliveryAddress = null;
+            Logger.log (TAG, "onClick - btnContinue: ", jsonEx.getMessage (), AppConstant.LOG_LEVEL_ERR);
+
+        }catch (Exception ex){
+            deliveryAddress = null;
+            Logger.log (TAG, "onClick - btnContinue: ", ex.getMessage (), AppConstant.LOG_LEVEL_ERR);
+        }
+
+        return deliveryAddress;
+    }
+
+    private JSONArray getCartItems (Context _context) {
+        JSONArray products = null;
+
+        LocalDAO localDAO = new LocalDAO (_context);
+        ArrayList<ShoppingCart> cartItems = localDAO.getCartItems ();
+        try{
+            if(cartItems != null && cartItems.size ()>0){
+                products = new JSONArray ();
+                for(ShoppingCart item : cartItems){
+                    JSONObject product = new JSONObject ();
+                    product.put ("product_id", item.getProductID ());
+                    product.put ("product_qty", item.getProductQuantity ());
+                    product.putOpt ("user_message", item.getUserMessage ());
+
+                    products.put (product);
+
+                }
+
+            }else{
+                products = null;
+            }
+        }catch (JSONException jsonEx){
+            products = null;
+
+        }catch (Exception ex){
+            products = null;
+
+        }
+
+        return products;
+    }
+
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -42,6 +43,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     private ImageView mBtnCart;
     private ImageView mBtnBuyNow;
     private ImageView mBtnLike;
+    private TextInputEditText mEdtUserMessage;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -108,6 +110,7 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         mOuterWrapper = (RelativeLayout) findViewById (R.id.rl_outer_wrapper);
         mToolbar = (Toolbar) findViewById (R.id.toolbar);
         mSlidingImagePager = (ViewPager) findViewById (R.id.pager);
+        mEdtUserMessage = (TextInputEditText) findViewById(R.id.edit_text_message);
 
         //Action Buttons
         mBtnCart = (ImageView) findViewById (R.id.btn_add_cart);
@@ -221,6 +224,10 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     private boolean addToCart (Product _product) {
+        ArrayList<ShoppingCart> cartItem = new ArrayList<ShoppingCart> ();
+
+        String userMessage = mEdtUserMessage.getText ().toString ();
+
         ShoppingCart shoppingCart = new ShoppingCart ();
         shoppingCart.setProductID (Integer.valueOf (_product.getProductID ()));
         shoppingCart.setProductName (_product.getFlowerName ());
@@ -228,12 +235,14 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         shoppingCart.setProductImage (_product.getImage ());
         shoppingCart.setProductQuantity (_product.getQty ());
         shoppingCart.setProductPrice (_product.getPrice ());
-        shoppingCart.setUserMessage ("");
+        shoppingCart.setUserMessage (userMessage);
         shoppingCart.setShoppingCartQuantity (1);
         shoppingCart.setStatus (1);
 
+        cartItem.add (shoppingCart);
+
         LocalDAO localDAO = new LocalDAO (mContext);
-        boolean status = localDAO.addItemToCart (shoppingCart);
+        boolean status = localDAO.addItemsToCart (cartItem);
         return status;
     }
 

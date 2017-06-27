@@ -8,17 +8,7 @@
         android:id="@+id/img_no_item_found"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_no_product"
+        android:src="@drawable/ic_empty_cart"
         android:layout_centerInParent="true"/>
-
-    <TextView
-        android:id="@+id/txt_msg_no_item_found"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No Product"
-        android:textAllCaps="true"
-        android:layout_marginTop="@dimen/dp10"
-        android:layout_below="@+id/img_no_item_found"
-        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
