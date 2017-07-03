@@ -98,7 +98,8 @@
 
         <activity
             android:name=".util.MapActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:parentActivityName=".delivery.AddressActivity"/>
 
         <service
             android:name=".common.location.service.FetchAddressIntentService"

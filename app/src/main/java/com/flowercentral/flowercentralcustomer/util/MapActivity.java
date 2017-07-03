@@ -1,7 +1,6 @@
 package com.flowercentral.flowercentralcustomer.util;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -11,9 +10,13 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NavUtils;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,7 +33,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MapActivity extends Activity implements OnMapReadyCallback {
+public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
     private GoogleMap mGoogleMap;
     private double mLatitude;
@@ -48,6 +51,14 @@ public class MapActivity extends Activity implements OnMapReadyCallback {
 
         ButterKnife.bind(this);
 
+        //Setup toolbar
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        if (null != getSupportActionBar())
+            getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.title_activity_address));
+
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -56,6 +67,25 @@ public class MapActivity extends Activity implements OnMapReadyCallback {
         mLongitude = getIntent().getDoubleExtra(getString(R.string.key_longitude), 0.0);
         mAddress = getIntent().getStringExtra(getString(R.string.key_address));
         mIsDraggable = getIntent().getBooleanExtra(getString(R.string.key_is_draggable), false);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        switch (id) {
+            case android.R.id.home:
+                if (getCallingActivity() != null) {
+                    Intent data = new Intent();
+                    data.putExtra(getString(R.string.key_latitude), mLatitude);
+                    data.putExtra(getString(R.string.key_longitude), mLongitude);
+                    setResult(RESULT_OK, data);
+                }
+                NavUtils.navigateUpFromSameTask(this);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 
     @Override

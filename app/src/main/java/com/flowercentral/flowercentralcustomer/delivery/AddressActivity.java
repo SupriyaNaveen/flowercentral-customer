@@ -1,28 +1,26 @@
 package com.flowercentral.flowercentralcustomer.delivery;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,16 +35,10 @@ import com.flowercentral.flowercentralcustomer.rest.QueryBuilder;
 import com.flowercentral.flowercentralcustomer.setting.AppConstant;
 import com.flowercentral.flowercentralcustomer.util.Logger;
 import com.flowercentral.flowercentralcustomer.util.MapActivity;
-import com.flowercentral.flowercentralcustomer.util.PermissionUtil;
 import com.flowercentral.flowercentralcustomer.util.Util;
 import com.flowercentral.flowercentralcustomer.volley.ErrorData;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,10 +47,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
-public class AddressActivity extends BaseActivity implements View.OnClickListener, OnMapReadyCallback {
+public class AddressActivity extends BaseActivity implements View.OnClickListener {
 
     private static final int REQUEST_CODE_MAP = 1000;
     private static final String TAG = AddressActivity.class.getSimpleName();
@@ -72,17 +63,16 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
     private TextInputEditText mCustomerZip;
     private TextInputEditText mCustomerPrimaryPhone;
     private TextInputEditText mCustomerAlternatePhone;
+    private ProgressBar mProgressBar;
 
     private double mLatitude;
     private double mLongitude;
-    private GoogleMap mGoogleMap;
 
     private CoordinatorLayout mRootLayout;
-    private Marker mMarker;
     private MaterialDialog mProgressDialog;
-    private String mAction;
-    private JSONObject mDeliveryAddress;
-
+    private ImageView mMapImageView;
+    private int mImgHtInPx;
+    private int mImgWidthInPx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +87,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                mAction = bundle.getString("action");
+                String mAction = bundle.getString("action");
             }
         }
 
@@ -177,14 +167,56 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         mLatitude = UserPreference.getLatitude();
         mLongitude = UserPreference.getLongitude();
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        mMapImageView = (ImageView) findViewById(R.id.map);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+
+        ViewTreeObserver vto = mMapImageView.getViewTreeObserver();
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+                mMapImageView.getViewTreeObserver().removeOnPreDrawListener(this);
+                mImgHtInPx = pxToDp(mMapImageView.getMeasuredHeight());
+                mImgWidthInPx = pxToDp(mMapImageView.getMeasuredWidth());
+                setMap();
+                return true;
+            }
+        });
+
     }
 
+    private void setMap() {
+
+        mProgressBar.setVisibility(View.VISIBLE);
+        String url = "https://maps.googleapis.com/maps/api/staticmap?" +
+                "center=" + mLatitude + "," + mLongitude +
+                "&zoom=15" +
+                "&size=" + mImgWidthInPx + "x" + mImgHtInPx +
+                "&maptype=roadmap" +
+                "&markers=color:red%7C" + mLatitude + "," + mLongitude;
+        Picasso.
+                with(AddressActivity.this).
+                load(url).
+                fit().
+                into(mMapImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+                });
+    }
+
+    public int pxToDp(int px) {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        return Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
 
     @Override
-    public void onClick (View v) {
-        int id = v.getId ();
+    public void onClick(View v) {
+        int id = v.getId();
         switch (id) {
             case R.id.btn_continue:
                 /* Todo
@@ -192,54 +224,54 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
                  * Get order id
                  * Initiate Payment process
                  */
-                boolean isValidInput = isValidInput ();
+                boolean isValidInput = isValidInput();
                 if (isValidInput) {
 
                     try {
                         //Get Order details
-                        JSONObject order = new JSONObject ();
+                        JSONObject order = new JSONObject();
 
-                        order.put ("order_date", Util.getCurrentDateTimeStamp ("MM-dd-YYYY"));
-                        order.put ("order_status", "New");
+                        order.put("order_date", Util.getCurrentDateTimeStamp("MM-dd-YYYY"));
+                        order.put("order_status", "New");
 
                         //Get customer Details
-                        JSONObject user = new JSONObject ();
-                        if (TextUtils.isEmpty (UserPreference.getAccessToken ())) {
-                            Logger.log (TAG, "onClick - btnContinue: ", "Access token is null", AppConstant.LOG_LEVEL_ERR);
+                        JSONObject user = new JSONObject();
+                        if (TextUtils.isEmpty(UserPreference.getAccessToken())) {
+                            Logger.log(TAG, "onClick - btnContinue: ", "Access token is null", AppConstant.LOG_LEVEL_ERR);
                             //Todo Should redirect user to login page
 
                             return;
 
                         }
-                        user.put ("access_token", UserPreference.getAccessToken ());
-                        user.putOpt ("userID", UserPreference.getUserID ());
-                        user.putOpt ("email", UserPreference.getUserEmail ());
+                        user.put("access_token", UserPreference.getAccessToken());
+                        user.putOpt("userID", UserPreference.getUserID());
+                        user.putOpt("email", UserPreference.getUserEmail());
 
-                        order.put ("user", user);
+                        order.put("user", user);
 
                         //Get Delivery Address
-                        JSONObject deliveryAddress = getDeliveryAddress ();
-                        if(deliveryAddress == null){
-                            Snackbar.make(mRootLayout, getString (R.string.msg_err_delivery_address), Snackbar.LENGTH_SHORT).show();
+                        JSONObject deliveryAddress = getDeliveryAddress();
+                        if (deliveryAddress == null) {
+                            Snackbar.make(mRootLayout, getString(R.string.msg_err_delivery_address), Snackbar.LENGTH_SHORT).show();
                             return;
                         }
-                        order.put ("delivery_address", deliveryAddress);
+                        order.put("delivery_address", deliveryAddress);
 
                         //Get Cart Information
                         JSONArray products = getCartItems(mContext);
-                        if(products == null){
-                            Snackbar.make(mRootLayout, getString (R.string.msg_err_cart_items), Snackbar.LENGTH_SHORT).show();
+                        if (products == null) {
+                            Snackbar.make(mRootLayout, getString(R.string.msg_err_cart_items), Snackbar.LENGTH_SHORT).show();
                             return;
                         }
-                        order.put ("products", products);
+                        order.put("products", products);
 
-                        submitOrderDetailsToServer (mContext, mCurrentActivity, order);
+                        submitOrderDetailsToServer(mContext, mCurrentActivity, order);
 
                     } catch (JSONException jsonEx) {
-                        Logger.log (TAG, "onClick - btnContinue: ", jsonEx.getMessage (), AppConstant.LOG_LEVEL_ERR);
+                        Logger.log(TAG, "onClick - btnContinue: ", jsonEx.getMessage(), AppConstant.LOG_LEVEL_ERR);
 
                     } catch (Exception ex) {
-                        Logger.log (TAG, "onClick - btnContinue: ", ex.getMessage (), AppConstant.LOG_LEVEL_ERR);
+                        Logger.log(TAG, "onClick - btnContinue: ", ex.getMessage(), AppConstant.LOG_LEVEL_ERR);
 
                     }
                 }
@@ -249,24 +281,24 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
                 //Check the address, if there then locate the map based on that.
                 // Or else, locate the current address.
                 // On activity result change the map in this activity based on location.
-                if (mCustomerAddress.getText ().length () > 0) {
-                    locateAddress (mCustomerAddress.getText ().toString ());
+                if (mCustomerAddress.getText().length() > 0) {
+                    locateAddress(mCustomerAddress.getText().toString());
                 }
-                Intent mapIntent = new Intent (this, MapActivity.class);
-                mapIntent.putExtra (getString (R.string.key_latitude), mLatitude);
-                mapIntent.putExtra (getString (R.string.key_longitude), mLongitude);
-                mapIntent.putExtra (getString (R.string.key_address), mCustomerAddress.getText ());
-                mapIntent.putExtra (getString (R.string.key_is_draggable), true);
-                startActivityForResult (mapIntent, REQUEST_CODE_MAP);
+                Intent mapIntent = new Intent(this, MapActivity.class);
+                mapIntent.putExtra(getString(R.string.key_latitude), mLatitude);
+                mapIntent.putExtra(getString(R.string.key_longitude), mLongitude);
+                mapIntent.putExtra(getString(R.string.key_address), mCustomerAddress.getText());
+                mapIntent.putExtra(getString(R.string.key_is_draggable), true);
+                startActivityForResult(mapIntent, REQUEST_CODE_MAP);
                 break;
 
             case R.id.btn_cancel:
-                finish ();
+                finish();
                 break;
 
             case R.id.tv_check_on_delivery_address:
-                if (isValidInput ()) {
-                    checkDeliveryAddress ();
+                if (isValidInput()) {
+                    checkDeliveryAddress();
                 }
                 break;
         }
@@ -364,7 +396,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void submitOrderDetailsToServer(Context _context, Activity _activity, JSONObject _data) {
-        submitOrder (_context, _activity, constructJsonObject());
+        submitOrder(_context, _activity, constructJsonObject());
 
     }
 
@@ -383,9 +415,9 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
                 dismissDialog();
                 try {
                     if (response.getInt(getString(R.string.api_res_status)) == 1) {
-                        Snackbar.make(mRootLayout, getString (R.string.msg_order_success), Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mRootLayout, getString(R.string.msg_order_success), Snackbar.LENGTH_SHORT).show();
                     } else {
-                        Snackbar.make(mRootLayout, getString (R.string.msg_order_fail), Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mRootLayout, getString(R.string.msg_order_fail), Snackbar.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     Snackbar.make(mRootLayout, "Fail", Snackbar.LENGTH_SHORT).show();
@@ -430,7 +462,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
             }
         };
 
-        String url = QueryBuilder.getSubmitOrderUrl ();
+        String url = QueryBuilder.getSubmitOrderUrl();
 
         if (_data != null) {
             baseModel.executePostJsonRequest(url, _data, TAG);
@@ -535,166 +567,54 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         }
     }
 
-    @Override
-    public void onMapReady(GoogleMap map) {
-        mGoogleMap = map;
-        requestPermission();
-    }
-
-    /**
-     * Request for the runtime permission (SDK >= Marshmallow devices)
-     */
-    private void requestPermission() {
-        if (PermissionUtil.hasPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            initMap();
-        } else {
-            PermissionUtil.requestPermission(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PermissionUtil.REQUEST_CODE_LOCATION);
-        }
-    }
-
-    private void initMap() {
-        //Show the pin in map.
-        if (UserPreference.getAddress() != null) {
-            locateAddress(mCustomerAddress.getText().toString() + BLANK_SPACE +
-                    mCustomerCity.getText() + BLANK_SPACE +
-                    mCustomerState.getText());
-        }
-        setMap();
-    }
-
-    private void setMap() {
+    public JSONObject getDeliveryAddress() {
+        JSONObject deliveryAddress = new JSONObject();
         try {
-            mGoogleMap.setMyLocationEnabled(true);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-        LatLng location = new LatLng(mLatitude, mLongitude);
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 16));
+            deliveryAddress.put("customer_name", mCustomerName.getText().toString());
+            deliveryAddress.put("address", mCustomerAddress.getText().toString());
+            deliveryAddress.put("city", mCustomerCity.getText().toString());
+            deliveryAddress.put("state", mCustomerState.getText().toString());
+            deliveryAddress.put("zip", mCustomerZip.getText().toString());
+            deliveryAddress.put("primary_phone", mCustomerPrimaryPhone.getText().toString());
+            deliveryAddress.putOpt("alternate_phone", mCustomerAlternatePhone.getText().toString());
 
-        if (null != mMarker) {
-            mMarker.remove();
-        }
-        mMarker = mGoogleMap.addMarker(new MarkerOptions()
-                .title(getCityName()).visible(true)
-                .position(location));
-        mMarker.showInfoWindow();
-    }
-
-    private String getCityName() {
-        Geocoder geocoder = new Geocoder(AddressActivity.this, Locale.getDefault());
-        List<Address> addresses;
-        String cityName = mCustomerAddress.getText().toString();
-        try {
-            addresses = geocoder.getFromLocation(mLatitude, mLongitude, 1);
-            cityName = addresses.get(0).getAddressLine(0);
-        } catch (IOException | IndexOutOfBoundsException e) {
-            e.printStackTrace();
-        }
-        return cityName;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case PermissionUtil.REQUEST_CODE_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    initMap();
-                } else {
-                    if (PermissionUtil.showRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                        snackBarRequestPermission();
-                    } else {
-                        snackBarRedirectToSettings();
-                    }
-                }
-                break;
-        }
-    }
-
-    /**
-     * Displays the snack bar to request the permission from user
-     */
-    private void snackBarRequestPermission() {
-        Snackbar snackbar = Snackbar.make(mRootLayout, getResources().getString(R.string
-                .s_required_permission_location), Snackbar.LENGTH_INDEFINITE).setAction(getResources().getString(R.string
-                .s_action_request_again), new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestPermission();
-            }
-        });
-        snackbar.show();
-    }
-
-    /**
-     * If the user checked "Never ask again" option and deny the permission then request dialog
-     * cannot be invoked. So display SnackBar to redirect to Settings to grant the permissions
-     */
-    private void snackBarRedirectToSettings() {
-        Snackbar snackbar = Snackbar.make(mRootLayout, getResources()
-                .getString(R.string.s_required_permission_settings), Snackbar.LENGTH_INDEFINITE)
-                .setAction(getResources().getString(R.string.s_action_redirect_settings), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Navigate to app details settings
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package", getPackageName(), null);
-                        intent.setData(uri);
-                        startActivityForResult(intent, PermissionUtil.REQUEST_CODE_LOCATION);
-                    }
-                });
-        snackbar.show();
-    }
-
-    public JSONObject getDeliveryAddress () {
-        JSONObject deliveryAddress = new JSONObject ();
-        try{
-            deliveryAddress.put ("customer_name", mCustomerName.getText ().toString ());
-            deliveryAddress.put ("address", mCustomerAddress.getText ().toString ());
-            deliveryAddress.put ("city", mCustomerCity.getText ().toString ());
-            deliveryAddress.put ("state", mCustomerState.getText ().toString ());
-            deliveryAddress.put ("zip", mCustomerZip.getText ().toString ());
-            deliveryAddress.put ("primary_phone", mCustomerPrimaryPhone.getText ().toString ());
-            deliveryAddress.putOpt ("alternate_phone", mCustomerAlternatePhone.getText ().toString ());
-
-        }catch (JSONException jsonEx){
+        } catch (JSONException jsonEx) {
             deliveryAddress = null;
-            Logger.log (TAG, "onClick - btnContinue: ", jsonEx.getMessage (), AppConstant.LOG_LEVEL_ERR);
+            Logger.log(TAG, "onClick - btnContinue: ", jsonEx.getMessage(), AppConstant.LOG_LEVEL_ERR);
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             deliveryAddress = null;
-            Logger.log (TAG, "onClick - btnContinue: ", ex.getMessage (), AppConstant.LOG_LEVEL_ERR);
+            Logger.log(TAG, "onClick - btnContinue: ", ex.getMessage(), AppConstant.LOG_LEVEL_ERR);
         }
 
         return deliveryAddress;
     }
 
-    private JSONArray getCartItems (Context _context) {
+    private JSONArray getCartItems(Context _context) {
         JSONArray products = null;
 
-        LocalDAO localDAO = new LocalDAO (_context);
-        ArrayList<ShoppingCart> cartItems = localDAO.getCartItems ();
-        try{
-            if(cartItems != null && cartItems.size ()>0){
-                products = new JSONArray ();
-                for(ShoppingCart item : cartItems){
-                    JSONObject product = new JSONObject ();
-                    product.put ("product_id", item.getProductID ());
-                    product.put ("product_qty", item.getProductQuantity ());
-                    product.putOpt ("user_message", item.getUserMessage ());
+        LocalDAO localDAO = new LocalDAO(_context);
+        ArrayList<ShoppingCart> cartItems = localDAO.getCartItems();
+        try {
+            if (cartItems != null && cartItems.size() > 0) {
+                products = new JSONArray();
+                for (ShoppingCart item : cartItems) {
+                    JSONObject product = new JSONObject();
+                    product.put("product_id", item.getProductID());
+                    product.put("product_qty", item.getProductQuantity());
+                    product.putOpt("user_message", item.getUserMessage());
 
-                    products.put (product);
+                    products.put(product);
 
                 }
 
-            }else{
+            } else {
                 products = null;
             }
-        }catch (JSONException jsonEx){
+        } catch (JSONException jsonEx) {
             products = null;
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             products = null;
 
         }
