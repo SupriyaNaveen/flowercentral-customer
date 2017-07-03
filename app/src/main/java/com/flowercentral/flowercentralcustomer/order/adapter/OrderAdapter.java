@@ -1,20 +1,23 @@
 package com.flowercentral.flowercentralcustomer.order.adapter;
 
 import android.content.Context;
+import android.support.transition.TransitionManager;
+
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.flowercentral.flowercentralcustomer.R;
-import com.flowercentral.flowercentralcustomer.cart.adapter.CartItemAdapter;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnItemClickListener;
 import com.flowercentral.flowercentralcustomer.common.model.Order;
-import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
+import com.flowercentral.flowercentralcustomer.common.model.Product;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -30,15 +33,19 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private static final int VIEW_TYPE_EMPTY_LIST = 0;
     private static final int VIEW_TYPE_NON_EMPTY_LIST = 1;
+    private final LayoutInflater mLayoutInflater;
 
     private Context mContext;
     private ArrayList<Order> mMyOrders;
     private OnItemClickListener mItemClickListener;
+    private int mExpandedPosition = -1;
+
 
     public OrderAdapter(Context _context, ArrayList<Order> _orders, OnItemClickListener _itemClickListener){
         mContext = _context;
         mMyOrders = _orders;
         mItemClickListener = _itemClickListener;
+        mLayoutInflater = LayoutInflater.from(mContext);
     }
 
     @Override
@@ -115,7 +122,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         switch (viewType) {
             case VIEW_TYPE_EMPTY_LIST:
 
-                View viewEmptyList = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_no_order_item, parent, false);
+                //View viewEmptyList = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_no_order_item, parent, false);
+                View viewEmptyList = mLayoutInflater.inflate(R.layout.layout_no_order_item, parent, false);
                 viewEmptyList.setTag("VIEW_EMPTY_LIST");
                 viewHolder = new OrderAdapter.EmptyListViewHolder(viewEmptyList);
 
@@ -123,7 +131,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             case VIEW_TYPE_NON_EMPTY_LIST:
 
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_order_item, parent, false);
+                //view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_order_item, parent, false);
+                view = mLayoutInflater.inflate(R.layout.layout_order_item, parent, false);
                 view.setTag("VIEW_LIST");
                 viewHolder = new OrderAdapter.ViewListHolder(view);
 
@@ -135,7 +144,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder (RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder (RecyclerView.ViewHolder holder, final int position) {
         Order orderItem = null;
         if (mMyOrders != null && mMyOrders.size() > 0) {
             orderItem = mMyOrders.get(position);
@@ -144,58 +153,56 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
 
         if (holder instanceof OrderAdapter.ViewListHolder) {
+            final boolean isExpanded = position==mExpandedPosition;
 
-            OrderAdapter.ViewListHolder viewListHolder = (OrderAdapter.ViewListHolder) holder;
+            final OrderAdapter.ViewListHolder viewListHolder = (OrderAdapter.ViewListHolder) holder;
 
-            /*if (orderItem.getProductImage () != null) {
-                Picasso.with(mContext).load(orderItem.getProductImage ()).into(viewListHolder.imgProduct);
-            } else {
-                //Default image
-            }
+            ArrayList<Product> products = orderItem.getProducts ();
 
+            if(products != null && products.size ()>0){
 
-            if(cartItem.getShoppingCartQuantity ()>0){
-                viewListHolder.qty.setText (String.valueOf (cartItem.getShoppingCartQuantity ()));
-            }else {
-                viewListHolder.qty.setText (String.valueOf (0));
-            }
-            viewListHolder.title.setText(cartItem.getProductName ());
-            viewListHolder.description.setText("");
-            viewListHolder.price.setText(String.format("$%S", cartItem.getProductPrice ()));
+                viewListHolder.itemContainer.removeAllViews ();
 
-            if (cartItem.getShoppingCartQuantity () > 0) {
-                viewListHolder.qty.setText(String.valueOf(cartItem.getShoppingCartQuantity ()));
-            } else {
-                viewListHolder.qty.setText(String.valueOf(0));
+                for(Product product : products){
+                    View itemLayout = mLayoutInflater.inflate (R.layout.layout_item, null);
+                    itemLayout.setId (View.generateViewId ());
+                    ImageView imgItem = (ImageView) itemLayout.findViewById (R.id.img_item);
+                    TextView txtFlowerName = (TextView) itemLayout.findViewById (R.id.txt_item_title);
+                    TextView txtDesc = (TextView) itemLayout.findViewById (R.id.txt_item_desc);
+                    TextView txtPrice = (TextView) itemLayout.findViewById (R.id.txt_item_price);
+                    TextView txtUserMsg = (TextView) itemLayout.findViewById (R.id.txt_user_message);
 
-            }
-
-            viewListHolder.plus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mItemClickListener != null) {
-                        mItemClickListener.onItemClicked("plus", position, mCartItems.get(position));
+                    if (product.getImage () != null) {
+                        Picasso.with(mContext).load(product.getImage ()).into(imgItem);
+                    } else {
+                        //Default image
                     }
+                    txtFlowerName.setText (product.getFlowerName ());
+                    txtDesc.setText (product.getDescription ());
+                    txtPrice.setText (String.valueOf (product.getPrice ()));
+
+                    if(!TextUtils.isEmpty (product.getUserMessage ())){
+                        txtUserMsg.setText (product.getUserMessage ());
+                    }
+
+
+                    viewListHolder.itemContainer.addView (itemLayout);
+
+                }
+
+            }
+
+            viewListHolder.itemExpandedWrapper.setVisibility (isExpanded==true?View.VISIBLE:View.GONE);
+            viewListHolder.txtMore.setActivated (isExpanded);
+
+            viewListHolder.txtMore.setOnClickListener (new View.OnClickListener () {
+                @Override
+                public void onClick (View v) {
+                    mExpandedPosition = isExpanded ? -1:position;
+                    TransitionManager.beginDelayedTransition(viewListHolder.itemInnerWrapper);
+                    notifyDataSetChanged();
                 }
             });
-
-            viewListHolder.minus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mItemClickListener != null) {
-                        mItemClickListener.onItemClicked("minus", position, mCartItems.get(position));
-                    }
-                }
-            });
-
-            viewListHolder.remove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mItemClickListener != null) {
-                        mItemClickListener.onItemDeleted(position, mCartItems.get(position));
-                    }
-                }
-            });*/
 
 
         } else if (holder instanceof OrderAdapter.EmptyListViewHolder) {
@@ -220,25 +227,18 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private class ViewListHolder extends RecyclerView.ViewHolder {
 
-        /*ImageView imgProduct;
-        TextView title;
-        TextView description;
-        TextView price;
-        Button plus;
-        TextView qty;
-        Button minus;
-        TextView remove;*/
+        LinearLayout itemInnerWrapper;
+        LinearLayout itemExpandedWrapper;
+        LinearLayout itemContainer;
+        TextView txtMore;
 
         public ViewListHolder(View itemView) {
             super(itemView);
-            /*imgProduct = (ImageView) itemView.findViewById(R.id.img_product);
-            title = (TextView) itemView.findViewById(R.id.txt_item_title);
-            description = (TextView) itemView.findViewById(R.id.txt_item_desc);
-            price = (TextView) itemView.findViewById(R.id.txt_item_price);
-            plus = (Button) itemView.findViewById(R.id.btn_plus);
-            minus = (Button) itemView.findViewById(R.id.btn_minus);
-            qty = (TextView) itemView.findViewById(R.id.txt_qty);
-            remove = (TextView) itemView.findViewById(R.id.btn_remove);*/
+
+            itemInnerWrapper = (LinearLayout) itemView.findViewById (R.id.ll_order_item_inner_wrapper);
+            itemExpandedWrapper = (LinearLayout) itemView.findViewById (R.id.ll_expanded_item_content_wrapper);
+            txtMore = (TextView) itemView.findViewById (R.id.txt_more);
+            itemContainer = (LinearLayout) itemView.findViewById (R.id.item_container);
 
         }
     }

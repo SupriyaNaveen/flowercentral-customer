@@ -142,6 +142,15 @@
     <string name="msg_order_fail">Oops! we have encountered some problem. Please try again!</string>
     <string name="msg_registering_order">Placing your order.</string>
     <string name="title_activity_order">My Order</string>
+    <string name="lbl_order">Order No</string>
+    <string name="lbl_orderDate">Ordered On</string>
+    <string name="lbl_see_items">See Items</string>
+    <string name="lbl_orderQty">Item</string>
+    <string name="lbl_orderAmount">Amount</string>
+    <string name="lbl_SchdDelivery">Schd. Delivery</string>
+    <string name="lbl_schdDeliveryDate">To Be Delivered On</string>
+    <string name="lbl_items">Items</string>
+    <string name="lbl_DeliveryAddress">Delivered At</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

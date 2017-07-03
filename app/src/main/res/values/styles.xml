@@ -49,6 +49,11 @@
         <item name="android:padding">5dp</item>
     </style>
 
+    <style name="AppTheme.Label1" parent="AppTheme">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorSecondaryText</item>
+        <item name="android:padding">5dp</item>
+    </style>
 
     <style name="AppTheme.Title1" parent="AppTheme">
         <item name="android:textAllCaps">true</item>

@@ -50,6 +50,8 @@ public class Product implements Parcelable, Comparable<Product>{
     @SerializedName ("tag")
     private ArrayList<String> mTags;
 
+    private String mUserMessage;
+
     public Product () {
 
     }
@@ -66,7 +68,7 @@ public class Product implements Parcelable, Comparable<Product>{
         mIsLiked = in.readInt ();
         mRelatedImages = in.readArrayList (String.class.getClassLoader ());
         mTags = in.readArrayList (String.class.getClassLoader ());
-
+        mUserMessage = in.readString ();
     }
 
     @Override
@@ -82,6 +84,7 @@ public class Product implements Parcelable, Comparable<Product>{
         dest.writeInt (mIsLiked);
         dest.writeList (mRelatedImages);
         dest.writeList (mTags);
+        dest.writeString (mUserMessage);
     }
 
     @Override
@@ -261,4 +264,11 @@ public class Product implements Parcelable, Comparable<Product>{
         }
     };
 
+    public String getUserMessage () {
+        return mUserMessage;
+    }
+
+    public void setUserMessage (String userMessage) {
+        mUserMessage = userMessage;
+    }
 }

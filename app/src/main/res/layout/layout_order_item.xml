@@ -1,7 +1,287 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv_order_item_outer_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
+    android:layout_marginBottom="1dp"
+    app:cardElevation="@dimen/cardview_default_elavation"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="false"
+    app:contentPadding="@dimen/dp5">
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_order_item_inner_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:padding="@dimen/dp2"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/img_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"/>
+                <TextView
+                    android:id="@+id/txtOrderStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Delivered"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="12sp"
+                    android:background="@color/colorPrimary"
+                    style="@style/AppTheme.Label1"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_item_content_wrapper"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".7"
+                android:orientation="vertical"
+                android:paddingLeft="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/lblOrder"
+                        android:layout_width="0dp"
+                        android:layout_weight=".4"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_order"
+                        style="@style/AppTheme.Label1"
+                        android:gravity="left|center_vertical"/>
+
+                    <TextView
+                        android:id="@+id/txtOrderNo"
+                        android:layout_width="0dp"
+                        android:layout_weight=".6"
+                        android:layout_height="wrap_content"
+                        style="@style/AppTheme.Label1"
+                        android:gravity="left|center_vertical"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/lblOrderDate"
+                        android:layout_width="0dp"
+                        android:layout_weight=".4"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_orderDate"
+                        android:gravity="left|center_vertical"
+                        style="@style/AppTheme.Label1"/>
+
+                    <TextView
+                        android:id="@+id/txtOrderDate"
+                        android:layout_width="0dp"
+                        android:layout_weight=".6"
+                        android:layout_height="wrap_content"
+                        android:gravity="left|center_vertical"
+                        style="@style/AppTheme.Label1"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/lblOrderQty"
+                        android:layout_width="0dp"
+                        android:layout_weight=".4"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_orderQty"
+                        android:gravity="left|center_vertical"
+                        style="@style/AppTheme.Label1"/>
+
+                    <TextView
+                        android:id="@+id/txtOrderQty"
+                        android:layout_width="0dp"
+                        android:layout_weight=".6"
+                        android:text="10"
+                        android:layout_height="wrap_content"
+                        android:gravity="left|center_vertical"
+                        style="@style/AppTheme.Label1"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/lblOrderAmount"
+                        android:layout_width="0dp"
+                        android:layout_weight=".4"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_orderAmount"
+                        android:gravity="left|center_vertical"
+                        style="@style/AppTheme.Label1"/>
+
+                    <TextView
+                        android:id="@+id/txtOrderAmount"
+                        android:layout_width="0dp"
+                        android:layout_weight=".6"
+                        android:layout_height="wrap_content"
+                        android:text="1000"
+                        android:gravity="left|center_vertical"
+                        style="@style/AppTheme.Label1"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/lblDeliveryAddress"
+                        android:layout_width="0dp"
+                        android:layout_weight=".4"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_DeliveryAddress"
+                        android:gravity="left|center_vertical"
+                        style="@style/AppTheme.Label1"/>
+
+                    <TextView
+                        android:id="@+id/txtSchdDeliveryAddress"
+                        android:layout_width="0dp"
+                        android:layout_weight=".6"
+                        android:layout_height="wrap_content"
+                        android:text="Flat No 208, Radhika Apt, Sector - 14, Dwarka, New Delhi 110078"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:gravity="left|center_vertical"
+                        style="@style/AppTheme.Label1"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/lblSchdDeliveryDate"
+                        android:layout_width="0dp"
+                        android:layout_weight=".6"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_schdDeliveryDate"
+                        android:gravity="left|center_vertical"
+                        style="@style/AppTheme.Label1"/>
+
+                    <TextView
+                        android:id="@+id/txtSchdDeliveryDate"
+                        android:layout_width="0dp"
+                        android:layout_weight=".4"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorAccent"
+                        android:text="12-NOV-2017"
+                        android:gravity="left|center_vertical"
+                        style="@style/AppTheme.Label1"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txt_more"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_see_items"
+                    android:textSize="12sp"
+                    android:gravity="end"
+                    style="@style/AppTheme.Label1"
+                    android:layout_margin="5dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_expanded_item_content_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:orientation="vertical"
+            android:background="@drawable/item_background"
+            android:stateListAnimator="@drawable/item_selected">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight=".4"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/colorDivider"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".2"
+                    android:padding="@dimen/dp2"
+                    android:gravity="center"
+                    android:text="@string/lbl_items"
+                    style="@style/AppTheme.Label1"
+                    android:textAllCaps="true"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight=".4"
+                    android:layout_gravity="center_vertical"
+                    android:background="@color/colorDivider"/>
+
+            </LinearLayout>
+
+            <!--<fragment
+                android:name="com.flowercentral.flowercentralcustomer.order.fragment.OrderFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />-->
+
+            <LinearLayout
+                android:id="@+id/item_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

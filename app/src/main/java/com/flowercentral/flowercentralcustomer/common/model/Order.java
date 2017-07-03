@@ -13,6 +13,8 @@ import java.util.ArrayList;
 
 public class Order implements Parcelable {
 
+    private String mOrderID;
+
     @SerializedName ("order_date")
     private String mOrderDate;
 
@@ -44,11 +46,12 @@ public class Order implements Parcelable {
     private ArrayList<Product> mProducts;
 
 
-    protected Order () {
+    public Order () {
 
     }
 
     protected Order (Parcel in) {
+        mOrderID = in.readString ();
         mOrderDate = in.readString ();
         mOrderTotal = in.readDouble ();
         mDeliveryAddress = in.readString ();
@@ -80,6 +83,7 @@ public class Order implements Parcelable {
 
     @Override
     public void writeToParcel (Parcel dest, int flags) {
+        dest.writeString (mOrderID);
         dest.writeString (mOrderDate);
         dest.writeDouble (mOrderTotal);
         dest.writeString (mDeliveryAddress);
@@ -173,4 +177,11 @@ public class Order implements Parcelable {
         mProducts = _products;
     }
 
+    public String getOrderID () {
+        return mOrderID;
+    }
+
+    public void setOrderID (String orderID) {
+        mOrderID = orderID;
+    }
 }

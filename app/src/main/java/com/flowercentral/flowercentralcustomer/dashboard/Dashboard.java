@@ -35,6 +35,7 @@ import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
 import com.flowercentral.flowercentralcustomer.dao.LocalDAO;
 import com.flowercentral.flowercentralcustomer.dashboard.fragment.ProductGridFragment;
 import com.flowercentral.flowercentralcustomer.launch.ui.LauncherActivity;
+import com.flowercentral.flowercentralcustomer.order.OrderActivity;
 import com.flowercentral.flowercentralcustomer.preference.UserPreference;
 import com.flowercentral.flowercentralcustomer.profile.ProfileActivity;
 import com.flowercentral.flowercentralcustomer.setting.AppConstant;
@@ -186,7 +187,8 @@ public class Dashboard extends BaseActivity
         int id = item.getItemId ();
 
         if (id == R.id.nav_orders) {
-            // Handle the camera action
+            showOrder();
+
         } else if (id == R.id.nav_profile) {
             showProfile ();
 
@@ -405,6 +407,14 @@ public class Dashboard extends BaseActivity
         intent.addFlags (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity (intent);
     }
+
+    private void showOrder () {
+        Intent intent = new Intent (mContext, OrderActivity.class);
+        intent.setAction (AppConstant.ACTIONS.SHOW_ORDER.name ());
+        intent.addFlags (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity (intent);
+    }
+
 
     private void getProductStoredLocally (Context _context) {
         //Fetch products saved locally (if any), and display

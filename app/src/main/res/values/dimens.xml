@@ -40,6 +40,7 @@
     <dimen name="profile_image_height">100dip</dimen>
     <dimen name="sp22">22sp</dimen>
     <dimen name="dp30">30dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 
 
 </resources>
