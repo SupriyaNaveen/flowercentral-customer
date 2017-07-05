@@ -30,9 +30,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class MapActivity extends BaseActivity implements OnMapReadyCallback {
 
     private GoogleMap mGoogleMap;
@@ -41,7 +38,6 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     private String mAddress;
     private boolean mIsDraggable;
 
-    @BindView(R.id.root_layout)
     RelativeLayout mRelativeLayoutRoot;
 
     @Override
@@ -49,7 +45,7 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_activity);
 
-        ButterKnife.bind(this);
+        mRelativeLayoutRoot = (RelativeLayout) findViewById(R.id.root_layout);
 
         //Setup toolbar
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
