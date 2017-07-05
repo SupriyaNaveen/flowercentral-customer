@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnItemClickListener;
@@ -21,8 +23,18 @@ import com.flowercentral.flowercentralcustomer.common.model.Product;
 import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
 import com.flowercentral.flowercentralcustomer.dao.LocalDAO;
 import com.flowercentral.flowercentralcustomer.order.adapter.OrderAdapter;
+import com.flowercentral.flowercentralcustomer.preference.UserPreference;
+import com.flowercentral.flowercentralcustomer.rest.BaseModel;
+import com.flowercentral.flowercentralcustomer.rest.QueryBuilder;
+import com.flowercentral.flowercentralcustomer.setting.AppConstant;
+import com.flowercentral.flowercentralcustomer.util.Util;
+import com.flowercentral.flowercentralcustomer.volley.ErrorData;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class OrderActivity extends BaseActivity implements OnItemClickListener {
 
@@ -39,6 +51,8 @@ public class OrderActivity extends BaseActivity implements OnItemClickListener {
     private OnDataReceiveListener onDataReceiveListener;
     private OrderAdapter mMyOrderAdapter;
     private LinearLayoutManager mLinearLayoutManager;
+
+    private MaterialDialog mProgressDialog;
 
     @Override
     protected void onCreate (Bundle savedInstanceState) {
@@ -79,7 +93,7 @@ public class OrderActivity extends BaseActivity implements OnItemClickListener {
 
         //Get orders from Local Database
         LocalDAO localDAO = new LocalDAO (_context);
-        //mMyOrders = localDAO.getAllOrders(_context);
+        //mMyOrders = localDAO.getOrders(_context);
         mMyOrders = getDummyData ();
 
         onDataReceiveListener = new OnDataReceiveListener () {
@@ -130,11 +144,6 @@ public class OrderActivity extends BaseActivity implements OnItemClickListener {
         super.onDestroy();
     }
 
-
-    private void getMyOrdersFromServer (Context _context, Activity _currentActivity) {
-
-    }
-
     @Override
     public void onItemClicked (String _type, int _position, Object _data) {
 
@@ -148,6 +157,83 @@ public class OrderActivity extends BaseActivity implements OnItemClickListener {
     //Interface to update Order data for offline use and update recycler view
     interface OnDataReceiveListener{
         public void onDataReceived(ArrayList<Order> _orders);
+    }
+
+    private void getMyOrdersFromServer(Context _context, Activity _currentActivity){
+        //Start Progress dialog
+        dismissDialog();
+
+        mProgressDialog = Util.showProgressDialog (_currentActivity, null, getString (R.string.msg_registering_user), false);
+
+        BaseModel<JSONObject> baseModel = new BaseModel<JSONObject> (_context) {
+            @Override
+            public void onSuccess (int _statusCode, Map<String, String> _headers, JSONObject _response) {
+                //CLose Progress dialog
+                dismissDialog();
+                if(_response != null){
+                    try{
+                        if(_response.getString ("status").equalsIgnoreCase ("1")){
+
+                        }else{
+                            Snackbar.make(mOrderOuterWapper, getString (R.string.msg_user_not_registered),Snackbar.LENGTH_SHORT).show();
+                        }
+
+                    }catch (JSONException jsEx){
+                        Snackbar.make(mOrderOuterWapper, jsEx.getMessage (),Snackbar.LENGTH_SHORT).show();
+                    }
+                }else {
+                    Snackbar.make(mOrderOuterWapper, "No response from server",Snackbar.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError (ErrorData error) {
+                //Close Progress dialog
+                dismissDialog();
+                if(error != null){
+
+                    switch (error.getErrorType()){
+                        case NETWORK_NOT_AVAILABLE:
+                            Snackbar.make(mOrderOuterWapper, getResources().getString(R.string.msg_internet_unavailable),Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case INTERNAL_SERVER_ERROR:
+                            Snackbar.make(mOrderOuterWapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case CONNECTION_TIMEOUT:
+                            Snackbar.make(mOrderOuterWapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case APPLICATION_ERROR:
+                            Snackbar.make(mOrderOuterWapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case INVALID_INPUT_SUPPLIED:
+                            Snackbar.make(mOrderOuterWapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case AUTHENTICATION_ERROR:
+                            Snackbar.make(mOrderOuterWapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            break;
+                        case UNAUTHORIZED_ERROR:
+                            Snackbar.make(mOrderOuterWapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            break;
+                    }
+                }
+            }
+        };
+
+        String url = QueryBuilder.getLoginUrl ();
+        baseModel.executeGetJsonArrayRequest (url, TAG);
+
+    }
+
+    private void dismissDialog() {
+        try {
+
+            if (mProgressDialog != null && mProgressDialog.isShowing() && !isFinishing()) {
+                mProgressDialog.dismiss();
+                mProgressDialog = null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     ArrayList<Order> getDummyData(){

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -543,7 +544,15 @@ public class LocalDAO {
     }
 
     //======================= Order related queries =======================
-    public ArrayList<Order> getAllOrders (Context _context) {
+
+    public ArrayList<Order> getOrders (Context _context, @Nullable Integer _id) {
         return null;
     }
+
+    public boolean addOrder(Context _context, Order _order){return false;}
+
+    public boolean deleteOrders(Context _context, @Nullable Integer _id){return false; }
+
+    public boolean updateOrderSyncStatus(Context _context, int _status){ return false;}
+
 }
