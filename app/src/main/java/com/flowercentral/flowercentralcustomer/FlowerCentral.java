@@ -7,10 +7,13 @@ import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
 
+import com.crashlytics.android.Crashlytics;
 import com.flowercentral.flowercentralcustomer.preference.UserPreference;
 import com.flowercentral.flowercentralcustomer.util.Logger;
 
 import java.util.List;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by Ashish Upadhyay on 4/29/17.
@@ -26,6 +29,7 @@ public class FlowerCentral extends Application {
     @Override
     public void onCreate () {
         super.onCreate ();
+        Fabric.with(this, new Crashlytics());
         mContext = this;
         mAppInstance = this;
 
