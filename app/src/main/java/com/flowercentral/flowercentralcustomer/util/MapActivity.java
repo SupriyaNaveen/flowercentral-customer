@@ -1,10 +1,16 @@
 package com.flowercentral.flowercentralcustomer.util;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -102,6 +108,8 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
     }
 
     private void setMap() {
+
+        checkForLocationEnabled();
         try {
             mGoogleMap.setMyLocationEnabled(true);
         } catch (SecurityException e) {
@@ -141,6 +149,27 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
                 marker.showInfoWindow();
             }
         });
+    }
+
+    private void checkForLocationEnabled() {
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+        }
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, please enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private String getCityName() {
@@ -220,6 +249,26 @@ public class MapActivity extends BaseActivity implements OnMapReadyCallback {
         }
         super.onBackPressed();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        registerReceiver(m_gpsChangeReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+    }
+
+    @Override
+    protected void onStop() {
+        // Unregister since the activity is not visible
+        unregisterReceiver(m_gpsChangeReceiver);
+        super.onStop();
+    }
+
+    private BroadcastReceiver m_gpsChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            checkForLocationEnabled();
+        }
+    };
 }
 
 
