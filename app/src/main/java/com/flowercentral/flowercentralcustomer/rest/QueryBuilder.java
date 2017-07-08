@@ -71,4 +71,11 @@ public class QueryBuilder {
         return sb.toString();
 
     }
+
+    public static String getPreviousOrderUrl () {
+        StringBuilder sb = new StringBuilder ();
+        sb.append(BuildConfig.SERVER);
+        sb.append ("previous_orders");
+        return sb.toString ();
+    }
 }

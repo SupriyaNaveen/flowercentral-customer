@@ -12,6 +12,23 @@ import java.util.ArrayList;
  */
 
 public class Order implements Parcelable {
+/*
+
+    "id": "0",
+            "payment_status": "0",
+            "order_date": "2017-07-26",
+            "address": "B-53, Janakpuri Swachh apartments Delhi-110003",
+            "status": "Delivered",
+            "message": "Success!!",
+            "delivered_at": "2017-08-01 13:00",
+            "product_details": [
+    {
+        "title": "10 Roses Bunch",
+            "category": "XL",
+            "price": "299",
+            "img_url": "https://thumbs.dreamstime.com/z/spring-easter-tulips-bucket-29667967.jpg"
+    }
+*/
 
     private String mOrderID;
 
@@ -44,6 +61,9 @@ public class Order implements Parcelable {
 
     @SerializedName ("order_date")
     private ArrayList<Product> mProducts;
+
+    @SerializedName ("payment_status")
+    private int mPaymentStatus;
 
 
     public Order () {

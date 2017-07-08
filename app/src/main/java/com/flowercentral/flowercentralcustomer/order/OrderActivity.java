@@ -219,7 +219,7 @@ public class OrderActivity extends BaseActivity implements OnItemClickListener {
             }
         };
 
-        String url = QueryBuilder.getLoginUrl ();
+        String url = QueryBuilder.getPreviousOrderUrl ();
         baseModel.executeGetJsonArrayRequest (url, TAG);
 
     }
