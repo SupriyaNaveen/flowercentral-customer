@@ -1,7 +1,6 @@
 package com.flowercentral.flowercentralcustomer.dashboard.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -97,6 +96,19 @@ public class ProductGridFragment extends Fragment implements OnItemClickListener
             //Get Adapter
             mProductViewAdapter = new ProductViewAdapter (mContext, mSelectedView, mProductList, this);
             mGridLayoutManager = new GridLayoutManager (mContext,2);
+            mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    switch (mProductViewAdapter.getItemViewType(position)) {
+                        case ProductViewAdapter.VIEW_TYPE_EMPTY_LIST:
+                            return 2;
+                        case ProductViewAdapter.VIEW_TYPE_NON_EMPTY_LIST:
+                            return 1;
+                        default:
+                            return 1;
+                    }
+                }
+            });
             mRVProductList.setLayoutManager(mGridLayoutManager);
 
         } else if(mSelectedView == AppConstant.VIEW_TYPE.LIST.ordinal ()){

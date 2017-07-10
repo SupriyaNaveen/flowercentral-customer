@@ -30,8 +30,8 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private final String TAG = ProductViewAdapter.class.getSimpleName ();
 
-    private static final int VIEW_TYPE_EMPTY_LIST = 0;
-    private static final int VIEW_TYPE_NON_EMPTY_LIST = 1;
+    public static final int VIEW_TYPE_EMPTY_LIST = 0;
+    public static final int VIEW_TYPE_NON_EMPTY_LIST = 1;
 
     private Context mContext;
     private int mSelectedView;
