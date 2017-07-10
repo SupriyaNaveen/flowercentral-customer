@@ -30,6 +30,7 @@ import com.flowercentral.flowercentralcustomer.setting.AppConstant;
 import com.flowercentral.flowercentralcustomer.util.Util;
 import com.flowercentral.flowercentralcustomer.volley.ErrorData;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -76,7 +77,7 @@ public class OrderActivity extends BaseActivity implements OnItemClickListener {
 
     }
 
-    private void initializeView (Context _context) {
+    private void initializeView (final Context _context) {
         mOrderOuterWapper = (RelativeLayout) findViewById (R.id.rl_order_outer_wrapper);
         mOrderWrapper = (LinearLayout) findViewById (R.id.ll_order_wrapper);
         mOrderRecyclerView = (RecyclerView) findViewById (R.id.rv_order_list);
@@ -93,14 +94,16 @@ public class OrderActivity extends BaseActivity implements OnItemClickListener {
 
         //Get orders from Local Database
         LocalDAO localDAO = new LocalDAO (_context);
-        //mMyOrders = localDAO.getOrders(_context);
-        mMyOrders = getDummyData ();
+        mMyOrders = localDAO.getOrders(_context, null);
 
         onDataReceiveListener = new OnDataReceiveListener () {
 
             @Override
-            public void onDataReceived (ArrayList<Order> _orders) {
-
+            public void onDataReceived () {
+                LocalDAO localDAO = new LocalDAO (mContext);
+                ArrayList<Order> orders = localDAO.getOrders (mContext, null);
+                mMyOrders.addAll (orders);
+                mMyOrderAdapter.notifyDataSetChanged ();
             }
         };
 
@@ -156,30 +159,32 @@ public class OrderActivity extends BaseActivity implements OnItemClickListener {
 
     //Interface to update Order data for offline use and update recycler view
     interface OnDataReceiveListener{
-        public void onDataReceived(ArrayList<Order> _orders);
+        public void onDataReceived();
     }
 
-    private void getMyOrdersFromServer(Context _context, Activity _currentActivity){
+    private void getMyOrdersFromServer(final Context _context, Activity _currentActivity){
         //Start Progress dialog
         dismissDialog();
 
         mProgressDialog = Util.showProgressDialog (_currentActivity, null, getString (R.string.msg_registering_user), false);
 
-        BaseModel<JSONObject> baseModel = new BaseModel<JSONObject> (_context) {
+        BaseModel<JSONArray> baseModel = new BaseModel<JSONArray> (_context) {
             @Override
-            public void onSuccess (int _statusCode, Map<String, String> _headers, JSONObject _response) {
+            public void onSuccess (int _statusCode, Map<String, String> _headers, JSONArray _response) {
                 //CLose Progress dialog
                 dismissDialog();
                 if(_response != null){
                     try{
-                        if(_response.getString ("status").equalsIgnoreCase ("1")){
-
-                        }else{
-                            Snackbar.make(mOrderOuterWapper, getString (R.string.msg_user_not_registered),Snackbar.LENGTH_SHORT).show();
+                        LocalDAO localDAO = new LocalDAO (_context);
+                        boolean isAdded = localDAO.addOrder (_context, _response);
+                        if(isAdded){
+                            if(onDataReceiveListener != null){
+                                onDataReceiveListener.onDataReceived ();
+                            }
                         }
 
-                    }catch (JSONException jsEx){
-                        Snackbar.make(mOrderOuterWapper, jsEx.getMessage (),Snackbar.LENGTH_SHORT).show();
+                    }catch (Exception ex){
+                        Snackbar.make(mOrderOuterWapper, ex.getMessage (),Snackbar.LENGTH_SHORT).show();
                     }
                 }else {
                     Snackbar.make(mOrderOuterWapper, "No response from server",Snackbar.LENGTH_SHORT).show();
@@ -236,7 +241,7 @@ public class OrderActivity extends BaseActivity implements OnItemClickListener {
         }
     }
 
-    ArrayList<Order> getDummyData(){
+    /*ArrayList<Order> getDummyData(){
 
         ArrayList<Product> products = new ArrayList<Product> ();
         Product p1 = new Product ();
@@ -288,5 +293,5 @@ public class OrderActivity extends BaseActivity implements OnItemClickListener {
         orders.add (order4);
 
         return orders;
-    }
+    }*/
 }

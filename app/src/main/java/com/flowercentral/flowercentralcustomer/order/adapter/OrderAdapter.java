@@ -18,6 +18,7 @@ import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnItemClickListener;
 import com.flowercentral.flowercentralcustomer.common.model.Order;
 import com.flowercentral.flowercentralcustomer.common.model.Product;
+import com.flowercentral.flowercentralcustomer.util.CircularTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -121,8 +122,6 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
         switch (viewType) {
             case VIEW_TYPE_EMPTY_LIST:
-
-                //View viewEmptyList = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_no_order_item, parent, false);
                 View viewEmptyList = mLayoutInflater.inflate(R.layout.layout_no_order_item, parent, false);
                 viewEmptyList.setTag("VIEW_EMPTY_LIST");
                 viewHolder = new OrderAdapter.EmptyListViewHolder(viewEmptyList);
@@ -130,8 +129,6 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 break;
 
             case VIEW_TYPE_NON_EMPTY_LIST:
-
-                //view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_order_item, parent, false);
                 view = mLayoutInflater.inflate(R.layout.layout_order_item, parent, false);
                 view.setTag("VIEW_LIST");
                 viewHolder = new OrderAdapter.ViewListHolder(view);
@@ -157,13 +154,13 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             final OrderAdapter.ViewListHolder viewListHolder = (OrderAdapter.ViewListHolder) holder;
 
-            ArrayList<Product> products = orderItem.getProducts ();
+            ArrayList<Order.Product> products = orderItem.getProducts ();
 
             if(products != null && products.size ()>0){
 
                 viewListHolder.itemContainer.removeAllViews ();
 
-                for(Product product : products){
+                for(Order.Product product : products){
                     View itemLayout = mLayoutInflater.inflate (R.layout.layout_item, null);
                     itemLayout.setId (View.generateViewId ());
                     ImageView imgItem = (ImageView) itemLayout.findViewById (R.id.img_item);
@@ -177,13 +174,13 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     } else {
                         //Default image
                     }
-                    txtFlowerName.setText (product.getFlowerName ());
-                    txtDesc.setText (product.getDescription ());
+                    txtFlowerName.setText (product.getTitle ());
+                    txtDesc.setText (product.getCategory ());
                     txtPrice.setText (String.valueOf (product.getPrice ()));
 
-                    if(!TextUtils.isEmpty (product.getUserMessage ())){
+                    /*if(!TextUtils.isEmpty (product.getUserMessage ())){
                         txtUserMsg.setText (product.getUserMessage ());
-                    }
+                    }*/
 
 
                     viewListHolder.itemContainer.addView (itemLayout);
@@ -232,13 +229,33 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         LinearLayout itemContainer;
         TextView txtMore;
 
+        ImageView orderItemImage;
+        CircularTextView orderCategory;
+        TextView orderDetails;
+        TextView orderPrice;
+        TextView orderPaymentStatus;
+        TextView orderQuantity;
+        TextView orderSchedule;
+        TextView orderDeliveryDate;
+        TextView orderAddresss;
+
         public ViewListHolder(View itemView) {
             super(itemView);
 
             itemInnerWrapper = (LinearLayout) itemView.findViewById (R.id.ll_order_item_inner_wrapper);
             itemExpandedWrapper = (LinearLayout) itemView.findViewById (R.id.ll_expanded_item_content_wrapper);
-            txtMore = (TextView) itemView.findViewById (R.id.txt_more);
             itemContainer = (LinearLayout) itemView.findViewById (R.id.item_container);
+
+            orderItemImage = (ImageView) itemView.findViewById (R.id.order_item_image);
+            orderCategory = (CircularTextView) itemView.findViewById (R.id.order_category);
+            orderDetails = (TextView) itemView.findViewById (R.id.order_details);
+            orderPrice = (TextView) itemView.findViewById (R.id.order_price);
+            orderPaymentStatus = (TextView) itemView.findViewById (R.id.order_payment_status);
+            orderQuantity = (TextView) itemView.findViewById (R.id.order_quantity);
+            orderSchedule = (TextView) itemView.findViewById (R.id.order_schedule);
+            orderDeliveryDate = (TextView) itemView.findViewById (R.id.order_delivered_at);
+            orderAddresss = (TextView) itemView.findViewById (R.id.order_address);
+            txtMore = (TextView) itemView.findViewById (R.id.txt_more);
 
         }
     }

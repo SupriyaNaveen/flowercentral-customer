@@ -1,238 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cv_order_item_outer_wrapper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
-    android:layout_marginBottom="1dp"
-    app:cardElevation="@dimen/cardview_default_elavation"
-    app:cardPreventCornerOverlap="true"
-    app:cardUseCompatPadding="false"
-    app:contentPadding="@dimen/dp5">
+    android:layout_margin="@dimen/dp5"
+    app:cardBackgroundColor="@color/colorWhite">
 
     <LinearLayout
         android:id="@+id/ll_order_item_inner_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/order_detail_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".3"
-                android:padding="@dimen/dp2"
-                android:orientation="vertical">
+                android:layout_height="@dimen/dp100"
+                android:layout_margin="@dimen/dp5"
+                android:layout_weight="0.3"
+                android:background="@drawable/flower_image_frame">
 
                 <ImageView
-                    android:id="@+id/img_product"
+                    android:id="@+id/order_item_image"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"/>
-                <TextView
-                    android:id="@+id/txtOrderStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Delivered"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="12sp"
-                    android:background="@color/colorPrimary"
-                    style="@style/AppTheme.Label1"
-                    android:gravity="center"/>
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/dp5"/>
+
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_item_content_wrapper"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".7"
+                android:layout_weight="0.7"
                 android:orientation="vertical"
-                android:paddingLeft="5dp">
+                android:paddingBottom="@dimen/dp5"
+                android:paddingTop="@dimen/dp5">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.flowercentral.flowercentralbusiness.util.CircularTextView
+                        android:id="@+id/order_category"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_margin="@dimen/dp5"
+                        android:gravity="center"
+                        android:padding="@dimen/dp5"/>
+
+                    <TextView
+                        android:id="@+id/order_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@id/order_category"
+                        android:theme="@style/AppTheme.Normal"/>
+
+                    <!--<TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/order_details"
+                        android:layout_toStartOf="@id/order_category"
+                        android:text="Small desc text"
+                        android:theme="@style/AppTheme.Normal"/>-->
+                </RelativeLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/lblOrder"
-                        android:layout_width="0dp"
-                        android:layout_weight=".4"
+                        android:id="@+id/order_price"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/lbl_order"
-                        style="@style/AppTheme.Label1"
-                        android:gravity="left|center_vertical"/>
+                        android:textColor="@color/colorPrimary"
+                        style="@style/AppTheme.Label1"/>
 
                     <TextView
-                        android:id="@+id/txtOrderNo"
-                        android:layout_width="0dp"
-                        android:layout_weight=".6"
+                        android:id="@+id/order_payment_status"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/AppTheme.Label1"
-                        android:gravity="left|center_vertical"/>
-
+                        android:layout_marginStart="@dimen/dp10"
+                        android:background="@drawable/flower_image_frame"
+                        android:padding="@dimen/dp5"
+                        android:textColor="@color/colorPrimary"
+                        style="@style/AppTheme.Label1"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/order_quantity"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    style="@style/AppTheme.Label1"
+                    android:visibility="gone"/>
 
-                    <TextView
-                        android:id="@+id/lblOrderDate"
-                        android:layout_width="0dp"
-                        android:layout_weight=".4"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lbl_orderDate"
-                        android:gravity="left|center_vertical"
-                        style="@style/AppTheme.Label1"/>
-
-                    <TextView
-                        android:id="@+id/txtOrderDate"
-                        android:layout_width="0dp"
-                        android:layout_weight=".6"
-                        android:layout_height="wrap_content"
-                        android:gravity="left|center_vertical"
-                        style="@style/AppTheme.Label1"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/order_schedule"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    style="@style/AppTheme.Label1"
+                    android:visibility="gone"/>
 
-                    <TextView
-                        android:id="@+id/lblOrderQty"
-                        android:layout_width="0dp"
-                        android:layout_weight=".4"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lbl_orderQty"
-                        android:gravity="left|center_vertical"
-                        style="@style/AppTheme.Label1"/>
-
-                    <TextView
-                        android:id="@+id/txtOrderQty"
-                        android:layout_width="0dp"
-                        android:layout_weight=".6"
-                        android:text="10"
-                        android:layout_height="wrap_content"
-                        android:gravity="left|center_vertical"
-                        style="@style/AppTheme.Label1"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/order_delivered_at"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    style="@style/AppTheme.Label1"/>
 
-                    <TextView
-                        android:id="@+id/lblOrderAmount"
-                        android:layout_width="0dp"
-                        android:layout_weight=".4"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lbl_orderAmount"
-                        android:gravity="left|center_vertical"
-                        style="@style/AppTheme.Label1"/>
-
-                    <TextView
-                        android:id="@+id/txtOrderAmount"
-                        android:layout_width="0dp"
-                        android:layout_weight=".6"
-                        android:layout_height="wrap_content"
-                        android:text="1000"
-                        android:gravity="left|center_vertical"
-                        style="@style/AppTheme.Label1"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/order_address"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:id="@+id/lblDeliveryAddress"
-                        android:layout_width="0dp"
-                        android:layout_weight=".4"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lbl_DeliveryAddress"
-                        android:gravity="left|center_vertical"
-                        style="@style/AppTheme.Label1"/>
-
-                    <TextView
-                        android:id="@+id/txtSchdDeliveryAddress"
-                        android:layout_width="0dp"
-                        android:layout_weight=".6"
-                        android:layout_height="wrap_content"
-                        android:text="Flat No 208, Radhika Apt, Sector - 14, Dwarka, New Delhi 110078"
-                        android:maxLines="2"
-                        android:ellipsize="end"
-                        android:gravity="left|center_vertical"
-                        style="@style/AppTheme.Label1"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        android:id="@+id/lblSchdDeliveryDate"
-                        android:layout_width="0dp"
-                        android:layout_weight=".6"
-                        android:layout_height="wrap_content"
-                        android:text="@string/lbl_schdDeliveryDate"
-                        android:gravity="left|center_vertical"
-                        style="@style/AppTheme.Label1"/>
-
-                    <TextView
-                        android:id="@+id/txtSchdDeliveryDate"
-                        android:layout_width="0dp"
-                        android:layout_weight=".4"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorAccent"
-                        android:text="12-NOV-2017"
-                        android:gravity="left|center_vertical"
-                        style="@style/AppTheme.Label1"/>
-
-                </LinearLayout>
+                    style="@style/AppTheme.Label1"/>
 
                 <TextView
                     android:id="@+id/txt_more"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/lbl_see_items"
-                    android:textSize="12sp"
+                    android:layout_margin="5dp"
                     android:gravity="end"
+                    android:text="@string/lbl_see_items"
                     style="@style/AppTheme.Label1"
-                    android:layout_margin="5dp"/>
+                    android:textSize="12sp"/>
 
             </LinearLayout>
 
         </LinearLayout>
 
+        <!--<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp5"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <RelativeLayout
+                android:id="@+id/order_status"
+                android:layout_width="0dp"
+                android:layout_height="?android:attr/actionBarSize"
+                android:layout_marginStart="@dimen/dp2"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary">
+
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingStart="@dimen/dp5"
+                    android:text="@string/lbl_status_delivered"
+                    android:textStyle="bold"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/tv_status"
+                    android:src="@drawable/ic_status_white_24dp"/>
+            </RelativeLayout>
+
+        </LinearLayout>-->
         <LinearLayout
             android:id="@+id/ll_expanded_item_content_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:orientation="vertical"
             android:background="@drawable/item_background"
-            android:stateListAnimator="@drawable/item_selected">
+            android:orientation="vertical"
+            android:stateListAnimator="@drawable/item_selected"
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -243,33 +187,28 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_weight=".4"
                     android:layout_gravity="center_vertical"
+                    android:layout_weight=".4"
                     android:background="@color/colorDivider"/>
 
                 <TextView
+                    style="@style/AppTheme.Label1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".2"
-                    android:padding="@dimen/dp2"
                     android:gravity="center"
+                    android:padding="@dimen/dp2"
                     android:text="@string/lbl_items"
-                    style="@style/AppTheme.Label1"
                     android:textAllCaps="true"/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_weight=".4"
                     android:layout_gravity="center_vertical"
+                    android:layout_weight=".4"
                     android:background="@color/colorDivider"/>
 
             </LinearLayout>
-
-            <!--<fragment
-                android:name="com.flowercentral.flowercentralcustomer.order.fragment.OrderFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />-->
 
             <LinearLayout
                 android:id="@+id/item_container"
@@ -281,7 +220,7 @@
 
 
         </LinearLayout>
-    </LinearLayout>
 
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

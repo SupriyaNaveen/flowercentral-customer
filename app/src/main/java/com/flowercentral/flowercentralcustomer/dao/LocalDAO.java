@@ -463,7 +463,6 @@ public class LocalDAO {
         return isUpdated;
     }
 
-
     public ArrayList<ShoppingCart> getCartItems(){
         ArrayList<ShoppingCart> cartItems = null;
         ShoppingCart cartItem = null;
@@ -546,13 +545,179 @@ public class LocalDAO {
     //======================= Order related queries =======================
 
     public ArrayList<Order> getOrders (Context _context, @Nullable Integer _id) {
-        return null;
+        ArrayList<Order> orders = null;
+        Order order = null;
+        Cursor cursor = null;
+
+        String sqlQuery = "SELECT order_data FROM UserOrder";
+
+        if(_id != null && _id > 0){
+            sqlQuery = sqlQuery + " where order_id='"+_id+"'";
+        }
+
+        if (mFlowerCenterDB == null) {
+            mFlowerCenterDB = mDBHelper.getDatabase();
+        }
+
+        try{
+            cursor = mFlowerCenterDB.rawQuery(sqlQuery, null);
+
+            if(cursor != null && cursor.getCount () > 0){
+                orders = new ArrayList<Order> ();
+
+                cursor.moveToFirst();
+                while (cursor.isAfterLast() == false) {
+                    order = new Order ();
+
+                    String strOrder = cursor.getString (cursor.getColumnIndex ("order_data"));
+                    JSONObject object = new JSONObject (strOrder);
+
+                    order.setOrderID (object.getString ("id"));
+                    order.setOrderDate (object.getString ("order_date"));
+                    order.setDeliveryAddress (object.getString ("address"));
+                    order.setDeliveredAt (object.getString ("delivered_at"));
+                    order.setStatus (object.getString ("status"));
+                    order.setPaymentStatus (object.getString ("payment_status"));
+                    order.setProducts (object.getJSONArray ("product_details"));
+
+                    orders.add (order);
+
+                    cursor.moveToNext ();
+                }
+            }else{
+                Log.i(TAG, "No order");
+            }
+        }catch(JSONException jsEx){
+            jsEx.printStackTrace ();
+            orders = null;
+        }
+        catch(SQLException sqlEx){
+            sqlEx.printStackTrace ();
+            orders = null;
+        }catch (Exception ex){
+            ex.printStackTrace ();
+            orders = null;
+        }
+
+        return orders;
     }
 
-    public boolean addOrder(Context _context, Order _order){return false;}
+    public boolean addOrder(Context _context, JSONArray _orders){
+        boolean isAdded = false;
+        if(_orders == null){
+            return isAdded;
+        }
+        for(int i=0; i<_orders.length (); i++){
+            try {
+                JSONObject order = _orders.getJSONObject (i);
 
-    public boolean deleteOrders(Context _context, @Nullable Integer _id){return false; }
+                String orderID = order.getString ("id");
+                boolean isOrderExixts = isOrderExists(orderID);
 
-    public boolean updateOrderSyncStatus(Context _context, int _status){ return false;}
+                if(isOrderExixts == false){
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put ("order_id", order.getString ("id"));
+                    contentValues.put("order_data", order.toString ());
+                    contentValues.put ("isSynced", 0);
+
+                    if (mFlowerCenterDB == null) {
+                        mFlowerCenterDB = mDBHelper.getDatabase();
+                    }
+
+                    long rowID = mFlowerCenterDB.insert("UserOrder", null, contentValues);
+
+                    if (rowID == -1) {
+                        isAdded = false;
+                    } else {
+                        isAdded = true;
+                    }
+                }
+
+
+            }catch (JSONException jsEx){
+                jsEx.printStackTrace ();
+                isAdded = false;
+
+            }catch (SQLException sqlEx){
+                sqlEx.printStackTrace ();
+                isAdded = false;
+            }
+            catch (Exception ex){
+                ex.printStackTrace ();
+                isAdded = false;
+            }
+
+
+        }
+
+        return isAdded;
+    }
+
+    public boolean deleteOrders(Context _context, @Nullable Integer _id){
+        boolean status = false;
+        try{
+            String sqlQuery = "DELETE FROM Order";
+
+            if(_id != null && _id > 0){
+                sqlQuery = sqlQuery + " where order_id="+_id;
+            }
+
+            if(mFlowerCenterDB == null){
+                mFlowerCenterDB = mDBHelper.getDatabase();
+            }
+
+            mFlowerCenterDB.execSQL(sqlQuery);
+            status = true;
+        }catch (SQLException sqlEx){
+            Logger.log(TAG, "deleteOrder", sqlEx.getMessage(), AppConstant.LOG_LEVEL_ERR);
+            status = false;
+        }catch (Exception ex){
+            Logger.log(TAG, "deleteOrder", ex.getMessage(), AppConstant.LOG_LEVEL_ERR);
+            status = false;
+        }finally {
+
+        }
+        return status;
+
+    }
+
+    public boolean updateOrderSyncStatus(Context _context, int _orderId, int _status){
+        boolean isUpdated = false;
+        int qunatityTobeUpdated = 0;
+
+        if(_orderId > 0){
+
+            String sqlQuery = "UPDATE Order SET isSynced = "+_status+" WHERE order_id = "+_orderId;
+
+            if (mFlowerCenterDB == null) {
+                mFlowerCenterDB = mDBHelper.getDatabase();
+            }
+
+            Cursor cursor = mFlowerCenterDB.rawQuery(sqlQuery, null);
+            isUpdated = true;
+            if(cursor != null && cursor.getCount () > 0){
+                Log.i (TAG, "order status has been updated.");
+            }
+
+        }
+        return isUpdated;
+    }
+
+    public boolean isOrderExists(String _orderID){
+        boolean isExists = false;
+        Cursor cursor = null;
+
+        String sqlQuery = "SELECT * FROM UserOrder where order_id = "+_orderID+"";
+
+        if (mFlowerCenterDB == null) {
+            mFlowerCenterDB = mDBHelper.getDatabase();
+        }
+
+        cursor = mFlowerCenterDB.rawQuery(sqlQuery, null);
+        if(cursor != null && cursor.getCount () > 0){
+            isExists = true;
+        }
+        return isExists;
+    }
 
 }
