@@ -145,10 +145,10 @@
     <string name="lbl_order">Order No</string>
     <string name="lbl_orderDate">Ordered On</string>
     <string name="lbl_see_items">See Items</string>
-    <string name="lbl_orderQty">Item</string>
+    <string name="lbl_orderQty">Item/Amount</string>
     <string name="lbl_orderAmount">Amount</string>
     <string name="lbl_SchdDelivery">Schd. Delivery</string>
-    <string name="lbl_schdDeliveryDate">To Be Delivered On</string>
+    <string name="lbl_schdDeliveryDate">Delivered On</string>
     <string name="lbl_items">Items</string>
     <string name="lbl_DeliveryAddress">Delivered At</string>
 

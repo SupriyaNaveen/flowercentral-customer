@@ -184,6 +184,8 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
                 }else{
                     //Nothing
                 }
+                //Update cart summary
+                updateCartSummary(mCartItems);
             }
 
         }
