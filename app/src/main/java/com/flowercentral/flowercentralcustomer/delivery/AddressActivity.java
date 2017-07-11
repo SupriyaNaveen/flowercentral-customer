@@ -185,32 +185,35 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
 
     private void setMap() {
 
-        if(mLatitude == 0f && mLongitude == 0f) {
-            //TODO if location permission disabled then value will be 0
+        String url;
+        mProgressBar.setVisibility(View.VISIBLE);
+        if (mLatitude == 0f && mLongitude == 0f) {
+            url = "https://maps.googleapis.com/maps/api/staticmap?center=0,0&zoom=1" +
+                    "&size=" + mImgWidthInPx + "x" + mImgHtInPx;
         } else {
-            mProgressBar.setVisibility(View.VISIBLE);
-            String url = "https://maps.googleapis.com/maps/api/staticmap?" +
+            url = "https://maps.googleapis.com/maps/api/staticmap?" +
                     "center=" + mLatitude + "," + mLongitude +
                     "&zoom=15" +
                     "&size=" + mImgWidthInPx + "x" + mImgHtInPx +
                     "&maptype=roadmap" +
                     "&markers=color:red%7C" + mLatitude + "," + mLongitude;
-            Picasso.
-                    with(AddressActivity.this).
-                    load(url).
-                    fit().
-                    into(mMapImageView, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            mProgressBar.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onError() {
-                            mProgressBar.setVisibility(View.GONE);
-                        }
-                    });
         }
+        Picasso.
+                with(AddressActivity.this).
+                load(url).
+                fit().
+                into(mMapImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+                });
+
     }
 
     public int pxToDp(int px) {
