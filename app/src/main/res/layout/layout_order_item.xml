@@ -47,20 +47,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.flowercentral.flowercentralbusiness.util.CircularTextView
-                        android:id="@+id/order_category"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_margin="@dimen/dp5"
-                        android:gravity="center"
-                        android:padding="@dimen/dp5"/>
-
                     <TextView
                         android:id="@+id/order_details"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_toStartOf="@id/order_category"
+                        android:textStyle="bold"
                         android:theme="@style/AppTheme.Normal"/>
 
                     <!--<TextView
@@ -83,7 +74,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorPrimary"
-                        style="@style/AppTheme.Label1"/>
+                        android:textSize="@dimen/sp12"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/order_payment_status"
@@ -92,35 +84,37 @@
                         android:layout_marginStart="@dimen/dp10"
                         android:background="@drawable/flower_image_frame"
                         android:padding="@dimen/dp5"
+                        android:text="Paid"
                         android:textColor="@color/colorPrimary"
-                        style="@style/AppTheme.Label1"/>
+                        android:textSize="@dimen/sp12"/>
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/order_quantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/AppTheme.Label1"
+                    android:textSize="@dimen/sp12"
+                    android:text="Quantity"
                     android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/order_schedule"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/AppTheme.Label1"
+                    android:textSize="@dimen/sp12"
                     android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/order_delivered_at"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/AppTheme.Label1"/>
+                    android:textSize="@dimen/sp12"/>
 
                 <TextView
                     android:id="@+id/order_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/AppTheme.Label1"/>
+                    android:textSize="@dimen/sp12"/>
 
                 <TextView
                     android:id="@+id/txt_more"

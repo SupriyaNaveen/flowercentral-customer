@@ -5,7 +5,6 @@
     android:id="@+id/rl_outer_wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/flower_customer_bg"
     tools:context="com.flowercentral.flowercentralcustomer.ProductDetail.ProductDetailActivity">
 
     <include

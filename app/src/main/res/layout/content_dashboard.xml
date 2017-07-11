@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.flowercentral.flowercentralcustomer.dashboard.Dashboard"
-    tools:showIn="@layout/app_bar_dashboard"
-    android:background="@drawable/flower_customer_bg">
+    tools:showIn="@layout/app_bar_dashboard">
 
     <RelativeLayout
         android:id="@+id/content_wrapper"
