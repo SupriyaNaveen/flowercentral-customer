@@ -3,6 +3,7 @@ package com.flowercentral.flowercentralcustomer.order.adapter;
 import android.content.Context;
 import android.support.transition.TransitionManager;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.text.TextUtils;
@@ -19,6 +20,7 @@ import com.flowercentral.flowercentralcustomer.common.interfaces.OnItemClickList
 import com.flowercentral.flowercentralcustomer.common.model.Order;
 import com.flowercentral.flowercentralcustomer.common.model.Product;
 import com.flowercentral.flowercentralcustomer.util.CircularTextView;
+import com.flowercentral.flowercentralcustomer.util.Util;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -153,10 +155,26 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             final boolean isExpanded = position==mExpandedPosition;
 
             final OrderAdapter.ViewListHolder viewListHolder = (OrderAdapter.ViewListHolder) holder;
+            //viewListHolder.orderCategory.setText (orderItem.);
+            String orderDate = Util.formatDate (orderItem.getOrderDate (), "YYYY-MM-dd", "dd-MMM-yyyy");
+            viewListHolder.orderDetails.setText ("No/Date: " + orderItem.getOrderID () + " / "+orderDate);
+            viewListHolder.orderAddresss.setText (orderItem.getDeliveryAddress ());
+            String deliveryDate = Util.formatDate (orderItem.getDeliveredAt (), "YYYY-MM-dd HH:mm", "dd-MMM-yyyy");
+            viewListHolder.orderDeliveryDate.setText ("Delivered On: "+deliveryDate);
+            viewListHolder.orderPaymentStatus.setText (orderItem.getPaymentStatus ());
+            //viewListHolder.orderPrice.setText (String.valueOf (orderItem.getOrderTotal ()));
+
+
 
             ArrayList<Order.Product> products = orderItem.getProducts ();
 
             if(products != null && products.size ()>0){
+
+                if (products.get(0).getImage () != null) {
+                    Picasso.with(mContext).load(products.get(0).getImage ()).into(viewListHolder.orderItemImage);
+                } else {
+                    //Default image
+                }
 
                 viewListHolder.itemContainer.removeAllViews ();
 
@@ -165,6 +183,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     itemLayout.setId (View.generateViewId ());
                     ImageView imgItem = (ImageView) itemLayout.findViewById (R.id.img_item);
                     TextView txtFlowerName = (TextView) itemLayout.findViewById (R.id.txt_item_title);
+                    CircularTextView txtCategory = (CircularTextView) itemLayout.findViewById (R.id.txt_category);
                     TextView txtDesc = (TextView) itemLayout.findViewById (R.id.txt_item_desc);
                     TextView txtPrice = (TextView) itemLayout.findViewById (R.id.txt_item_price);
                     TextView txtUserMsg = (TextView) itemLayout.findViewById (R.id.txt_user_message);
@@ -175,12 +194,17 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                         //Default image
                     }
                     txtFlowerName.setText (product.getTitle ());
-                    txtDesc.setText (product.getCategory ());
+                    txtCategory.setText (product.getCategory ());
                     txtPrice.setText (String.valueOf (product.getPrice ()));
 
                     /*if(!TextUtils.isEmpty (product.getUserMessage ())){
                         txtUserMsg.setText (product.getUserMessage ());
                     }*/
+
+                    txtCategory.setStrokeWidth(1);
+                    txtCategory.setStrokeColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+                    txtCategory.setSolidColor(ContextCompat.getColor(mContext, R.color.colorWhite));
+                    txtCategory.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
 
 
                     viewListHolder.itemContainer.addView (itemLayout);
@@ -230,9 +254,9 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         TextView txtMore;
 
         ImageView orderItemImage;
-        CircularTextView orderCategory;
+        //CircularTextView orderCategory;
         TextView orderDetails;
-        TextView orderPrice;
+        //TextView orderPrice;
         TextView orderPaymentStatus;
         TextView orderQuantity;
         TextView orderSchedule;
@@ -247,9 +271,9 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             itemContainer = (LinearLayout) itemView.findViewById (R.id.item_container);
 
             orderItemImage = (ImageView) itemView.findViewById (R.id.order_item_image);
-            orderCategory = (CircularTextView) itemView.findViewById (R.id.order_category);
+            //orderCategory = (CircularTextView) itemView.findViewById (R.id.order_category);
             orderDetails = (TextView) itemView.findViewById (R.id.order_details);
-            orderPrice = (TextView) itemView.findViewById (R.id.order_price);
+            //orderPrice = (TextView) itemView.findViewById (R.id.order_price);
             orderPaymentStatus = (TextView) itemView.findViewById (R.id.order_payment_status);
             orderQuantity = (TextView) itemView.findViewById (R.id.order_quantity);
             orderSchedule = (TextView) itemView.findViewById (R.id.order_schedule);

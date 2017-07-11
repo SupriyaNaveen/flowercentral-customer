@@ -38,8 +38,8 @@ public class Order implements Parcelable {
     @SerializedName ("payment_status")
     private String mPaymentStatus;
 
-    //@SerializedName ("order_total")
-    //private double mOrderTotal;
+    @SerializedName ("order_total")
+    private double mOrderTotal;
 
     //@SerializedName ("latitude")
     //private Double mLatitude;
@@ -64,6 +64,7 @@ public class Order implements Parcelable {
         mDeliveredAt = in.readString ();
         mStatus = in.readString ();
         mPaymentStatus = in.readString ();
+        mOrderTotal = in.readDouble ();
         mProducts = in.readArrayList (Product.class.getClassLoader ());
 
         //mOrderTotal = in.readDouble ();
@@ -99,6 +100,7 @@ public class Order implements Parcelable {
         dest.writeString (mDeliveredAt);
         dest.writeString (mStatus);
         dest.writeString (mPaymentStatus);
+        dest.writeDouble (mOrderTotal);
         dest.writeList (mProducts);
 
         //dest.writeDouble (mOrderTotal);
@@ -194,7 +196,7 @@ public class Order implements Parcelable {
         mPaymentStatus = paymentStatus;
     }
 
-    /*public double getOrderTotal () {
+    public double getOrderTotal () {
         return mOrderTotal;
     }
 
@@ -202,7 +204,7 @@ public class Order implements Parcelable {
         mOrderTotal = _orderTotal;
     }
 
-    public Double getLatitude () {
+    /*public Double getLatitude () {
         return mLatitude;
     }
 
