@@ -1,5 +1,6 @@
 package com.flowercentral.flowercentralcustomer.dashboard;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +28,6 @@ import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.ProductDetail.ProductDetailActivity;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.cart.CartActivity;
-import com.flowercentral.flowercentralcustomer.common.component.NavigationDrawerToggle;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnFragmentInteractionListener;
 import com.flowercentral.flowercentralcustomer.common.model.Product;
 import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
@@ -66,10 +67,9 @@ public class Dashboard extends BaseActivity
     private TextView mUserName;
     private TextView mUserEmail;
     private SearchView mProductSearch;
+    private ImageView mRightNavToggleIcon;
 
     private enum OPTIONS {DEFAULT, PROFILE, DELIVERY_TIME, ORDER, HELP}
-
-    ;
 
     private RelativeLayout mContentWrapper;
     private Toolbar mToolbar;
@@ -77,7 +77,6 @@ public class Dashboard extends BaseActivity
     private ActionBarDrawerToggle mToggle;
     private NavigationView mNavigationViewLeft;
     private NavigationView mNavigationViewRight;
-    private NavigationDrawerToggle mDrawerToggle;
     private ImageView mSelView;
     private ImageView mFilter;
 
@@ -101,9 +100,39 @@ public class Dashboard extends BaseActivity
 
         setSupportActionBar(mToolbar);
 
-        mToggle = new ActionBarDrawerToggle(
-                this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawer.setDrawerListener(mToggle);
+        mToggle = new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @SuppressLint("NewApi")
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                float moveFactor = (drawerView.getWidth() * slideOffset);
+                mRightNavToggleIcon.setTranslationX(-moveFactor);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                mRightNavToggleIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_right_nav));
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                mRightNavToggleIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_left_nav));
+            }
+        };
+
+        mDrawer.addDrawerListener(mToggle);
+
+        mRightNavToggleIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mDrawer.isDrawerOpen(Gravity.END)) {
+                    mDrawer.closeDrawer(Gravity.END);
+                } else {
+                    mDrawer.openDrawer(Gravity.END);
+                }
+            }
+        });
         mToggle.syncState();
 
         //Todo Get intent
@@ -327,6 +356,7 @@ public class Dashboard extends BaseActivity
         mNavigationViewRight = (NavigationView) findViewById(R.id.nav_view_right);
         mSelView = (ImageView) findViewById(R.id.img_grid_view);
         mFilter = (ImageView) findViewById(R.id.img_filter);
+        mRightNavToggleIcon = (ImageView) findViewById(R.id.image_view_right_nav_drawer);
 
         View header = mNavigationViewLeft.getHeaderView(0);
         mUserProfilePic = (CircleImageView) header.findViewById(R.id.user_profile_pic);
