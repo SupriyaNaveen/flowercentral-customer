@@ -18,13 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.andexert.library.RippleView;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
@@ -49,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class AddressActivity extends BaseActivity implements View.OnClickListener {
+public class AddressActivity extends BaseActivity implements RippleView.OnRippleCompleteListener {
 
     private static final int REQUEST_CODE_MAP = 1000;
     private static final String TAG = AddressActivity.class.getSimpleName();
@@ -140,9 +139,9 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         mCustomerAlternatePhone = (TextInputEditText) findViewById(R.id.edt_phone2);
 
         ImageView mPickLocation = (ImageView) findViewById(R.id.img_view_locate);
-        Button mBtnContinue = (Button) findViewById(R.id.btn_continue);
-        Button mBtnCancel = (Button) findViewById(R.id.btn_cancel);
-        TextView mCheckOnDeliveryAddress = (TextView) findViewById(R.id.tv_check_on_delivery_address);
+        RippleView mBtnContinue = (RippleView) findViewById(R.id.btn_continue);
+        RippleView mBtnCancel = (RippleView) findViewById(R.id.btn_cancel);
+        RippleView mCheckOnDeliveryAddress = (RippleView) findViewById(R.id.tv_check_on_delivery_address);
 
         //Setup toolbar
         setSupportActionBar(mToolbar);
@@ -152,10 +151,26 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
         getSupportActionBar().setTitle(getString(R.string.title_activity_address));
 
         //Setup click listener
-        mPickLocation.setOnClickListener(this);
-        mBtnContinue.setOnClickListener(this);
-        mBtnCancel.setOnClickListener(this);
-        mCheckOnDeliveryAddress.setOnClickListener(this);
+        mPickLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Check the address, if there then locate the map based on that.
+                // Or else, locate the current address.
+                // On activity result change the map in this activity based on location.
+                if (mCustomerAddress.getText().length() > 0) {
+                    locateAddress(mCustomerAddress.getText().toString());
+                }
+                Intent mapIntent = new Intent(AddressActivity.this, MapActivity.class);
+                mapIntent.putExtra(getString(R.string.key_latitude), mLatitude);
+                mapIntent.putExtra(getString(R.string.key_longitude), mLongitude);
+                mapIntent.putExtra(getString(R.string.key_address), mCustomerAddress.getText());
+                mapIntent.putExtra(getString(R.string.key_is_draggable), true);
+                startActivityForResult(mapIntent, REQUEST_CODE_MAP);
+            }
+        });
+        mBtnContinue.setOnRippleCompleteListener(this);
+        mBtnCancel.setOnRippleCompleteListener(this);
+        mCheckOnDeliveryAddress.setOnRippleCompleteListener(this);
 
         mCustomerName.setText(UserPreference.getUserFirstName());
         mCustomerAddress.setText(UserPreference.getAddress());
@@ -222,7 +237,7 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
     }
 
     @Override
-    public void onClick(View v) {
+    public void onComplete(RippleView v) {
         int id = v.getId();
         switch (id) {
             case R.id.btn_continue:
@@ -283,20 +298,6 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
                     }
                 }
 
-                break;
-            case R.id.img_view_locate:
-                //Check the address, if there then locate the map based on that.
-                // Or else, locate the current address.
-                // On activity result change the map in this activity based on location.
-                if (mCustomerAddress.getText().length() > 0) {
-                    locateAddress(mCustomerAddress.getText().toString());
-                }
-                Intent mapIntent = new Intent(this, MapActivity.class);
-                mapIntent.putExtra(getString(R.string.key_latitude), mLatitude);
-                mapIntent.putExtra(getString(R.string.key_longitude), mLongitude);
-                mapIntent.putExtra(getString(R.string.key_address), mCustomerAddress.getText());
-                mapIntent.putExtra(getString(R.string.key_is_draggable), true);
-                startActivityForResult(mapIntent, REQUEST_CODE_MAP);
                 break;
 
             case R.id.btn_cancel:

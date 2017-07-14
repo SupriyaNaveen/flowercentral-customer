@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fadeScrollbars="false"
@@ -133,15 +134,22 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <TextView
+        <com.andexert.library.RippleView
             android:id="@+id/tv_check_on_delivery_address"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:layout_marginTop="@dimen/dp16"
-            android:drawableEnd="@drawable/ic_check_on_delivery"
-            android:drawablePadding="@dimen/dp10"
-            android:gravity="end|center_vertical"
-            android:text="Check on Delivery" />
+            app:rv_centered="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/ic_check_on_delivery"
+                android:drawablePadding="@dimen/dp10"
+                android:gravity="end|center_vertical"
+                android:text="Check on Delivery" />
+        </com.andexert.library.RippleView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -150,23 +158,42 @@
             android:orientation="horizontal"
             android:weightSum="2">
 
-            <Button
+            <com.andexert.library.RippleView
                 android:id="@+id/btn_continue"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
                 android:layout_marginEnd="@dimen/dp10"
                 android:layout_weight="1"
-                android:background="@drawable/button_transparent"
-                android:text="@string/btn_continue" />
+                android:background="@drawable/rounded_corner_nofill"
+                app:rv_centered="true">
 
-            <Button
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/button_transparent"
+                    android:gravity="center"
+                    android:text="@string/btn_continue"
+                    android:textColor="@color/color3b3b3b" />
+            </com.andexert.library.RippleView>
+
+            <com.andexert.library.RippleView
                 android:id="@+id/btn_cancel"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="@dimen/dp10"
                 android:layout_weight="1"
-                android:background="@drawable/button_transparent"
-                android:text="@string/btn_cancel" />
+                android:background="@drawable/rounded_corner_nofill"
+                app:rv_centered="true">
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:background="@drawable/button_transparent"
+                    android:gravity="center"
+                    android:text="@string/btn_cancel"
+                    android:textColor="@color/color3b3b3b" />
+            </com.andexert.library.RippleView>
 
         </LinearLayout>
 
