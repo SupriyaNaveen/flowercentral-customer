@@ -138,7 +138,7 @@
     <string name="api_key_gender">gender</string>
     <string name="msg_err_delivery_address">Please check your delivery carefully before submitting your order.</string>
     <string name="msg_err_cart_items">Please add product into your cart before submitting order.</string>
-    <string name="msg_order_success">Your order has been placed successfully.</string>
+    <string name="msg_order_success">Your order has been successfully placed .</string>
     <string name="msg_order_fail">Oops! we have encountered some problem. Please try again!</string>
     <string name="msg_registering_order">Placing your order.</string>
     <string name="title_activity_order">My Order</string>

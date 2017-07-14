@@ -423,6 +423,10 @@ public class AddressActivity extends BaseActivity implements View.OnClickListene
                 try {
                     if (response.getInt(getString(R.string.api_res_status)) == 1) {
                         Snackbar.make(mRootLayout, getString(R.string.msg_order_success), Snackbar.LENGTH_SHORT).show();
+
+                        //Redirct user to payment InstaMojo
+
+
                     } else {
                         Snackbar.make(mRootLayout, getString(R.string.msg_order_fail), Snackbar.LENGTH_SHORT).show();
                     }
