@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/dp10"
-                android:drawableStart="@drawable/ic_location_grey"
+                android:drawableStart="@drawable/ic_address"
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:maxLines="1" />
@@ -140,7 +140,7 @@
             android:layout_marginTop="@dimen/dp16"
             android:drawableEnd="@drawable/ic_check_on_delivery"
             android:drawablePadding="@dimen/dp10"
-            android:gravity="end"
+            android:gravity="end|center_vertical"
             android:text="Check on Delivery" />
 
         <LinearLayout
