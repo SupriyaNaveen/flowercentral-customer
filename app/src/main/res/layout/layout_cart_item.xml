@@ -134,7 +134,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".3"
-                android:background="@color/colorPrimaryText"
+                android:background="@android:color/black"
                 android:padding="5dp">
 
                 <com.andexert.library.RippleView
@@ -149,7 +149,7 @@
                         android:gravity="center"
                         android:text="@string/btn_remove"
                         android:textColor="@color/colorWhite"
-                        android:background="@color/black_overlay"/>
+                        android:background="@android:color/transparent"/>
                 </com.andexert.library.RippleView>
 
             </LinearLayout>
