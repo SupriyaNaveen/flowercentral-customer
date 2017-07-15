@@ -10,11 +10,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.andexert.library.RippleView;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.ProductDetail.adapter.SlidingImageAdapter;
 import com.flowercentral.flowercentralcustomer.R;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class ProductDetailActivity extends BaseActivity implements View.OnClickListener {
+public class ProductDetailActivity extends BaseActivity implements RippleView.OnRippleCompleteListener {
 
     private RelativeLayout mOuterWrapper;
     private Toolbar mToolbar;
@@ -40,8 +40,8 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
 
     private static int currentPage = 0;
     private static int NUM_PAGES = 0;
-    private ImageView mBtnCart;
-    private ImageView mBtnBuyNow;
+    private RippleView mBtnCart;
+    private RippleView mBtnBuyNow;
     private ImageView mBtnLike;
     private TextInputEditText mEdtUserMessage;
 
@@ -113,8 +113,8 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         mEdtUserMessage = (TextInputEditText) findViewById(R.id.edit_text_message);
 
         //Action Buttons
-        mBtnCart = (ImageView) findViewById (R.id.btn_add_cart);
-        mBtnBuyNow = (ImageView) findViewById (R.id.btn_buy_now);
+        mBtnCart = (RippleView) findViewById (R.id.btn_add_cart);
+        mBtnBuyNow = (RippleView) findViewById (R.id.btn_buy_now);
         mBtnLike = (ImageView) findViewById(R.id.image_view_product_like);
 
         TextView infoTextView = (TextView) findViewById(R.id.txt_product_info);
@@ -136,8 +136,8 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
         getSupportActionBar().setTitle(getString (R.string.title_activity_product_detail));
 
         //Add Action Listener
-        mBtnCart.setOnClickListener (this);
-        mBtnBuyNow.setOnClickListener (this);
+        mBtnCart.setOnRippleCompleteListener (this);
+        mBtnBuyNow.setOnRippleCompleteListener (this);
 
         ArrayList<String> relatedImages = null;
         if(mProduct != null){
@@ -203,9 +203,9 @@ public class ProductDetailActivity extends BaseActivity implements View.OnClickL
     }
 
     @Override
-    public void onClick (View v) {
+    public void onComplete(RippleView rippleView) {
         boolean status = false;
-        int id = v.getId ();
+        int id = rippleView.getId ();
         switch (id){
             case R.id.btn_add_cart:
                 status = addToCart(mProduct);

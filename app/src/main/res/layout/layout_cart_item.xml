@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv_cart_item_outer_wrapper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/dp10"
-    card_view:contentPadding="@dimen/dp10"
     card_view:cardBackgroundColor="@color/colorWhite"
-    card_view:cardPreventCornerOverlap="false"
     card_view:cardCornerRadius="@dimen/cardview_default_corner_radius"
-    card_view:cardElevation="1dp">
+    card_view:cardElevation="1dp"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:contentPadding="@dimen/dp10">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,9 +19,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentTop="true"
             android:layout_above="@+id/ll_button_wrapper"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal"
             android:weightSum="1">
 
             <LinearLayout
@@ -34,7 +33,7 @@
                     android:id="@+id/img_product"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_product_like_svg"/>
+                    android:src="@drawable/ic_product_like_svg" />
 
             </LinearLayout>
 
@@ -42,31 +41,31 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".7"
-                android:padding="@dimen/dp5"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/dp5">
 
                 <TextView
                     android:id="@+id/txt_item_title"
+                    style="@style/AppTheme.Title1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lines="1"
                     android:ellipsize="end"
-                    style="@style/AppTheme.Title1"/>
+                    android:lines="1" />
 
                 <TextView
                     android:id="@+id/txt_item_desc"
+                    style="@style/AppTheme.Normal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lines="2"
                     android:ellipsize="end"
-                    style="@style/AppTheme.Normal"/>
+                    android:lines="2" />
 
                 <TextView
                     android:id="@+id/txt_item_price"
+                    style="@style/AppTheme.Title1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorAccent"
-                    style="@style/AppTheme.Title1"/>
+                    android:textColor="@color/colorAccent" />
 
             </LinearLayout>
 
@@ -76,47 +75,58 @@
             android:id="@+id/ll_button_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:orientation="horizontal"
-            android:weightSum="1"
-            android:layout_alignParentBottom="true">
+            android:weightSum="1">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".7"
-                android:padding="5dp"
                 android:background="@color/colorPrimaryLight"
-                android:gravity="center">
+                android:gravity="center"
+                android:padding="5dp">
 
-                <Button
+                <com.andexert.library.RippleView
                     android:id="@+id/btn_minus"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:text="@string/action_minus"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sp15"
                     android:layout_marginEnd="@dimen/dp20"
-                    android:background="@drawable/rounded_corner_border_white"/>
+                    card_view:rv_centered="true">
 
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/rounded_corner_border_white"
+                        android:text="@string/action_minus"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/sp15" />
+                </com.andexert.library.RippleView>
 
                 <TextView
                     android:id="@+id/txt_qty"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:text="3"
-                    android:textColor="@color/colorWhite"
                     android:layout_gravity="center_vertical"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:text="3"
+                    android:textColor="@color/colorWhite" />
 
-                <Button
+                <com.andexert.library.RippleView
                     android:id="@+id/btn_plus"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:text="@string/action_plus"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/sp15"
                     android:layout_marginStart="@dimen/dp20"
-                    android:background="@drawable/rounded_corner_border_white"/>
+                    card_view:rv_centered="true">
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/rounded_corner_border_white"
+                        android:text="@string/action_plus"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/sp15" />
+                </com.andexert.library.RippleView>
 
             </LinearLayout>
 
@@ -124,17 +134,23 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".3"
-                android:padding="5dp"
-                android:background="@color/colorPrimaryText">
+                android:background="@android:color/black"
+                android:padding="5dp">
 
-                <TextView
+                <com.andexert.library.RippleView
                     android:id="@+id/btn_remove"
                     android:layout_width="match_parent"
-                    android:layout_height="36dp"
-                    android:text="@string/btn_remove"
-                    android:textColor="@color/colorWhite"
-                    android:gravity="center"
-                    style="@style/AppTheme.Title1"/>
+                    android:layout_height="36dp">
+
+                    <Button
+                        style="@style/AppTheme.Title1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/btn_remove"
+                        android:textColor="@color/colorWhite"
+                        android:background="@android:color/transparent"/>
+                </com.andexert.library.RippleView>
 
             </LinearLayout>
 
