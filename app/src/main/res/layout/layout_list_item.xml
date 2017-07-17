@@ -140,9 +140,7 @@
                     android:textColor="@color/colorAccent"
                     android:textSize="@dimen/sp12" />
 
-                <com.andexert.library.RippleView
-                    android:id="@+id/txt_item_buy_now"
-                    rv_centered="true"
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -150,8 +148,10 @@
                     android:background="@drawable/rounded_corner_border_pink">
 
                     <TextView
+                        android:id="@+id/txt_item_buy_now"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:clickable="true"
                         android:letterSpacing=".1"
                         android:maxLines="1"
@@ -163,7 +163,7 @@
                         android:textAllCaps="true"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/sp10" />
-                </com.andexert.library.RippleView>
+                </RelativeLayout>
 
             </RelativeLayout>
 

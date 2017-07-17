@@ -576,6 +576,8 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
             mLatitude = location.getLatitude();
         } catch (IOException e) {
             Toast.makeText(this, getString(R.string.map_error_unable_locate_address), Toast.LENGTH_LONG).show();
+        } catch (IndexOutOfBoundsException e) {
+            Toast.makeText(this, getString(R.string.map_error_unable_locate_address), Toast.LENGTH_LONG).show();
         }
     }
 

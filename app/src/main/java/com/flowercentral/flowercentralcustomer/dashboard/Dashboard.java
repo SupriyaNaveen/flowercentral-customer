@@ -104,20 +104,26 @@ public class Dashboard extends BaseActivity
             @SuppressLint("NewApi")
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
-                float moveFactor = (drawerView.getWidth() * slideOffset);
-                mRightNavToggleIcon.setTranslationX(-moveFactor);
+                if (drawerView == mNavigationViewRight) {
+                    float moveFactor = (drawerView.getWidth() * slideOffset);
+                    mRightNavToggleIcon.setTranslationX(-moveFactor);
+                }
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                mRightNavToggleIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_right_nav));
+                if (drawerView == mNavigationViewRight) {
+                    mRightNavToggleIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_right_nav));
+                }
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                mRightNavToggleIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_left_nav));
+                if (drawerView == mNavigationViewRight) {
+                    mRightNavToggleIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_left_nav));
+                }
             }
         };
 
