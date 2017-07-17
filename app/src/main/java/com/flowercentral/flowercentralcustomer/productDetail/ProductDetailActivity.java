@@ -1,4 +1,4 @@
-package com.flowercentral.flowercentralcustomer.ProductDetail;
+package com.flowercentral.flowercentralcustomer.productDetail;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.andexert.library.RippleView;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
-import com.flowercentral.flowercentralcustomer.ProductDetail.adapter.SlidingImageAdapter;
+import com.flowercentral.flowercentralcustomer.productDetail.adapter.SlidingImageAdapter;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.cart.CartActivity;
 import com.flowercentral.flowercentralcustomer.common.model.Product;

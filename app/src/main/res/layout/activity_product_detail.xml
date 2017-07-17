@@ -5,7 +5,7 @@
     android:id="@+id/rl_outer_wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.flowercentral.flowercentralcustomer.ProductDetail.ProductDetailActivity">
+    tools:context="com.flowercentral.flowercentralcustomer.productDetail.ProductDetailActivity">
 
     <include
         android:id="@+id/toolbar_default"

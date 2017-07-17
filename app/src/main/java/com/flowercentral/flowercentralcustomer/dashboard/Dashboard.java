@@ -26,7 +26,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
-import com.flowercentral.flowercentralcustomer.ProductDetail.ProductDetailActivity;
+import com.flowercentral.flowercentralcustomer.productDetail.ProductDetailActivity;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.cart.CartActivity;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnFragmentInteractionListener;
@@ -235,7 +235,6 @@ public class Dashboard extends BaseActivity
                 }
                 loadFragment(mSelectedNavOption, null);
                 break;
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -257,12 +256,14 @@ public class Dashboard extends BaseActivity
 
         } else if (id == R.id.nav_delivery_time) {
             mSelectedNavOption = SELECTED_NAV_OPTIONS.DELIVERY_TIME.ordinal ();
+            showDeliveryTime();
 
         } else if (id == R.id.nav_logout) {
             logout(mContext);
 
         } else if (id == R.id.nav_help) {
             mSelectedNavOption = SELECTED_NAV_OPTIONS.HELP.ordinal ();
+            showHelp();
 
         } else if (id == R.id.nav_small) {
             mSelectedCategoryOption = SELECTED_CATEGORY_OPTIONS.SMALL.ordinal ();
@@ -298,6 +299,14 @@ public class Dashboard extends BaseActivity
         mDrawer.closeDrawer(GravityCompat.END);
 
         return true;
+    }
+
+    private void showHelp () {
+
+    }
+
+    private void showDeliveryTime () {
+
     }
 
     @Override
