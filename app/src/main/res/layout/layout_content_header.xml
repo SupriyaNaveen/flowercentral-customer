@@ -9,23 +9,12 @@
     android:weightSum="1"
     android:background="@drawable/rounded_corner_border_grey">
 
-    <android.support.v7.widget.SearchView
-        android:id="@+id/sv_productSearchInput"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight=".7"
-        android:queryHint="@string/lbl_query_hint"
-        app:iconifiedByDefault="false"
-        android:focusable="false">
-
-    </android.support.v7.widget.SearchView>
-
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight=".3">
 
-        <ImageView
+        <!--<ImageView
             android:id="@+id/img_grid_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,7 +32,7 @@
             android:layout_marginLeft="@dimen/dp5"
             android:src="@drawable/ic_filter_svg"
             android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"/>
+            android:foreground="?android:attr/selectableItemBackground"/>-->
 
     </LinearLayout>
 

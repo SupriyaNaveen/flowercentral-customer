@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/img_no_item_found"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:src="@drawable/ic_no_product"
         android:layout_centerInParent="true"/>
 
@@ -15,8 +15,8 @@
         android:id="@+id/txt_msg_no_item_found"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Product"
-        android:textAllCaps="true"
+        android:text="@string/msg_no_product"
+        android:gravity="center"
         android:layout_marginTop="@dimen/dp10"
         android:layout_below="@+id/img_no_item_found"
         android:layout_centerHorizontal="true"/>

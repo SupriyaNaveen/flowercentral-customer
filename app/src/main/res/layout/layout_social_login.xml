@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/lbl_lets_connect"
-        android:textColor="@color/colorSecondaryText"
+        android:textColor="@color/colorWhite"
         android:textSize="15sp" />
 
     <LinearLayout
@@ -34,7 +34,7 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/ic_facebook_grey" />
+                android:background="@drawable/ic_facebook_svg" />
         </com.andexert.library.RippleView>
 
         <com.andexert.library.RippleView
@@ -47,7 +47,7 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/ic_google_plus_grey" />
+                android:background="@drawable/ic_google_plus_svg" />
         </com.andexert.library.RippleView>
 
         <com.andexert.library.RippleView
@@ -60,7 +60,7 @@
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/ic_pinterest_grey" />
+                android:background="@drawable/ic_pinterest_svg" />
         </com.andexert.library.RippleView>
 
     </LinearLayout>

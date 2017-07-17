@@ -2,16 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!--<item android:id="@+id/action_search"
+    <item android:id="@+id/action_search"
           android:orderInCategory="100"
           android:title="Search"
           android:icon="@drawable/ic_search_svg"
           app:showAsAction="collapseActionView|always"
-          app:actionViewClass="android.support.v7.widget.SearchView"/>-->
+          app:actionViewClass="android.support.v7.widget.SearchView"/>
+
+    <item
+        android:id="@+id/action_toggle_view"
+        android:orderInCategory="101"
+        android:title="@string/action_toggle_view"
+        android:icon="@drawable/ic_grid_white_24"
+        app:showAsAction="always"/>
+
     <item
         android:id="@+id/action_cart"
-        android:orderInCategory="101"
+        android:orderInCategory="102"
         android:title="@string/action_cart"
         android:icon="@drawable/ic_add_shopping_cart_svg"
         app:showAsAction="always"/>
+
 </menu>
