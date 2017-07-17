@@ -3,9 +3,9 @@ package com.flowercentral.flowercentralcustomer.cart;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,13 +13,11 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.andexert.library.RippleView;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.cart.adapter.CartItemAdapter;
@@ -41,7 +39,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class CartActivity extends BaseActivity implements View.OnClickListener, OnItemClickListener{
+public class CartActivity extends BaseActivity implements RippleView.OnRippleCompleteListener, OnItemClickListener{
 
     private static final String TAG = CartActivity.class.getSimpleName ();
 
@@ -55,7 +53,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
     private RelativeLayout mButtonWrapper;
     private TextView txtCartItem;
     private TextView txtTotalItemPrice;
-    private ImageView btnCheckout;
+    private RippleView btnCheckout;
     private MaterialDialog mProgressDialog;
     private RelativeLayout mOuterWrapper;
 
@@ -118,7 +116,7 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
         txtTotalItemPrice = (TextView) findViewById (R.id.txt_total_price);
         mButtonWrapper = (RelativeLayout) findViewById (R.id.rl_button_wrapper);
 
-        btnCheckout = (ImageView) findViewById (R.id.btn_checkout);
+        btnCheckout = (RippleView) findViewById (R.id.btn_checkout);
 
         mRVCartItemList = (RecyclerView) findViewById (R.id.rv_cart_item_list);
 
@@ -147,13 +145,13 @@ public class CartActivity extends BaseActivity implements View.OnClickListener, 
         mRVCartItemList.setAdapter (mCartItemAdapter);
 
         //Add listener
-        btnCheckout.setOnClickListener (this);
+        btnCheckout.setOnRippleCompleteListener (this);
         updateCartSummary(mCartItems);
 
     }
 
     @Override
-    public void onClick (View v) {
+    public void onComplete (RippleView v) {
         int id = v.getId ();
         switch (id){
             case R.id.btn_checkout:

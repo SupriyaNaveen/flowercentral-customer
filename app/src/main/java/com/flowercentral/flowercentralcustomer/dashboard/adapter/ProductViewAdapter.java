@@ -13,6 +13,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.andexert.library.RippleView;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnItemClickListener;
 import com.flowercentral.flowercentralcustomer.common.model.Product;
@@ -365,13 +366,14 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private class ViewGridHolder extends RecyclerView.ViewHolder{
 
         ImageView imgProduct;
-        ImageView imgCart;
+        RippleView imgCart;
+        RippleView imgLikeRipple;
         ImageView imgLike;
 
         TextView txtTitle;
         TextView txtDesc;
         TextView txtPrice;
-        TextView txtBuyNow;
+        RippleView txtBuyNow;
 
         CardView cv_wrapperLayout;
 
@@ -382,9 +384,10 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             txtTitle = (TextView) itemView.findViewById (R.id.txt_item_title);
             txtDesc = (TextView) itemView.findViewById (R.id.txt_item_desc);
             txtPrice = (TextView) itemView.findViewById (R.id.txt_item_price);
-            txtBuyNow = (TextView) itemView.findViewById (R.id.txt_item_buy_now);
+            txtBuyNow = (RippleView) itemView.findViewById (R.id.txt_item_buy_now);
             imgProduct = (ImageView) itemView.findViewById (R.id.img_item_image);
-            imgCart = (ImageView) itemView.findViewById (R.id.img_item_cart);
+            imgCart = (RippleView) itemView.findViewById (R.id.img_item_cart);
+            imgLikeRipple = (RippleView) itemView.findViewById (R.id.ripple_img_item_like);
             imgLike = (ImageView) itemView.findViewById (R.id.img_item_like);
 
         }
@@ -393,13 +396,14 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private class ViewListHolder extends RecyclerView.ViewHolder{
 
         ImageView imgProduct;
-        ImageView imgCart;
+        RippleView imgCart;
+        RippleView imgLikeRipple;
         ImageView imgLike;
 
         TextView txtTitle;
         TextView txtDesc;
         TextView txtPrice;
-        TextView txtBuyNow;
+        RippleView txtBuyNow;
 
         CardView cv_wrapperLayout;
 
@@ -409,9 +413,10 @@ public class ProductViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             txtTitle = (TextView) itemView.findViewById (R.id.txt_item_title);
             txtDesc = (TextView) itemView.findViewById (R.id.txt_item_desc);
             txtPrice = (TextView) itemView.findViewById (R.id.txt_item_price);
-            txtBuyNow = (TextView) itemView.findViewById (R.id.txt_item_buy_now);
+            txtBuyNow = (RippleView) itemView.findViewById (R.id.txt_item_buy_now);
             imgProduct = (ImageView) itemView.findViewById (R.id.img_item_image);
-            imgCart = (ImageView) itemView.findViewById (R.id.img_item_cart);
+            imgCart = (RippleView) itemView.findViewById (R.id.img_item_cart);
+            imgLikeRipple = (RippleView) itemView.findViewById (R.id.ripple_img_item_like);
             imgLike = (ImageView) itemView.findViewById (R.id.img_item_like);
         }
     }

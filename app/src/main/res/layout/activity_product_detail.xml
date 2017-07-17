@@ -104,19 +104,31 @@
         android:layout_marginTop="@dimen/dp10"
         android:weightSum="1">
 
-        <ImageView
+        <com.andexert.library.RippleView
             android:id="@+id/btn_buy_now"
+            rv_centered="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:src="@drawable/ic_buy_now" />
+            android:layout_weight="0.5">
 
-        <ImageView
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_buy_now" />
+        </com.andexert.library.RippleView>
+
+        <com.andexert.library.RippleView
             android:id="@+id/btn_add_cart"
+            rv_centered="true"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:src="@drawable/ic_add_to_cart" />
+            android:layout_weight="0.5">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add_to_cart" />
+        </com.andexert.library.RippleView>
 
     </LinearLayout>
 </RelativeLayout>

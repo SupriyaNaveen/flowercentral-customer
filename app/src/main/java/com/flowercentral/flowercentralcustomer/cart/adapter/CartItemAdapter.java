@@ -7,13 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.andexert.library.RippleView;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnItemClickListener;
-import com.flowercentral.flowercentralcustomer.common.model.Product;
 import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
 import com.squareup.picasso.Picasso;
 
@@ -103,13 +102,13 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void updateQuantity(String _type, int _position, int _qty) {
         if (mCartItems != null && mCartItems.size() > _position) {
-            int qty = mCartItems.get(_position).getShoppingCartQuantity ();
+            int qty = mCartItems.get(_position).getShoppingCartQuantity();
             if (!TextUtils.isEmpty(_type) && _type.trim().equalsIgnoreCase("plus")) {
-                mCartItems.get(_position).setShoppingCartQuantity (qty + _qty);
+                mCartItems.get(_position).setShoppingCartQuantity(qty + _qty);
                 this.notifyDataSetChanged();
             } else if (!TextUtils.isEmpty(_type) && _type.trim().equalsIgnoreCase("minus")) {
                 if (qty > 1) {
-                    mCartItems.get(_position).setShoppingCartQuantity (qty - _qty);
+                    mCartItems.get(_position).setShoppingCartQuantity(qty - _qty);
                     this.notifyDataSetChanged();
                 }
             } else {
@@ -166,50 +165,50 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (holder instanceof ViewListHolder) {
 
             ViewListHolder viewListHolder = (ViewListHolder) holder;
-            if (cartItem.getProductImage () != null) {
-                Picasso.with(mContext).load(cartItem.getProductImage ()).into(viewListHolder.imgProduct);
+            if (cartItem.getProductImage() != null) {
+                Picasso.with(mContext).load(cartItem.getProductImage()).into(viewListHolder.imgProduct);
             } else {
                 //Default image
             }
 
 
-            if(cartItem.getShoppingCartQuantity ()>0){
-                viewListHolder.qty.setText (String.valueOf (cartItem.getShoppingCartQuantity ()));
-            }else {
-                viewListHolder.qty.setText (String.valueOf (0));
+            if (cartItem.getShoppingCartQuantity() > 0) {
+                viewListHolder.qty.setText(String.valueOf(cartItem.getShoppingCartQuantity()));
+            } else {
+                viewListHolder.qty.setText(String.valueOf(0));
             }
-            viewListHolder.title.setText(cartItem.getProductName ());
+            viewListHolder.title.setText(cartItem.getProductName());
             viewListHolder.description.setText("");
-            viewListHolder.price.setText(String.format("$%S", cartItem.getProductPrice ()));
+            viewListHolder.price.setText(String.format("$%S", cartItem.getProductPrice()));
 
-            if (cartItem.getShoppingCartQuantity () > 0) {
-                viewListHolder.qty.setText(String.valueOf(cartItem.getShoppingCartQuantity ()));
+            if (cartItem.getShoppingCartQuantity() > 0) {
+                viewListHolder.qty.setText(String.valueOf(cartItem.getShoppingCartQuantity()));
             } else {
                 viewListHolder.qty.setText(String.valueOf(0));
 
             }
 
-            viewListHolder.plus.setOnClickListener(new View.OnClickListener() {
+            viewListHolder.plus.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
                 @Override
-                public void onClick(View v) {
+                public void onComplete(RippleView v) {
                     if (mItemClickListener != null) {
                         mItemClickListener.onItemClicked("plus", position, mCartItems.get(position));
                     }
                 }
             });
 
-            viewListHolder.minus.setOnClickListener(new View.OnClickListener() {
+            viewListHolder.minus.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
                 @Override
-                public void onClick(View v) {
+                public void onComplete(RippleView v) {
                     if (mItemClickListener != null) {
                         mItemClickListener.onItemClicked("minus", position, mCartItems.get(position));
                     }
                 }
             });
 
-            viewListHolder.remove.setOnClickListener(new View.OnClickListener() {
+            viewListHolder.remove.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
                 @Override
-                public void onClick(View v) {
+                public void onComplete(RippleView v) {
                     if (mItemClickListener != null) {
                         mItemClickListener.onItemDeleted(position, mCartItems.get(position));
                     }
@@ -242,10 +241,10 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         TextView title;
         TextView description;
         TextView price;
-        Button plus;
+        RippleView plus;
         TextView qty;
-        Button minus;
-        TextView remove;
+        RippleView minus;
+        RippleView remove;
 
         public ViewListHolder(View itemView) {
             super(itemView);
@@ -253,12 +252,10 @@ public class CartItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             title = (TextView) itemView.findViewById(R.id.txt_item_title);
             description = (TextView) itemView.findViewById(R.id.txt_item_desc);
             price = (TextView) itemView.findViewById(R.id.txt_item_price);
-            plus = (Button) itemView.findViewById(R.id.btn_plus);
-            minus = (Button) itemView.findViewById(R.id.btn_minus);
+            plus = (RippleView) itemView.findViewById(R.id.btn_plus);
+            minus = (RippleView) itemView.findViewById(R.id.btn_minus);
             qty = (TextView) itemView.findViewById(R.id.txt_qty);
-            remove = (TextView) itemView.findViewById(R.id.btn_remove);
-
+            remove = (RippleView) itemView.findViewById(R.id.btn_remove);
         }
     }
-
 }

@@ -7,35 +7,30 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
-
-import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.andexert.library.RippleView;
 import com.binarysoft.sociallogin.facebook.FacebookGraphListner;
 import com.binarysoft.sociallogin.facebook.FacebookUser;
 import com.binarysoft.sociallogin.google.GoogleUser;
 import com.binarysoft.sociallogin.instagram.InstagramUser;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
-import com.flowercentral.flowercentralcustomer.common.interfaces.NotifyDataChangeListener;
 import com.flowercentral.flowercentralcustomer.common.location.LocationApi;
 import com.flowercentral.flowercentralcustomer.common.location.LocationApiConstants;
-import com.flowercentral.flowercentralcustomer.common.location.service.FetchAddressIntentService;
 import com.flowercentral.flowercentralcustomer.common.model.Product;
 import com.flowercentral.flowercentralcustomer.dao.LocalDAO;
 import com.flowercentral.flowercentralcustomer.dashboard.Dashboard;
@@ -50,7 +45,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -59,9 +53,9 @@ import java.util.Map;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class LauncherActivity extends BaseActivity implements View.OnClickListener {
+public class LauncherActivity extends BaseActivity implements RippleView.OnRippleCompleteListener {
 
-    private final String TAG = LauncherActivity.class.getSimpleName ();
+    private final String TAG = LauncherActivity.class.getSimpleName();
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -79,19 +73,19 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
      * and a change of the status and navigation bar.
      */
     private static final int UI_ANIMATION_DELAY = 300;
-    private final Handler mHideHandler = new Handler ();
+    private final Handler mHideHandler = new Handler();
     private boolean mVisible;
 
     //Bind UI View Controls
-    private Button mBtnTryAgain;
+    private RippleView mBtnTryAgain;
 
     private FrameLayout mFlOuterWrapper;
     private FrameLayout mFlNoInternet;
     private LinearLayout mllLoginWrapper;
 
-    private TextView mBtnFacebook;
-    private TextView mBtnGoogle;
-    private TextView mBtnInstagram;
+    private RippleView mBtnFacebook;
+    private RippleView mBtnGoogle;
+    private RippleView mBtnInstagram;
 
     private MaterialDialog mProgressDialog;
     private MaterialDialog mDialog;
@@ -103,9 +97,9 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
     private boolean mLocationFound;
 
     @Override
-    protected void onCreate (Bundle savedInstanceState){
-        super.onCreate (savedInstanceState);
-        setContentView (R.layout.activity_launcher);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_launcher);
 
         mContext = this;
         mCurrentActivity = this;
@@ -116,65 +110,65 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
 
         mVisible = true;
 
-        mBtnTryAgain = (Button) findViewById (R.id.btn_try_again);
-        mBtnFacebook = (TextView) findViewById (R.id.btn_fb);
-        mBtnGoogle = (TextView) findViewById (R.id.btn_google);
-        mBtnInstagram = (TextView) findViewById (R.id.btn_instagram);
+        mBtnTryAgain = (RippleView) findViewById(R.id.btn_try_again);
+        mBtnFacebook = (RippleView) findViewById(R.id.btn_fb);
+        mBtnGoogle = (RippleView) findViewById(R.id.btn_google);
+        mBtnInstagram = (RippleView) findViewById(R.id.btn_instagram);
 
-        mFlOuterWrapper = (FrameLayout) findViewById (R.id.outer_wrapper);
-        mFlNoInternet = (FrameLayout) findViewById (R.id.fl_no_internet);
-        mllLoginWrapper = (LinearLayout) findViewById (R.id.login_wrapper);
+        mFlOuterWrapper = (FrameLayout) findViewById(R.id.outer_wrapper);
+        mFlNoInternet = (FrameLayout) findViewById(R.id.fl_no_internet);
+        mllLoginWrapper = (LinearLayout) findViewById(R.id.login_wrapper);
 
-        mBtnTryAgain.setOnClickListener (this);
-        mBtnFacebook.setOnClickListener (this);
-        mBtnGoogle.setOnClickListener (this);
-        mBtnInstagram.setOnClickListener (this);
+        mBtnTryAgain.setOnRippleCompleteListener(this);
+        mBtnFacebook.setOnRippleCompleteListener(this);
+        mBtnGoogle.setOnRippleCompleteListener(this);
+        mBtnInstagram.setOnRippleCompleteListener(this);
 
-        mProgressDialog = Util.showProgressDialog (mCurrentActivity, null, getString (R.string.msg_please_wait), false);
+        mProgressDialog = Util.showProgressDialog(mCurrentActivity, null, getString(R.string.msg_please_wait), false);
 
         initializeActivity(mContext);
 
         //Fetching user's current location
 
-        boolean hasLocationPermission = Util.checkLocationPermission (this);
-        if(hasLocationPermission == true){
+        boolean hasLocationPermission = Util.checkLocationPermission(this);
+        if (hasLocationPermission == true) {
             getCurrrentLocation(mContext);
-        }else{
+        } else {
 
             //Ask for permission
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) ||
-                ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)){
+                    Manifest.permission.ACCESS_COARSE_LOCATION) ||
+                    ActivityCompat.shouldShowRequestPermissionRationale(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)) {
 
-                mDialog = showDialog(mContext, getString (R.string.title_location_permission),
-                    getString (R.string.content_location_permission),
-                    false, false, getString(R.string.btn_allow), getString (R.string.btn_cancel),null);
+                mDialog = showDialog(mContext, getString(R.string.title_location_permission),
+                        getString(R.string.content_location_permission),
+                        false, false, getString(R.string.btn_allow), getString(R.string.btn_cancel), null);
 
-                mDialog.getBuilder ().onPositive (new MaterialDialog.SingleButtonCallback () {
+                mDialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick (@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         // No explanation needed, we can request the permission.
                         ActivityCompat.requestPermissions(mCurrentActivity,
-                            new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                            AppConstant.REQUEST_CODE_LOCATION_PERMISSIONS);
+                                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                                AppConstant.REQUEST_CODE_LOCATION_PERMISSIONS);
                     }
                 });
 
-                mDialog.getBuilder ().onNegative (new MaterialDialog.SingleButtonCallback () {
+                mDialog.getBuilder().onNegative(new MaterialDialog.SingleButtonCallback() {
                     @Override
-                    public void onClick (@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        mDialog.dismiss ();
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        mDialog.dismiss();
                     }
                 });
-                mDialog.show ();
+                mDialog.show();
 
             } else {
 
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                    AppConstant.REQUEST_CODE_LOCATION_PERMISSIONS);
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                        AppConstant.REQUEST_CODE_LOCATION_PERMISSIONS);
 
             }
 
@@ -183,7 +177,7 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    public void onRequestPermissionsResult (int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         //super.onRequestPermissionsResult (requestCode, permissions, grantResults);
         switch (requestCode) {
             case AppConstant.REQUEST_CODE_LOCATION_PERMISSIONS:
@@ -191,7 +185,7 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the task you need to do.
-                    getCurrrentLocation (mContext);
+                    getCurrrentLocation(mContext);
                 }
 
                 break;
@@ -199,257 +193,206 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
     }
 
     @Override
-    protected void onPostCreate (Bundle savedInstanceState) {
-        super.onPostCreate (savedInstanceState);
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
 
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide (100);
+        delayedHide(100);
     }
 
     @Override
-    public void onClick (View v) {
-
-        //No internet connection then return
-        if(!Util.checkInternet (mContext)){
-            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable),Snackbar.LENGTH_SHORT).show();
-            return;
-        }
-
-        int id = v.getId ();
-        switch (id){
-            case R.id.btn_try_again:
-                initializeActivity (mContext);
-                break;
-            case R.id.btn_fb:
-                if(UserPreference.getAccessToken () != null){
-                    UserPreference.deleteProfileInformation ();
-                    signout ();
-                }
-
-                mLoginMethod = AppConstant.LOGIN_TYPE.FACEBOOK.ordinal ();
-                //mFacebookHelper.performSignIn(this);
-                showDashboard();
-
-                break;
-
-            case R.id.btn_google:
-                if(UserPreference.getAccessToken () != null){
-                    UserPreference.deleteProfileInformation ();
-                    signout ();
-                }
-
-                mLoginMethod = AppConstant.LOGIN_TYPE.GOOGLE.ordinal ();
-                mGoogleHelper.performSignIn (this);
-
-                break;
-
-            case R.id.btn_instagram:
-                if(UserPreference.getAccessToken () != null){
-                    UserPreference.deleteProfileInformation ();
-                    signout ();
-                }
-
-                mLoginMethod = AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal ();
-                mInstagramHelper.performSignIn ();
-
-                break;
-
-        }
-    }
-
-    @Override
-    public void onGoogleAuthSignIn (String authToken, GoogleUser _userAccount) {
+    public void onGoogleAuthSignIn(String authToken, GoogleUser _userAccount) {
         //String msg = String.format(Locale.US, "User id:%s\n\nAuthToken:%s", userId, authToken);
 
         //No internet connection then return
-        if(!Util.checkInternet (mContext)){
-            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable),Snackbar.LENGTH_SHORT).show();
+        if (!Util.checkInternet(mContext)) {
+            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable), Snackbar.LENGTH_SHORT).show();
             return;
         }
         //Prepare json object by getting required user info from GoogleUser object
-        JSONObject user = new JSONObject ();
+        JSONObject user = new JSONObject();
 
-        try{
+        try {
 
-            user.put ("email", _userAccount.getEmail ());
-            user.put ("auth_token", _userAccount.getIDToken ());
-            user.put ("auth_type", "google");
-            user.put ("imeiNum", Util.getIEMINumber (mContext));
-            user.put ("deviceid", Util.getDeviceId (mContext));
+            user.put("email", _userAccount.getEmail());
+            user.put("auth_token", _userAccount.getIDToken());
+            user.put("auth_type", "google");
+            user.put("imeiNum", Util.getIEMINumber(mContext));
+            user.put("deviceid", Util.getDeviceId(mContext));
 
             String name = "";
-            if(!TextUtils.isEmpty (_userAccount.getGivenName ())) {
-                name = _userAccount.getGivenName ();
-            }else if(!TextUtils.isEmpty (_userAccount.getDisplayName ())) {
-                name = _userAccount.getDisplayName ();
-            }else if(!TextUtils.isEmpty (_userAccount.getFamilyName ())) {
-                name = _userAccount.getFamilyName ();
-            }else {
+            if (!TextUtils.isEmpty(_userAccount.getGivenName())) {
+                name = _userAccount.getGivenName();
+            } else if (!TextUtils.isEmpty(_userAccount.getDisplayName())) {
+                name = _userAccount.getDisplayName();
+            } else if (!TextUtils.isEmpty(_userAccount.getFamilyName())) {
+                name = _userAccount.getFamilyName();
+            } else {
                 name = "";
             }
 
-            user.put ("name", name);
-            user.put ("age", "");
-            if(!TextUtils.isEmpty (_userAccount.getPhotoUrl ())) {
-                user.put ("profile_pic", _userAccount.getPhotoUrl ());
-            }else {
-                user.put ("profile_pic", "");
+            user.put("name", name);
+            user.put("age", "");
+            if (!TextUtils.isEmpty(_userAccount.getPhotoUrl())) {
+                user.put("profile_pic", _userAccount.getPhotoUrl());
+            } else {
+                user.put("profile_pic", "");
             }
-            user.put ("address", "");
-            user.put ("phone", "0000000000");
+            user.put("address", "");
+            user.put("phone", "0000000000");
 
-            registerUser (mContext, user);
+            registerUser(mContext, user);
 
-        }catch(JSONException jsonEx){
-            Snackbar.make(mFlOuterWrapper, "JSON Parsing Error",Snackbar.LENGTH_SHORT).show();
+        } catch (JSONException jsonEx) {
+            Snackbar.make(mFlOuterWrapper, "JSON Parsing Error", Snackbar.LENGTH_SHORT).show();
         }
 
     }
 
     @Override
-    public void onGoogleAuthSignInFailed (String errorMessage) {
-        Snackbar.make(mFlOuterWrapper, errorMessage,Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onGoogleAuthSignOut () {
-        UserPreference.deleteProfileInformation ();
-        Snackbar.make(mFlOuterWrapper, getString (R.string.msg_logout_success), Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onFbSignInFail (String errorMessage) {
+    public void onGoogleAuthSignInFailed(String errorMessage) {
         Snackbar.make(mFlOuterWrapper, errorMessage, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onFbSignInSuccess (final String authToken, String userId) {
+    public void onGoogleAuthSignOut() {
+        UserPreference.deleteProfileInformation();
+        Snackbar.make(mFlOuterWrapper, getString(R.string.msg_logout_success), Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFbSignInFail(String errorMessage) {
+        Snackbar.make(mFlOuterWrapper, errorMessage, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFbSignInSuccess(final String authToken, String userId) {
         String msg = String.format(Locale.US, "User id:%s\n\nAuthToken:%s", userId, authToken);
 
         //Must implement this interface before calling get Profile
-        mFacebookHelper.registerProfileListener (new FacebookGraphListner () {
+        mFacebookHelper.registerProfileListener(new FacebookGraphListner() {
             @Override
-            public void onProfileReceived (FacebookUser _profile) {
-                Log.i(TAG, _profile.toString ());
+            public void onProfileReceived(FacebookUser _profile) {
+                Log.i(TAG, _profile.toString());
                 //No internet connection then return
-                if(!Util.checkInternet (mContext)){
-                    Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable),Snackbar.LENGTH_SHORT).show();
+                if (!Util.checkInternet(mContext)) {
+                    Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable), Snackbar.LENGTH_SHORT).show();
                     return;
                 }
                 //Prepare json object by getting required user info from GoogleUser object
-                JSONObject user = new JSONObject ();
+                JSONObject user = new JSONObject();
 
-                try{
+                try {
 
-                    user.put ("email", _profile.getEmail ());
-                    user.put ("auth_token", authToken);
-                    user.put ("auth_type", "facebook");
-                    user.put ("imeiNum", Util.getIEMINumber (mContext));
-                    user.put ("deviceid", Util.getDeviceId (mContext));
+                    user.put("email", _profile.getEmail());
+                    user.put("auth_token", authToken);
+                    user.put("auth_type", "facebook");
+                    user.put("imeiNum", Util.getIEMINumber(mContext));
+                    user.put("deviceid", Util.getDeviceId(mContext));
 
-                    String name = _profile.getFirstName () + " " + _profile.getLastName ();
+                    String name = _profile.getFirstName() + " " + _profile.getLastName();
 
-                    if(TextUtils.isEmpty (name)){
-                        if(!TextUtils.isEmpty (_profile.getName ())){
-                            name = _profile.getName ();
-                        }else{
+                    if (TextUtils.isEmpty(name)) {
+                        if (!TextUtils.isEmpty(_profile.getName())) {
+                            name = _profile.getName();
+                        } else {
                             name = "";
                         }
                     }
 
-                    user.put ("name", name);
-                    user.put ("age", "");
+                    user.put("name", name);
+                    user.put("age", "");
 
-                    if(!TextUtils.isEmpty (_profile.getPicture ())) {
-                        user.put ("profile_pic", _profile.getPicture ());
-                    }else {
-                        user.put ("profile_pic", "");
+                    if (!TextUtils.isEmpty(_profile.getPicture())) {
+                        user.put("profile_pic", _profile.getPicture());
+                    } else {
+                        user.put("profile_pic", "");
                     }
 
-                    user.put ("address", "");
-                    user.put ("phone", "0000000000");
+                    user.put("address", "");
+                    user.put("phone", "0000000000");
 
-                    registerUser (mContext, user);
+                    registerUser(mContext, user);
 
-                }catch(JSONException jsonEx){
-                    Snackbar.make(mFlOuterWrapper, "JSON Parsing Error",Snackbar.LENGTH_SHORT).show();
+                } catch (JSONException jsonEx) {
+                    Snackbar.make(mFlOuterWrapper, "JSON Parsing Error", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });
 
-        try{
-            mFacebookHelper.getProfile ();
-        }catch (RuntimeException rEx){
-            rEx.printStackTrace ();
+        try {
+            mFacebookHelper.getProfile();
+        } catch (RuntimeException rEx) {
+            rEx.printStackTrace();
         }
 
     }
 
     @Override
-    public void onFBSignOut () {
-        UserPreference.deleteProfileInformation ();
-        Snackbar.make(mFlOuterWrapper, getString (R.string.msg_logout_success), Snackbar.LENGTH_SHORT).show();
+    public void onFBSignOut() {
+        UserPreference.deleteProfileInformation();
+        Snackbar.make(mFlOuterWrapper, getString(R.string.msg_logout_success), Snackbar.LENGTH_SHORT).show();
 
     }
 
     @Override
-    public void onInstagramSignInFail (String _errorMessage) {
+    public void onInstagramSignInFail(String _errorMessage) {
         Snackbar.make(mFlOuterWrapper, _errorMessage, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onInstagramSignInSuccess (String _authToken, InstagramUser _instagramUser) {
+    public void onInstagramSignInSuccess(String _authToken, InstagramUser _instagramUser) {
 
         //No internet connection then return
-        if(!Util.checkInternet (mContext)){
-            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable),Snackbar.LENGTH_SHORT).show();
+        if (!Util.checkInternet(mContext)) {
+            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable), Snackbar.LENGTH_SHORT).show();
             return;
         }
         //Prepare json object by getting required user info from GoogleUser object
-        JSONObject user = new JSONObject ();
+        JSONObject user = new JSONObject();
 
-        try{
+        try {
 
-            user.put ("email", _instagramUser.getUserName ());
-            user.put ("auth_token", _authToken);
-            user.put ("auth_type", "instagram");
-            user.put ("imeiNum", Util.getIEMINumber (mContext));
-            user.put ("deviceid", Util.getDeviceId (mContext));
+            user.put("email", _instagramUser.getUserName());
+            user.put("auth_token", _authToken);
+            user.put("auth_type", "instagram");
+            user.put("imeiNum", Util.getIEMINumber(mContext));
+            user.put("deviceid", Util.getDeviceId(mContext));
 
-            String name = _instagramUser.getFullName ();
+            String name = _instagramUser.getFullName();
 
-            if(TextUtils.isEmpty (name)){
+            if (TextUtils.isEmpty(name)) {
                 name = "";
             }
 
-            user.put ("name", name);
-            user.put ("age", "");
+            user.put("name", name);
+            user.put("age", "");
 
-            if(!TextUtils.isEmpty (_instagramUser.getProfilePicture ())) {
-                user.put ("profile_pic", _instagramUser.getProfilePicture ());
-            }else {
-                user.put ("profile_pic", "");
+            if (!TextUtils.isEmpty(_instagramUser.getProfilePicture())) {
+                user.put("profile_pic", _instagramUser.getProfilePicture());
+            } else {
+                user.put("profile_pic", "");
             }
 
-            user.put ("address", "");
-            user.put ("phone", "0000000000");
+            user.put("address", "");
+            user.put("phone", "0000000000");
 
-            registerUser (mContext, user);
+            registerUser(mContext, user);
 
-        }catch(JSONException jsonEx){
-            Snackbar.make(mFlOuterWrapper, "JSON Parsing Error",Snackbar.LENGTH_SHORT).show();
+        } catch (JSONException jsonEx) {
+            Snackbar.make(mFlOuterWrapper, "JSON Parsing Error", Snackbar.LENGTH_SHORT).show();
         }
 
     }
 
-    private void initializeActivity (Context _context) {
+    private void initializeActivity(Context _context) {
 
         //Check internet connectivity
-        if(Util.checkInternet (mContext)){
-            mFlNoInternet.setVisibility (View.GONE);
-            mllLoginWrapper.setVisibility (View.VISIBLE);
+        if (Util.checkInternet(mContext)) {
+            mFlNoInternet.setVisibility(View.GONE);
+            mllLoginWrapper.setVisibility(View.VISIBLE);
 
             //Todo Goto dashboard if user already logged in
 
@@ -459,9 +402,9 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
             //Get data from server
             getProductsFromServer(_context);
 
-        }else{
-            mFlNoInternet.setVisibility (View.VISIBLE);
-            mllLoginWrapper.setVisibility (View.GONE);
+        } else {
+            mFlNoInternet.setVisibility(View.VISIBLE);
+            mllLoginWrapper.setVisibility(View.GONE);
         }
     }
 
@@ -469,38 +412,38 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
      * Schedules a call to hide() in [delay] milliseconds, canceling any
      * previously scheduled calls.
      */
-    private void delayedHide (int delayMillis) {
-        mHideHandler.removeCallbacks (mHideRunnable);
-        mHideHandler.postDelayed (mHideRunnable, delayMillis);
+    private void delayedHide(int delayMillis) {
+        mHideHandler.removeCallbacks(mHideRunnable);
+        mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-    private final Runnable mHideRunnable = new Runnable () {
+    private final Runnable mHideRunnable = new Runnable() {
         @Override
-        public void run () {
-            hide ();
+        public void run() {
+            hide();
         }
     };
 
-    private void hide () {
+    private void hide() {
         // Hide UI first
-        ActionBar actionBar = getSupportActionBar ();
+        ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.hide ();
+            actionBar.hide();
         }
         mVisible = false;
 
         // Schedule a runnable to remove the status and navigation bar after a delay
-        mHideHandler.removeCallbacks (mShowPart2Runnable);
+        mHideHandler.removeCallbacks(mShowPart2Runnable);
     }
 
-    private final Runnable mShowPart2Runnable = new Runnable () {
+    private final Runnable mShowPart2Runnable = new Runnable() {
         @Override
-        public void run () {
+        public void run() {
             // Delayed display of UI elements
-            ActionBar actionBar = getSupportActionBar ();
+            ActionBar actionBar = getSupportActionBar();
 
             if (actionBar != null) {
-                actionBar.show ();
+                actionBar.show();
             }
         }
     };
@@ -511,11 +454,11 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
      * while interacting with activity UI.
      */
 
-    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener () {
+    private final View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
         @Override
-        public boolean onTouch (View view, MotionEvent motionEvent) {
+        public boolean onTouch(View view, MotionEvent motionEvent) {
             if (AUTO_HIDE) {
-                delayedHide (AUTO_HIDE_DELAY_MILLIS);
+                delayedHide(AUTO_HIDE_DELAY_MILLIS);
             }
             return false;
         }
@@ -524,106 +467,106 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
     /**
      * Register User using Social Login
      */
-    private void registerUser(Context _context, final JSONObject _user){
+    private void registerUser(Context _context, final JSONObject _user) {
         //Start Progress dialog
         dismissDialog();
 
-        mProgressDialog = Util.showProgressDialog (mCurrentActivity, null, getString (R.string.msg_registering_user), false);
+        mProgressDialog = Util.showProgressDialog(mCurrentActivity, null, getString(R.string.msg_registering_user), false);
 
-        BaseModel<JSONObject> baseModel = new BaseModel<JSONObject> (_context) {
+        BaseModel<JSONObject> baseModel = new BaseModel<JSONObject>(_context) {
             @Override
-            public void onSuccess (int _statusCode, Map<String, String> _headers, JSONObject _response) {
+            public void onSuccess(int _statusCode, Map<String, String> _headers, JSONObject _response) {
                 //CLose Progress dialog
                 dismissDialog();
-                if(_response != null){
-                    try{
-                        if(_response.getString ("status").equalsIgnoreCase ("1")){
-                            UserPreference.setAccessToken (_response.getString ("token"));
-                            if(_user.getString ("auth_type").equalsIgnoreCase ("google")){
-                                UserPreference.setLoginMethod (AppConstant.LOGIN_TYPE.GOOGLE.ordinal ());
+                if (_response != null) {
+                    try {
+                        if (_response.getString("status").equalsIgnoreCase("1")) {
+                            UserPreference.setAccessToken(_response.getString("token"));
+                            if (_user.getString("auth_type").equalsIgnoreCase("google")) {
+                                UserPreference.setLoginMethod(AppConstant.LOGIN_TYPE.GOOGLE.ordinal());
 
-                            }else if(_user.getString ("auth_type").equalsIgnoreCase ("facebook")){
-                                UserPreference.setLoginMethod (AppConstant.LOGIN_TYPE.FACEBOOK.ordinal ());
+                            } else if (_user.getString("auth_type").equalsIgnoreCase("facebook")) {
+                                UserPreference.setLoginMethod(AppConstant.LOGIN_TYPE.FACEBOOK.ordinal());
 
-                            }else if(_user.getString ("auth_type").equalsIgnoreCase ("instagram")){
-                                UserPreference.setLoginMethod (AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal ());
-                            }else{
-                                UserPreference.setLoginMethod (AppConstant.LOGIN_TYPE.CUSTOM.ordinal ());
+                            } else if (_user.getString("auth_type").equalsIgnoreCase("instagram")) {
+                                UserPreference.setLoginMethod(AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal());
+                            } else {
+                                UserPreference.setLoginMethod(AppConstant.LOGIN_TYPE.CUSTOM.ordinal());
                             }
 
-                            JSONObject customer = _response.getJSONObject ("customer_details");
+                            JSONObject customer = _response.getJSONObject("customer_details");
 
-                            if(customer != null){
-                                UserPreference.setUserEmail (customer.getString ("email"));
-                                UserPreference.setUserFirstName (customer.getString ("first_name"));
-                                UserPreference.setUserLastName (customer.getString ("last_name"));
-                                UserPreference.setUserAddress1 (customer.getString ("add1"));
-                                UserPreference.setUserAddress2 (customer.getString ("add2"));
-                                UserPreference.setUserCity (customer.getString ("city"));
-                                UserPreference.setUserState (customer.getString ("state"));
-                                UserPreference.setUserCountry (customer.getString ("country"));
-                                UserPreference.setUserPin (customer.getString ("PIN"));
-                                UserPreference.setUserAddress1 (customer.getString ("Phone"));
-                                UserPreference.setProfilePic (customer.getString ("profile_img"));
+                            if (customer != null) {
+                                UserPreference.setUserEmail(customer.getString("email"));
+                                UserPreference.setUserFirstName(customer.getString("first_name"));
+                                UserPreference.setUserLastName(customer.getString("last_name"));
+                                UserPreference.setUserAddress1(customer.getString("add1"));
+                                UserPreference.setUserAddress2(customer.getString("add2"));
+                                UserPreference.setUserCity(customer.getString("city"));
+                                UserPreference.setUserState(customer.getString("state"));
+                                UserPreference.setUserCountry(customer.getString("country"));
+                                UserPreference.setUserPin(customer.getString("PIN"));
+                                UserPreference.setUserAddress1(customer.getString("Phone"));
+                                UserPreference.setProfilePic(customer.getString("profile_img"));
                             }
 
                             mUserRegistered = true;
                             //Redirect to Dashboard
-                            if(mLocationFound = true && mUserRegistered == true && mDataDownloaded == true){
-                                showDashboard ();
+                            if (mLocationFound = true && mUserRegistered == true && mDataDownloaded == true) {
+                                showDashboard();
                             }
 
 
-                        }else{
-                            Snackbar.make(mFlOuterWrapper, getString (R.string.msg_user_not_registered),Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            Snackbar.make(mFlOuterWrapper, getString(R.string.msg_user_not_registered), Snackbar.LENGTH_SHORT).show();
                         }
 
-                    }catch (JSONException jsEx){
-                        Snackbar.make(mFlOuterWrapper, jsEx.getMessage (),Snackbar.LENGTH_SHORT).show();
+                    } catch (JSONException jsEx) {
+                        Snackbar.make(mFlOuterWrapper, jsEx.getMessage(), Snackbar.LENGTH_SHORT).show();
                     }
-                }else {
-                    Snackbar.make(mFlOuterWrapper, "No response from server",Snackbar.LENGTH_SHORT).show();
+                } else {
+                    Snackbar.make(mFlOuterWrapper, "No response from server", Snackbar.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onError (ErrorData error) {
+            public void onError(ErrorData error) {
                 //Close Progress dialog
                 dismissDialog();
-                if(error != null){
+                if (error != null) {
 
-                    switch (error.getErrorType()){
+                    switch (error.getErrorType()) {
                         case NETWORK_NOT_AVAILABLE:
-                            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable),Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable), Snackbar.LENGTH_SHORT).show();
                             break;
                         case INTERNAL_SERVER_ERROR:
-                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
                             break;
                         case CONNECTION_TIMEOUT:
-                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
                             break;
                         case APPLICATION_ERROR:
-                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
                             break;
                         case INVALID_INPUT_SUPPLIED:
-                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
                             break;
                         case AUTHENTICATION_ERROR:
-                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
                             break;
                         case UNAUTHORIZED_ERROR:
-                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(),Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
                             break;
                     }
                 }
             }
         };
 
-        String url = QueryBuilder.getLoginUrl ();
-        if(_user != null){
-            baseModel.executePostJsonRequest(url,_user,TAG);
-        }else{
-            Snackbar.make(mFlOuterWrapper, getResources ().getString (R.string.msg_reg_user_missing_input),Snackbar.LENGTH_SHORT).show();
+        String url = QueryBuilder.getLoginUrl();
+        if (_user != null) {
+            baseModel.executePostJsonRequest(url, _user, TAG);
+        } else {
+            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_reg_user_missing_input), Snackbar.LENGTH_SHORT).show();
         }
 
     }
@@ -640,90 +583,90 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    private void showDashboard(){
-        Intent intent = new Intent (mContext, Dashboard.class);
-        intent.setAction(AppConstant.ACTIONS.HOME.name ());
-        intent.addFlags (Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity (intent);
-        finish ();
+    private void showDashboard() {
+        Intent intent = new Intent(mContext, Dashboard.class);
+        intent.setAction(AppConstant.ACTIONS.HOME.name());
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
-    private void getCurrrentLocation (Context _context) {
+    private void getCurrrentLocation(Context _context) {
         try {
 
-            LocationApi locationApi = new LocationApi (_context);
+            LocationApi locationApi = new LocationApi(_context);
 
-            LocationApi.MyLocationDataListener myLocationListener = new LocationApi.MyLocationDataListener () {
+            LocationApi.MyLocationDataListener myLocationListener = new LocationApi.MyLocationDataListener() {
 
                 @Override
-                public void gotLocation (Location _location) {
-                    Log.i (TAG,"Location: Lat"+String.valueOf (_location.getLatitude ())+", Lon: "+String.valueOf (_location.getLongitude ()));
-                    UserPreference.setLatitude (_location.getLatitude ());
-                    UserPreference.setLongitude (_location.getLongitude ());
+                public void gotLocation(Location _location) {
+                    Log.i(TAG, "Location: Lat" + String.valueOf(_location.getLatitude()) + ", Lon: " + String.valueOf(_location.getLongitude()));
+                    UserPreference.setLatitude(_location.getLatitude());
+                    UserPreference.setLongitude(_location.getLongitude());
 
                 }
 
                 @Override
-                public void gotLocation (Location location, Bundle _addresses) {
-                    Log.i (TAG,"Location: Address"+ _addresses.getString (LocationApiConstants.RESULT_DATA_MSG_KEY));
-                    UserPreference.setAddress (_addresses.getString (LocationApiConstants.RESULT_DATA_MSG_KEY));
+                public void gotLocation(Location location, Bundle _addresses) {
+                    Log.i(TAG, "Location: Address" + _addresses.getString(LocationApiConstants.RESULT_DATA_MSG_KEY));
+                    UserPreference.setAddress(_addresses.getString(LocationApiConstants.RESULT_DATA_MSG_KEY));
                     mLocationFound = true;
 
-                    if(mLocationFound == true && mDataDownloaded == true){
-                        dismissDialog ();
+                    if (mLocationFound == true && mDataDownloaded == true) {
+                        dismissDialog();
 
                         //Validate access token and store the fresh token
-                        validateAccessToken ();
+                        validateAccessToken();
                     }
                 }
 
                 @Override
-                public void locationNotAvailable () {
-                    Log.i (TAG, "Location is not Available");
+                public void locationNotAvailable() {
+                    Log.i(TAG, "Location is not Available");
                 }
 
                 @Override
-                public void onPermissionRequired () {
-                    Log.i (TAG, "Permission required");
+                public void onPermissionRequired() {
+                    Log.i(TAG, "Permission required");
                 }
             };
 
-            locationApi.init (mContext, true, myLocationListener);
+            locationApi.init(mContext, true, myLocationListener);
 
-        }catch (SecurityException sqEx){
-            sqEx.printStackTrace ();
-        }catch (Exception ex){
-            ex.printStackTrace ();
+        } catch (SecurityException sqEx) {
+            sqEx.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
-    private void validateAccessToken () {
-        if(!TextUtils.isEmpty (UserPreference.getAccessToken ())){
+    private void validateAccessToken() {
+        if (!TextUtils.isEmpty(UserPreference.getAccessToken())) {
             //Revalidate the auth token based on type of login
-            if(UserPreference.getLoginMethod () == AppConstant.LOGIN_TYPE.FACEBOOK.ordinal ()){
+            if (UserPreference.getLoginMethod() == AppConstant.LOGIN_TYPE.FACEBOOK.ordinal()) {
                 mFacebookHelper.performSignIn(mCurrentActivity);
 
-            }else if(UserPreference.getLoginMethod () == AppConstant.LOGIN_TYPE.GOOGLE.ordinal ()){
-                mGoogleHelper.performSignIn (mCurrentActivity);
+            } else if (UserPreference.getLoginMethod() == AppConstant.LOGIN_TYPE.GOOGLE.ordinal()) {
+                mGoogleHelper.performSignIn(mCurrentActivity);
 
-            }else if(UserPreference.getLoginMethod () == AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal ()){
-                mInstagramHelper.performSignIn ();
+            } else if (UserPreference.getLoginMethod() == AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal()) {
+                mInstagramHelper.performSignIn();
             }
         }
     }
 
     private MaterialDialog showDialog(Context _context, String _title, String _content, boolean _cancellable,
-        boolean _autoDismiss, String _positiveText, String _negativeText, Drawable _icon){
+                                      boolean _autoDismiss, String _positiveText, String _negativeText, Drawable _icon) {
 
         MaterialDialog.Builder builder = new MaterialDialog.Builder(_context)
-            .title(_title)
-            .content(_content)
-            .cancelable(_cancellable)
-            .autoDismiss(_autoDismiss)
-            .positiveText(_positiveText)
-            .negativeText(_negativeText);
+                .title(_title)
+                .content(_content)
+                .cancelable(_cancellable)
+                .autoDismiss(_autoDismiss)
+                .positiveText(_positiveText)
+                .negativeText(_negativeText);
 
-        if(_icon != null){
+        if (_icon != null) {
             builder.icon(_icon);
         }
 
@@ -731,76 +674,124 @@ public class LauncherActivity extends BaseActivity implements View.OnClickListen
         return mDialog;
     }
 
-    private void getProductsFromServer (final Context _context) {
+    private void getProductsFromServer(final Context _context) {
 
-        BaseModel<JSONArray> baseModel = new BaseModel<JSONArray> (_context) {
+        BaseModel<JSONArray> baseModel = new BaseModel<JSONArray>(_context) {
 
             @Override
-            public void onSuccess (int statusCode, Map<String, String> headers, JSONArray _response) {
+            public void onSuccess(int statusCode, Map<String, String> headers, JSONArray _response) {
                 //CLose Progress dialog
 
-                if(mLocationFound == true && mDataDownloaded == true){
-                    dismissDialog ();
+                if (mLocationFound == true && mDataDownloaded == true) {
+                    dismissDialog();
                 }
 
-                if (_response != null & _response.length ()>0) {
+                if (_response != null & _response.length() > 0) {
                     try {
 
-                        LocalDAO localDAO = new LocalDAO (_context);
-                        localDAO.addProducts (_response, false);
+                        LocalDAO localDAO = new LocalDAO(_context);
+                        localDAO.addProducts(_response, false);
                         mDataDownloaded = true;
 
-                        if(mUserRegistered == true && mDataDownloaded == true){
+                        if (mUserRegistered == true && mDataDownloaded == true) {
                             //Validate access token and store the fresh token
-                            validateAccessToken ();
+                            validateAccessToken();
                         }
 
                     } catch (Exception ex) {
-                        Snackbar.make (mFlOuterWrapper, ex.getMessage (), Snackbar.LENGTH_SHORT).show ();
+                        Snackbar.make(mFlOuterWrapper, ex.getMessage(), Snackbar.LENGTH_SHORT).show();
                     }
                 } else {
-                    Snackbar.make (mFlOuterWrapper, "No response from server", Snackbar.LENGTH_SHORT).show ();
+                    Snackbar.make(mFlOuterWrapper, "No response from server", Snackbar.LENGTH_SHORT).show();
                 }
 
             }
 
             @Override
-            public void onError (ErrorData error) {
+            public void onError(ErrorData error) {
                 //Close Progress dialog
-                dismissDialog ();
+                dismissDialog();
 
                 if (error != null) {
 
-                    switch (error.getErrorType ()) {
+                    switch (error.getErrorType()) {
                         case NETWORK_NOT_AVAILABLE:
-                            Snackbar.make (mFlOuterWrapper, getResources ().getString (R.string.msg_internet_unavailable), Snackbar.LENGTH_SHORT).show ();
+                            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable), Snackbar.LENGTH_SHORT).show();
                             break;
                         case INTERNAL_SERVER_ERROR:
-                            Snackbar.make (mFlOuterWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
                             break;
                         case CONNECTION_TIMEOUT:
-                            Snackbar.make (mFlOuterWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
                             break;
                         case APPLICATION_ERROR:
-                            Snackbar.make (mFlOuterWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
                             break;
                         case INVALID_INPUT_SUPPLIED:
-                            Snackbar.make (mFlOuterWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
                             break;
                         case AUTHENTICATION_ERROR:
-                            Snackbar.make (mFlOuterWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
                             break;
                         case UNAUTHORIZED_ERROR:
-                            Snackbar.make (mFlOuterWrapper, error.getErrorMessage (), Snackbar.LENGTH_SHORT).show ();
+                            Snackbar.make(mFlOuterWrapper, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
                             break;
                     }
                 }
             }
         };
 
-        String url = QueryBuilder.getProducts ();
-        baseModel.executeGetJsonArrayRequest (url, TAG);
+        String url = QueryBuilder.getProducts();
+        baseModel.executeGetJsonArrayRequest(url, TAG);
 
     }
 
+    @Override
+    public void onComplete(RippleView rippleView) {
+        //No internet connection then return
+        if (!Util.checkInternet(mContext)) {
+            Snackbar.make(mFlOuterWrapper, getResources().getString(R.string.msg_internet_unavailable), Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+
+        int id = rippleView.getId();
+        switch (id) {
+            case R.id.btn_try_again:
+                initializeActivity(mContext);
+                break;
+            case R.id.btn_fb:
+                if (UserPreference.getAccessToken() != null) {
+                    UserPreference.deleteProfileInformation();
+                    signout();
+                }
+
+                mLoginMethod = AppConstant.LOGIN_TYPE.FACEBOOK.ordinal();
+                //mFacebookHelper.performSignIn(this);
+                showDashboard();
+                break;
+
+            case R.id.btn_google:
+                if (UserPreference.getAccessToken() != null) {
+                    UserPreference.deleteProfileInformation();
+                    signout();
+                }
+
+                mLoginMethod = AppConstant.LOGIN_TYPE.GOOGLE.ordinal();
+                mGoogleHelper.performSignIn(this);
+
+                break;
+
+            case R.id.btn_instagram:
+                if (UserPreference.getAccessToken() != null) {
+                    UserPreference.deleteProfileInformation();
+                    signout();
+                }
+
+                mLoginMethod = AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal();
+                mInstagramHelper.performSignIn();
+
+                break;
+
+        }
+    }
 }

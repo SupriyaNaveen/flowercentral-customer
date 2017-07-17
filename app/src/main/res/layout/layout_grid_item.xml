@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/product_outer_wrapper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/dp5"
-    card_view:contentPadding="@dimen/dp5"
+    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardBackgroundColor="@color/colorWhite"
-    card_view:cardPreventCornerOverlap="false"
     card_view:cardCornerRadius="@dimen/cardview_default_corner_radius"
-    card_view:cardElevation="1dp">
+    card_view:cardElevation="1dp"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:contentPadding="@dimen/dp5">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,9 +20,9 @@
             android:id="@+id/item_header_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:orientation="horizontal"
-            android:weightSum="1"
-            android:layout_alignParentTop="true">
+            android:weightSum="1">
 
             <LinearLayout
                 android:id="@+id/left_header_item"
@@ -35,15 +35,15 @@
                     android:id="@+id/txt_item_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Bunch 1"
-                    android:textSize="@dimen/sp12"
-                    android:textColor="@color/colorPrimaryText"
-                    android:textAllCaps="true"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:letterSpacing=".1"
                     android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"/>
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:letterSpacing=".1"
+                    android:maxLines="1"
+                    android:text="Bunch 1"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimaryText"
+                    android:textSize="@dimen/sp12" />
 
             </LinearLayout>
 
@@ -52,25 +52,36 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".4"
-                android:orientation="horizontal"
-                android:gravity="right">
+                android:gravity="right"
+                android:orientation="horizontal">
 
-                <ImageView
+                <com.andexert.library.RippleView
                     android:id="@+id/img_item_cart"
+                    rv_centered="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_add_product_cart_svg"
-                    android:clickable="true"
-                    android:layout_marginEnd="@dimen/dp5"
-                    android:foreground="?android:attr/selectableItemBackground"/>
+                    android:layout_marginEnd="@dimen/dp5">
 
-                <ImageView
-                    android:id="@+id/img_item_like"
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:src="@drawable/ic_add_product_cart_svg" />
+                </com.andexert.library.RippleView>
+
+                <com.andexert.library.RippleView
+                    android:id="@+id/ripple_img_item_like"
+                    rv_centered="true"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_product_like_svg"
-                    android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackground"/>
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/img_item_like"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:src="@drawable/ic_product_like_svg" />
+                </com.andexert.library.RippleView>
 
             </LinearLayout>
 
@@ -80,30 +91,30 @@
             android:id="@+id/txt_item_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxLines="1"
+            android:layout_below="@+id/item_header_wrapper"
             android:ellipsize="end"
-            android:text="Small Description Text"
-            android:textSize="@dimen/sp10"
-            android:textColor="@color/colorSecondaryText"
             android:letterSpacing=".1"
-            android:layout_below="@+id/item_header_wrapper"/>
+            android:maxLines="1"
+            android:text="Small Description Text"
+            android:textColor="@color/colorSecondaryText"
+            android:textSize="@dimen/sp10" />
 
         <LinearLayout
             android:id="@+id/item_image_wrapper"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/txt_item_desc"
             android:layout_above="@+id/item_footer_wrapper"
-            android:gravity="center">
+            android:layout_below="@+id/txt_item_desc"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/img_item_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp5"
-                android:src="@drawable/ic_product_like_svg"/>
+                android:src="@drawable/ic_product_like_svg" />
 
         </LinearLayout>
 
@@ -118,33 +129,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:padding="@dimen/dp5"
                 android:layout_marginStart="@dimen/dp10"
+                android:letterSpacing=".1"
                 android:maxLines="1"
+                android:padding="@dimen/dp5"
                 android:text="700"
-                android:textSize="@dimen/sp12"
                 android:textColor="@color/colorAccent"
-                android:letterSpacing=".1"/>
+                android:textSize="@dimen/sp12" />
 
-            <TextView
+            <com.andexert.library.RippleView
                 android:id="@+id/txt_item_buy_now"
+                rv_centered="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/rounded_corner_border_pink"
-                android:paddingTop="@dimen/dp5"
-                android:paddingBottom="@dimen/dp5"
-                android:paddingLeft="@dimen/dp10"
-                android:paddingRight="@dimen/dp10"
                 android:layout_marginEnd="@dimen/dp10"
-                android:maxLines="1"
-                android:text="@string/lbl_buy_now"
-                android:textSize="@dimen/sp10"
-                android:textColor="@color/colorPrimary"
-                android:textAllCaps="true"
-                android:letterSpacing=".1"
-                android:clickable="true"
-                android:foreground="?android:attr/selectableItemBackground"/>
+                android:background="@drawable/rounded_corner_border_pink">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:letterSpacing=".1"
+                    android:maxLines="1"
+                    android:paddingBottom="@dimen/dp5"
+                    android:paddingLeft="@dimen/dp10"
+                    android:paddingRight="@dimen/dp10"
+                    android:paddingTop="@dimen/dp5"
+                    android:text="@string/lbl_buy_now"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/sp10" />
+            </com.andexert.library.RippleView>
 
         </RelativeLayout>
 
