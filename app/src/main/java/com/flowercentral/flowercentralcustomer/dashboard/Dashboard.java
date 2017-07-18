@@ -113,17 +113,11 @@ public class Dashboard extends BaseActivity
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                if (drawerView == mNavigationViewRight) {
-                    mRightNavToggleIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_right_nav));
-                }
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                if (drawerView == mNavigationViewRight) {
-                    mRightNavToggleIcon.setImageDrawable(getResources().getDrawable(R.drawable.ic_left_nav));
-                }
             }
         };
 
