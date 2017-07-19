@@ -2,11 +2,8 @@ package com.flowercentral.flowercentralcustomer.order.adapter;
 
 import android.content.Context;
 import android.support.transition.TransitionManager;
-
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +12,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.andexert.library.RippleView;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnItemClickListener;
 import com.flowercentral.flowercentralcustomer.common.model.Order;
-import com.flowercentral.flowercentralcustomer.common.model.Product;
 import com.flowercentral.flowercentralcustomer.util.CircularTextView;
 import com.flowercentral.flowercentralcustomer.util.Util;
 import com.squareup.picasso.Picasso;
@@ -216,9 +213,9 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             viewListHolder.itemExpandedWrapper.setVisibility (isExpanded==true?View.VISIBLE:View.GONE);
             viewListHolder.txtMore.setActivated (isExpanded);
 
-            viewListHolder.txtMore.setOnClickListener (new View.OnClickListener () {
+            viewListHolder.txtMore.setOnRippleCompleteListener (new RippleView.OnRippleCompleteListener() {
                 @Override
-                public void onClick (View v) {
+                public void onComplete (RippleView v) {
                     mExpandedPosition = isExpanded ? -1:position;
                     TransitionManager.beginDelayedTransition(viewListHolder.itemInnerWrapper);
                     notifyDataSetChanged();
@@ -251,7 +248,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         LinearLayout itemInnerWrapper;
         LinearLayout itemExpandedWrapper;
         LinearLayout itemContainer;
-        TextView txtMore;
+        RippleView txtMore;
 
         ImageView orderItemImage;
         //CircularTextView orderCategory;
@@ -279,7 +276,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             orderSchedule = (TextView) itemView.findViewById (R.id.order_schedule);
             orderDeliveryDate = (TextView) itemView.findViewById (R.id.order_delivered_at);
             orderAddresss = (TextView) itemView.findViewById (R.id.order_address);
-            txtMore = (TextView) itemView.findViewById (R.id.txt_more);
+            txtMore = (RippleView) itemView.findViewById (R.id.txt_more);
 
         }
     }

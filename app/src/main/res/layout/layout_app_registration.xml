@@ -1,54 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true">
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/wrapper_devider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="@dimen/dp20"
         android:layout_marginStart="@dimen/dp20"
-        android:layout_marginEnd="@dimen/dp20">
+        android:gravity="center">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorSecondaryText"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/lbl_app_rgistration"
-            android:layout_centerVertical="true"/>
+            android:background="@color/colorSecondaryText" />
 
         <TextView
             android:id="@+id/lbl_app_rgistration"
+            style="@style/AppTheme.Label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/lbl_or"
-            android:textSize="11sp"
-            android:textColor="@color/colorSecondaryText"
             android:layout_centerInParent="true"
-            style="@style/AppTheme.Label"/>
+            android:text="@string/lbl_or"
+            android:textColor="@color/colorSecondaryText"
+            android:textSize="11sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorSecondaryText"
+            android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/lbl_app_rgistration"
-            android:layout_centerVertical="true"/>
+            android:background="@color/colorSecondaryText" />
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/txt_link_flower_central_account"
+    <com.andexert.library.RippleView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/lbl_need_flower_central_account"
-        android:textColor="@color/colorAccent"
-        android:textSize="15sp"
-        style="@style/AppTheme.Label"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="@dimen/dp20"/>
+        android:layout_marginBottom="@dimen/dp20"
+        app:rv_zoom="true"
+        app:rv_zoomScale="1.2">
+
+        <TextView
+            android:id="@+id/txt_link_flower_central_account"
+            style="@style/AppTheme.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_need_flower_central_account"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp" />
+    </com.andexert.library.RippleView>
+
 
 </LinearLayout>

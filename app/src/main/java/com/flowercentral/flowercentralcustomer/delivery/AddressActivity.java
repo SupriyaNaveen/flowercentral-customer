@@ -138,7 +138,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         mCustomerPrimaryPhone = (TextInputEditText) findViewById(R.id.edt_phone1);
         mCustomerAlternatePhone = (TextInputEditText) findViewById(R.id.edt_phone2);
 
-        ImageView mPickLocation = (ImageView) findViewById(R.id.img_view_locate);
+        RippleView mPickLocation = (RippleView) findViewById(R.id.img_view_locate);
         RippleView mBtnContinue = (RippleView) findViewById(R.id.btn_continue);
         RippleView mBtnCancel = (RippleView) findViewById(R.id.btn_cancel);
         RippleView mCheckOnDeliveryAddress = (RippleView) findViewById(R.id.tv_check_on_delivery_address);
@@ -151,9 +151,9 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         getSupportActionBar().setTitle(getString(R.string.title_activity_address));
 
         //Setup click listener
-        mPickLocation.setOnClickListener(new View.OnClickListener() {
+        mPickLocation.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
             @Override
-            public void onClick(View v) {
+            public void onComplete(RippleView v) {
                 //Check the address, if there then locate the map based on that.
                 // Or else, locate the current address.
                 // On activity result change the map in this activity based on location.

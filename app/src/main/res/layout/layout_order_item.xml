@@ -30,7 +30,7 @@
                     android:id="@+id/order_item_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/dp5"/>
+                    android:layout_margin="@dimen/dp5" />
 
             </LinearLayout>
 
@@ -52,7 +52,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
-                        android:theme="@style/AppTheme.Normal"/>
+                        android:theme="@style/AppTheme.Normal" />
 
                     <!--<TextView
                         android:layout_width="match_parent"
@@ -75,7 +75,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorPrimary"
                         android:textSize="@dimen/sp12"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/order_payment_status"
@@ -86,45 +86,52 @@
                         android:padding="@dimen/dp5"
                         android:text="Paid"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/sp12"/>
+                        android:textSize="@dimen/sp12" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/order_quantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp12"
                     android:text="Quantity"
-                    android:visibility="gone"/>
+                    android:textSize="@dimen/sp12"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/order_schedule"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp12"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/order_delivered_at"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp12"/>
+                    android:textSize="@dimen/sp12" />
 
                 <TextView
                     android:id="@+id/order_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/sp12"/>
+                    android:textSize="@dimen/sp12" />
 
-                <TextView
+                <com.andexert.library.RippleView
                     android:id="@+id/txt_more"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="end"
                     android:layout_margin="5dp"
-                    android:gravity="end"
-                    android:text="@string/lbl_see_items"
-                    style="@style/AppTheme.Label1"
-                    android:textSize="12sp"/>
+                    app:rv_zoom="true"
+                    app:rv_zoomScale="1.2">
+
+                    <TextView
+                        style="@style/AppTheme.Label1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_see_items"
+                        android:textSize="12sp" />
+                </com.andexert.library.RippleView>
 
             </LinearLayout>
 
@@ -183,7 +190,7 @@
                     android:layout_height="1dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight=".4"
-                    android:background="@color/colorDivider"/>
+                    android:background="@color/colorDivider" />
 
                 <TextView
                     style="@style/AppTheme.Label1"
@@ -193,14 +200,14 @@
                     android:gravity="center"
                     android:padding="@dimen/dp2"
                     android:text="@string/lbl_items"
-                    android:textAllCaps="true"/>
+                    android:textAllCaps="true" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     android:layout_gravity="center_vertical"
                     android:layout_weight=".4"
-                    android:background="@color/colorDivider"/>
+                    android:background="@color/colorDivider" />
 
             </LinearLayout>
 
