@@ -1,4 +1,4 @@
-package com.flowercentral.flowercentralcustomer.ProductDetail.adapter;
+package com.flowercentral.flowercentralcustomer.productDetail.adapter;
 
 import android.content.Context;
 import android.os.Parcelable;

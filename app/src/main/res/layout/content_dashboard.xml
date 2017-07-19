@@ -13,15 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include
+        <!--<include
             android:id="@+id/content_header_wrapper"
-            layout="@layout/layout_content_header" />
+            layout="@layout/layout_content_header" />-->
 
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/content_header_wrapper"
             android:layout_marginEnd="@dimen/dp10"
             android:layout_marginStart="@dimen/dp10" />
 

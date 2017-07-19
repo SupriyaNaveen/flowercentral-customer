@@ -127,6 +127,10 @@ public class Util {
             TelephonyManager telephonyManger = (TelephonyManager) _context.getSystemService(Context.TELEPHONY_SERVICE);
             imeiNumber = telephonyManger.getDeviceId();
 
+            if(imeiNumber == null){
+                imeiNumber = Settings.Secure.getString(_context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            }
+
         }catch(Exception ex){
             imeiNumber = null;
             ex.printStackTrace();
