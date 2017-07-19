@@ -94,7 +94,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
     private List<Product> mProductList;
     private boolean mDataDownloaded;
     private boolean mUserRegistered;
-    private boolean mLocationFound;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +106,6 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
 
         mDataDownloaded = false;
         mUserRegistered = false;
-        mLocationFound = false;
 
         mVisible = true;
 
@@ -124,72 +123,8 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
         mBtnGoogle.setOnRippleCompleteListener(this);
         mBtnInstagram.setOnRippleCompleteListener(this);
 
-        mProgressDialog = Util.showProgressDialog(mCurrentActivity, null, getString(R.string.msg_please_wait), false);
-
         initializeActivity(mContext);
 
-        //Fetching user's current location
-
-        boolean hasLocationPermission = Util.checkLocationPermission(this);
-        if (hasLocationPermission == true) {
-            getCurrrentLocation(mContext);
-        } else {
-
-            //Ask for permission
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) ||
-                    ActivityCompat.shouldShowRequestPermissionRationale(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                mDialog = showDialog(mContext, getString(R.string.title_location_permission),
-                        getString(R.string.content_location_permission),
-                        false, false, getString(R.string.btn_allow), getString(R.string.btn_cancel), null);
-
-                mDialog.getBuilder().onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        // No explanation needed, we can request the permission.
-                        ActivityCompat.requestPermissions(mCurrentActivity,
-                                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                                AppConstant.REQUEST_CODE_LOCATION_PERMISSIONS);
-                    }
-                });
-
-                mDialog.getBuilder().onNegative(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        mDialog.dismiss();
-                    }
-                });
-                mDialog.show();
-
-            } else {
-
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                        AppConstant.REQUEST_CODE_LOCATION_PERMISSIONS);
-
-            }
-
-        }
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        //super.onRequestPermissionsResult (requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case AppConstant.REQUEST_CODE_LOCATION_PERMISSIONS:
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the task you need to do.
-                    getCurrrentLocation(mContext);
-                }
-
-                break;
-        }
     }
 
     @Override
@@ -394,13 +329,26 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
             mFlNoInternet.setVisibility(View.GONE);
             mllLoginWrapper.setVisibility(View.VISIBLE);
 
-            //Todo Goto dashboard if user already logged in
+            mProgressDialog = Util.showProgressDialog(mCurrentActivity, null, getString(R.string.msg_please_wait), false);
 
             //Initialize social plugins
             initSocialPlugins();
 
             //Get data from server
             getProductsFromServer(_context);
+
+            //Todo Goto dashboard if user already logged in
+            String accessToken = UserPreference.getAccessToken ();
+            if(!TextUtils.isEmpty (accessToken)){
+                mUserRegistered = true;
+            }else{
+                mUserRegistered = false;
+            }
+
+            if(mUserRegistered == true && mDataDownloaded == true){
+                //Goto dashboard
+                showDashboard();
+            }
 
         } else {
             mFlNoInternet.setVisibility(View.VISIBLE);
@@ -491,7 +439,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                             } else if (_user.getString("auth_type").equalsIgnoreCase("instagram")) {
                                 UserPreference.setLoginMethod(AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal());
                             } else {
-                                UserPreference.setLoginMethod(AppConstant.LOGIN_TYPE.CUSTOM.ordinal());
+                                UserPreference.setLoginMethod (AppConstant.LOGIN_TYPE.CUSTOM.ordinal ());
                             }
 
                             JSONObject customer = _response.getJSONObject("customer_details");
@@ -512,7 +460,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
 
                             mUserRegistered = true;
                             //Redirect to Dashboard
-                            if (mLocationFound = true && mUserRegistered == true && mDataDownloaded == true) {
+                            if (mUserRegistered == true && mDataDownloaded == true) {
                                 showDashboard();
                             }
 
@@ -591,7 +539,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
         finish();
     }
 
-    private void getCurrrentLocation(Context _context) {
+    /*private void getCurrrentLocation(Context _context) {
         try {
 
             LocationApi locationApi = new LocationApi(_context);
@@ -638,9 +586,9 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
+    }*/
 
-    private void validateAccessToken() {
+    /*private void validateAccessToken() {
         if (!TextUtils.isEmpty(UserPreference.getAccessToken())) {
             //Revalidate the auth token based on type of login
             if (UserPreference.getLoginMethod() == AppConstant.LOGIN_TYPE.FACEBOOK.ordinal()) {
@@ -653,7 +601,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                 mInstagramHelper.performSignIn();
             }
         }
-    }
+    }*/
 
     private MaterialDialog showDialog(Context _context, String _title, String _content, boolean _cancellable,
                                       boolean _autoDismiss, String _positiveText, String _negativeText, Drawable _icon) {
@@ -680,11 +628,8 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
 
             @Override
             public void onSuccess(int statusCode, Map<String, String> headers, JSONArray _response) {
-                //CLose Progress dialog
 
-                if (mLocationFound == true && mDataDownloaded == true) {
-                    dismissDialog();
-                }
+                dismissDialog();
 
                 if (_response != null & _response.length() > 0) {
                     try {
@@ -693,9 +638,9 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                         localDAO.addProducts(_response, false);
                         mDataDownloaded = true;
 
+                        //CLose Progress dialog
                         if (mUserRegistered == true && mDataDownloaded == true) {
-                            //Validate access token and store the fresh token
-                            validateAccessToken();
+                            showDashboard ();
                         }
 
                     } catch (Exception ex) {
@@ -759,6 +704,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
             case R.id.btn_try_again:
                 initializeActivity(mContext);
                 break;
+
             case R.id.btn_fb:
                 if (UserPreference.getAccessToken() != null) {
                     UserPreference.deleteProfileInformation();
@@ -766,8 +712,8 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                 }
 
                 mLoginMethod = AppConstant.LOGIN_TYPE.FACEBOOK.ordinal();
-                //mFacebookHelper.performSignIn(this);
-                showDashboard();
+                mFacebookHelper.performSignIn(this);
+
                 break;
 
             case R.id.btn_google:

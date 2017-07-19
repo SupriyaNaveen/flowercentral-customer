@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:text="@string/lbl_categories"
         android:textSize="@dimen/sp17"
-        android:gravity="center"
+        android:gravity="left"
         android:layout_centerInParent="true"
         style="@style/AppTheme.Normal"/>
 

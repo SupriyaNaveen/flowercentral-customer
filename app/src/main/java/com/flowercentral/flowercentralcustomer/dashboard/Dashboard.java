@@ -9,6 +9,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
@@ -25,7 +26,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
-import com.flowercentral.flowercentralcustomer.ProductDetail.ProductDetailActivity;
+import com.flowercentral.flowercentralcustomer.productDetail.ProductDetailActivity;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.cart.CartActivity;
 import com.flowercentral.flowercentralcustomer.common.interfaces.OnFragmentInteractionListener;
@@ -69,7 +70,8 @@ public class Dashboard extends BaseActivity
     private SearchView mProductSearch;
     private ImageView mRightNavToggleIcon;
 
-    private enum OPTIONS {DEFAULT, PROFILE, DELIVERY_TIME, ORDER, HELP}
+    private enum SELECTED_NAV_OPTIONS {DEFAULT, PROFILE, DELIVERY_TIME, ORDER, HELP}
+    private enum SELECTED_CATEGORY_OPTIONS {ALL, SMALL, MEDIUM, LARGE, EXTRA_LARGE, EXTRA_LARGE_PLUS}
 
     private RelativeLayout mContentWrapper;
     private Toolbar mToolbar;
@@ -77,11 +79,13 @@ public class Dashboard extends BaseActivity
     private ActionBarDrawerToggle mToggle;
     private NavigationView mNavigationViewLeft;
     private NavigationView mNavigationViewRight;
-    private ImageView mSelView;
-    private ImageView mFilter;
+
+    //private ImageView mSelView;
+    //private ImageView mFilter;
 
     private String mAction;
-    private int mSelectedOption;
+    private int mSelectedNavOption;
+    private int mSelectedCategoryOption;
     private int mSelectedView;
     private int mSelectedSortingOption;
 
@@ -126,11 +130,11 @@ public class Dashboard extends BaseActivity
         mRightNavToggleIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mDrawer.isDrawerOpen(Gravity.END)) {
-                    mDrawer.closeDrawer(Gravity.END);
-                } else {
-                    mDrawer.openDrawer(Gravity.END);
-                }
+            if (mDrawer.isDrawerOpen(Gravity.END)) {
+                mDrawer.closeDrawer(Gravity.END);
+            } else {
+                mDrawer.openDrawer(Gravity.END);
+            }
             }
         });
         mToggle.syncState();
@@ -153,17 +157,24 @@ public class Dashboard extends BaseActivity
         getProductStoredLocally(mContext);
 
         //Set the default options and view
-        mSelectedOption = OPTIONS.DEFAULT.ordinal();
+        mSelectedNavOption = SELECTED_NAV_OPTIONS.DEFAULT.ordinal();
+        mSelectedCategoryOption = SELECTED_CATEGORY_OPTIONS.ALL.ordinal ();
         mSelectedView = AppConstant.VIEW_TYPE.GRID.ordinal();
 
+        //Clear selection of navigation menu
+        deselectSelectedNavOption();
+
+        //Set Default Category "All" Selected
+        defaultSelectedCategory();
+
         //Load default home fragment
-        loadFragment(mSelectedOption, null);
+        loadFragment(mSelectedNavOption, null);
 
         mNavigationViewLeft.setNavigationItemSelectedListener(this);
         mNavigationViewRight.setNavigationItemSelectedListener(this);
 
-        mSelView.setOnClickListener(this);
-        mFilter.setOnClickListener(this);
+        //mSelView.setOnClickListener(this);
+        //mFilter.setOnClickListener(this);
 
     }
 
@@ -180,13 +191,21 @@ public class Dashboard extends BaseActivity
     }
 
     @Override
+    protected void onResume () {
+        super.onResume ();
+        if(mSelectedNavOption == SELECTED_NAV_OPTIONS.DEFAULT.ordinal ()){
+            deselectSelectedNavOption ();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.dashboard, menu);
 
-        /*MenuItem search = menu.findItem(R.id.action_search);
+        MenuItem search = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
-        search(searchView);*/
+        search(searchView);
 
         return true;
     }
@@ -201,9 +220,21 @@ public class Dashboard extends BaseActivity
             case R.id.action_cart:
                 showCart();
                 break;
-            /*case R.id.action_search:
+            case R.id.action_search:
 
-                break;*/
+                break;
+
+            case R.id.action_toggle_view:
+                if(mSelectedView == AppConstant.VIEW_TYPE.GRID.ordinal ()){
+                    //Switch to List
+                    mSelectedView = AppConstant.VIEW_TYPE.LIST.ordinal ();
+                    item.setIcon (R.drawable.ic_bullet_list_white_24);
+                }else{
+                    mSelectedView = AppConstant.VIEW_TYPE.GRID.ordinal ();
+                    item.setIcon (R.drawable.ic_grid_white_24);
+                }
+                loadFragment(mSelectedNavOption, null);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -216,43 +247,53 @@ public class Dashboard extends BaseActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_orders) {
+            mSelectedNavOption = SELECTED_NAV_OPTIONS.ORDER.ordinal ();
             showOrder();
 
         } else if (id == R.id.nav_profile) {
+            mSelectedNavOption = SELECTED_NAV_OPTIONS.PROFILE.ordinal ();
             showProfile();
 
         } else if (id == R.id.nav_delivery_time) {
+            mSelectedNavOption = SELECTED_NAV_OPTIONS.DELIVERY_TIME.ordinal ();
+            showDeliveryTime();
 
         } else if (id == R.id.nav_logout) {
             logout(mContext);
 
         } else if (id == R.id.nav_help) {
+            mSelectedNavOption = SELECTED_NAV_OPTIONS.HELP.ordinal ();
+            showHelp();
 
         } else if (id == R.id.nav_small) {
+            mSelectedCategoryOption = SELECTED_CATEGORY_OPTIONS.SMALL.ordinal ();
             if (productGridFragment != null) {
                 productGridFragment.showProductByCategory("S");
             }
 
         } else if (id == R.id.nav_medium) {
+            mSelectedCategoryOption = SELECTED_CATEGORY_OPTIONS.MEDIUM.ordinal ();
             productGridFragment.showProductByCategory("M");
 
         } else if (id == R.id.nav_large) {
+            mSelectedCategoryOption = SELECTED_CATEGORY_OPTIONS.LARGE.ordinal ();
             productGridFragment.showProductByCategory("L");
 
         } else if (id == R.id.nav_extra_large) {
+            mSelectedCategoryOption = SELECTED_CATEGORY_OPTIONS.EXTRA_LARGE.ordinal ();
             productGridFragment.showProductByCategory("XL");
         } else if (id == R.id.nav_extra_large_plus) {
+            mSelectedCategoryOption = SELECTED_CATEGORY_OPTIONS.EXTRA_LARGE.ordinal ();
+            productGridFragment.showProductByCategory("XL+");
 
         } else if (id == R.id.nav_all) {
+            mSelectedCategoryOption = SELECTED_CATEGORY_OPTIONS.ALL.ordinal ();
             productGridFragment.showProductByCategory(null);
 
         } else {
+            mSelectedCategoryOption = SELECTED_CATEGORY_OPTIONS.ALL.ordinal ();
             productGridFragment.showProductByCategory(null);
         }
-
-//        else if (id == R.id.nav_customize) {
-//            Toast.makeText (mContext, "Customize", Toast.LENGTH_SHORT).show ();
-//        }
 
         mDrawer.closeDrawer(GravityCompat.START);
         mDrawer.closeDrawer(GravityCompat.END);
@@ -260,25 +301,23 @@ public class Dashboard extends BaseActivity
         return true;
     }
 
+    private void showHelp () {
+
+    }
+
+    private void showDeliveryTime () {
+
+    }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
-            case R.id.img_grid_view:
-
-                mSelectedOption = OPTIONS.DEFAULT.ordinal();
-                if (mSelectedView == AppConstant.VIEW_TYPE.GRID.ordinal()) {
-                    mSelectedView = AppConstant.VIEW_TYPE.LIST.ordinal();
-                } else if (mSelectedView == AppConstant.VIEW_TYPE.LIST.ordinal()) {
-                    mSelectedView = AppConstant.VIEW_TYPE.GRID.ordinal();
-                }
-                loadFragment(mSelectedOption, null);
-
-                break;
-            case R.id.img_filter:
-                showSingleChoiceListDialog();
-
-                break;
+            //case R.id.img_grid_view:
+            //break;
+            //case R.id.img_filter:
+                //showSingleChoiceListDialog();
+            // break;
         }
 
     }
@@ -354,15 +393,16 @@ public class Dashboard extends BaseActivity
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationViewLeft = (NavigationView) findViewById(R.id.nav_view_left);
         mNavigationViewRight = (NavigationView) findViewById(R.id.nav_view_right);
-        mSelView = (ImageView) findViewById(R.id.img_grid_view);
-        mFilter = (ImageView) findViewById(R.id.img_filter);
+
+        //mSelView = (ImageView) findViewById(R.id.img_grid_view);
+        //mFilter = (ImageView) findViewById(R.id.img_filter);
+
         mRightNavToggleIcon = (ImageView) findViewById(R.id.image_view_right_nav_drawer);
 
         View header = mNavigationViewLeft.getHeaderView(0);
         mUserProfilePic = (CircleImageView) header.findViewById(R.id.user_profile_pic);
         mUserName = (TextView) header.findViewById(R.id.user_name);
         mUserEmail = (TextView) header.findViewById(R.id.user_email);
-        mProductSearch = (SearchView) findViewById(R.id.sv_productSearchInput);
 
         //Adding a name, email and profile pic to the left navigation drawer
         String profilePic = UserPreference.getProfilePic();
@@ -388,9 +428,6 @@ public class Dashboard extends BaseActivity
             mUserEmail.setText(UserPreference.getUserEmail());
         }
 
-        //UI Search Implementation
-        search(mProductSearch);
-
     }
 
     private void loadFragment(int _selectedOptions, String _data) {
@@ -401,7 +438,7 @@ public class Dashboard extends BaseActivity
 
         productGridFragment = null;
 
-        if (_selectedOptions == OPTIONS.DEFAULT.ordinal()) {
+        if (_selectedOptions == SELECTED_NAV_OPTIONS.DEFAULT.ordinal()) {
 
             if (mSelectedView == AppConstant.VIEW_TYPE.GRID.ordinal()) {
                 Bundle args = new Bundle();
@@ -498,26 +535,26 @@ public class Dashboard extends BaseActivity
     //Single choice list dialog
     private void showSingleChoiceListDialog() {
         mSingleChoiceListDialog = new MaterialDialog.Builder(this)
-                .title(R.string.title_filter_by)
-                .items(R.array.filter_product)
-                .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
-                    @Override
-                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+            .title(R.string.title_filter_by)
+            .items(R.array.filter_product)
+            .itemsCallbackSingleChoice(-1, new MaterialDialog.ListCallbackSingleChoice() {
+                @Override
+                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
 
-                        if (text.toString().equalsIgnoreCase("price")) {
-                            mSelectedSortingOption = AppConstant.SORTING_OPTION.BY_PRICE.ordinal();
-                        } else {
-                            mSelectedSortingOption = AppConstant.SORTING_OPTION.BY_CATEGORY.ordinal();
-                        }
-
-                        if (productGridFragment != null) {
-                            productGridFragment.sort(mSelectedSortingOption);
-                        }
-                        return true;
+                    if (text.toString().equalsIgnoreCase("price")) {
+                        mSelectedSortingOption = AppConstant.SORTING_OPTION.BY_PRICE.ordinal();
+                    } else {
+                        mSelectedSortingOption = AppConstant.SORTING_OPTION.BY_CATEGORY.ordinal();
                     }
-                })
-                .positiveText(R.string.btn_choose)
-                .show();
+
+                    if (productGridFragment != null) {
+                        productGridFragment.sort(mSelectedSortingOption);
+                    }
+                    return true;
+                }
+            })
+            .positiveText(R.string.btn_choose)
+            .show();
     }
 
     private void logout(Context _context) {
@@ -527,6 +564,16 @@ public class Dashboard extends BaseActivity
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
+    }
+
+    private void deselectSelectedNavOption(){
+        for(int i = 0; i<mNavigationViewLeft.getMenu ().size (); i++){
+            mNavigationViewLeft.getMenu ().getItem (i).setChecked (false);
+        }
+    }
+
+    private void defaultSelectedCategory(){
+        mNavigationViewRight.getMenu ().getItem (0).setChecked (true);
     }
 
 }

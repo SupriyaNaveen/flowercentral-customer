@@ -151,6 +151,10 @@
     <string name="lbl_schdDeliveryDate">Delivered On</string>
     <string name="lbl_items">Items</string>
     <string name="lbl_DeliveryAddress">Delivered At</string>
+    <string name="action_toggle_view">Toggle View</string>
+    <string name="msg_no_order">It seems that you\'ve not placed any order yet.\nPlease checkout our flower collections.</string>
+    <string name="msg_no_cart_item">It seems that you\'ve not added any item into cart.\nPlease checkout our flower collections.</string>
+    <string name="msg_no_product">Opps! Did not find product.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

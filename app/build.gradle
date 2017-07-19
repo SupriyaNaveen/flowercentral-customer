@@ -1,10 +1,6 @@
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
-        mavenCentral()
-        maven {
-            url "https://s3-ap-southeast-1.amazonaws.com/godel-release/godel/"
-        }
     }
 
     dependencies {
@@ -36,14 +32,20 @@ android {
             buildConfigField("String", "BUILD_MODE", "\"DEVELOPMENT\"")
             buildConfigField("boolean", "IS_PRODUCTION", "false")
             buildConfigField("String", "SERVER", "\"https://private-63c01-divye.apiary-mock.com/\"")
+            buildConfigField("String", "INSTA_MOJO_BASE_URL", "https://test.instamojo.com/")
+            buildConfigField("String", "INSTA_MOJO_CLIENT_ID", "IsPqj56UPZWzY4czhqvLk6cUdVV6osJUhL6ykTPr")
+            buildConfigField("String", "INSTA_MOJO_CLIENT_SECRET", "jgSLO2Jovfm6kLicE9NMdReWNOwNGsV6nQKIf5nFXuPtB8e8Vs1jzHCb1HEAG8HwpjoVCA76MZd7RqbINEzTSByMu05UFPKPq2CalQYWM6o7igG5HHkZoS9ReeZJ37Wp")
         }
 
         production {
             buildConfigField("String", "BUILD_MODE", "\"PRODUCTION\"")
             buildConfigField("boolean", "IS_PRODUCTION", "true")
             buildConfigField("String", "SERVER", "\"https://private-63c01-divye.apiary-mock.com/\"")
-
+            buildConfigField("String", "INSTA_MOJO_BASE_URL", "https://www.instamojo.com/")
+            buildConfigField("String", "INSTA_MOJO_CLIENT_ID", "IsPqj56UPZWzY4czhqvLk6cUdVV6osJUhL6ykTPr")
+            buildConfigField("String", "INSTA_MOJO_CLIENT_SECRET", "jgSLO2Jovfm6kLicE9NMdReWNOwNGsV6nQKIf5nFXuPtB8e8Vs1jzHCb1HEAG8HwpjoVCA76MZd7RqbINEzTSByMu05UFPKPq2CalQYWM6o7igG5HHkZoS9ReeZJ37Wp")
         }
+
     }
 }
 
@@ -54,6 +56,10 @@ dependencies {
     })
 
     compile project(':sociallogin')
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
 
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
@@ -74,11 +80,9 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
     compile 'com.google.android.gms:play-services-maps:10.2.6'
     compile 'com.patrickpissurno:ripple-effect:1.3.1'
-    testCompile 'junit:junit:4.12'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
-    }
+    compile 'in.juspay:godel:0.6.22.1623'
     compile 'com.instamojo:android-sdk:+'
+    testCompile 'junit:junit:4.12'
 }
 
 
