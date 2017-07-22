@@ -95,8 +95,6 @@ public class FacebookHelper {
             }
         });
 
-   //     {"id":"10210672149052711","name":"Ashish Upadhyay","first_name":"Ashish","last_name":"Upadhyay","email":"ashish_upadhyay76@yahoo.co.in","gender":"male","picture":{"data":{"is_silhouette":false,"url":"https:\/\/scontent.xx.fbcdn.net\/v\/t1.0-1\/c0.0.50.50\/p50x50\/12821625_10207131766545361_5977801007893198243_n.jpg?oh=92264b1fb73c283805f0e31e61dd2aa3&oe=5A073F6D"}},"cover":{"id":"10206250983686340","offset_x":0,"offset_y":50,"source":"https:\/\/scontent.xx.fbcdn.net\/v\/t31.0-8\/s720x720\/12087675_10206250983686340_4813887211874454413_o.jpg?oh=99eebb7839c246c4457195f3b915ee88&oe=59F49584"},"verified":true}
-
         //Basic profile with minimum permission
         Bundle parameters = new Bundle();
         parameters.putString("fields", "id,name, first_name,last_name,email,gender,picture, cover, verified");
@@ -116,13 +114,6 @@ public class FacebookHelper {
                 user.setEmail (_object.getString ("email"));
                 user.setGender (_object.getString ("gender"));
                 user.setVerified (_object.getBoolean ("verified"));
-                if(_object.has ("picture")){
-                    user.setPicture (_object.getJSONObject ("picture").getJSONObject ("data").getString ("url"));
-                }
-                if(_object.has ("cover")){
-                    user.setCover (_object.getJSONObject ("cover").getString ("source"));
-                }
-
 
             }catch (JSONException jsonEx){
                 jsonEx.printStackTrace ();

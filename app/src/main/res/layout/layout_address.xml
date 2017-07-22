@@ -140,7 +140,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginTop="@dimen/dp16"
-            app:rv_centered="true">
+            app:rv_centered="true"
+            app:rv_color="@color/colorRipple">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -165,12 +166,13 @@
                 android:layout_marginEnd="@dimen/dp10"
                 android:layout_weight="1"
                 android:background="@drawable/rounded_corner_nofill"
-                app:rv_centered="true">
+                app:rv_centered="true"
+                app:rv_color="@color/colorRipple">
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
-                    android:background="@drawable/button_transparent"
+                    android:background="@android:color/transparent"
                     android:gravity="center"
                     android:text="@string/btn_continue"
                     android:textColor="@color/color3b3b3b" />
@@ -184,12 +186,13 @@
                 android:layout_marginStart="@dimen/dp10"
                 android:layout_weight="1"
                 android:background="@drawable/rounded_corner_nofill"
-                app:rv_centered="true">
+                app:rv_centered="true"
+                app:rv_color="@color/colorRipple">
 
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
-                    android:background="@drawable/button_transparent"
+                    android:background="@android:color/transparent"
                     android:gravity="center"
                     android:text="@string/btn_cancel"
                     android:textColor="@color/color3b3b3b" />

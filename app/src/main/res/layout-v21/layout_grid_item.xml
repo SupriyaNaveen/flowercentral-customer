@@ -132,8 +132,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="@dimen/dp10"
+                android:letterSpacing=".1"
                 android:maxLines="1"
                 android:padding="@dimen/dp5"
+                android:text="700"
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/sp12" />
 
@@ -151,6 +153,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
+                    android:letterSpacing=".1"
                     android:maxLines="1"
                     android:paddingBottom="@dimen/dp5"
                     android:paddingLeft="@dimen/dp10"

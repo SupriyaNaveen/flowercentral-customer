@@ -14,13 +14,12 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.andexert.library.RippleView;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.preference.UserPreference;
@@ -48,8 +47,8 @@ public class ProfileActivity extends BaseActivity {
     private RadioGroup mRadioGroupGender;
     private RadioButton mRadioBtnFemale;
     private RadioButton mRadioBtnMale;
-    private Button mBtnUpdate;
-    private Button mBtnCancel;
+    private RippleView mBtnUpdate;
+    private RippleView mBtnCancel;
     private MaterialDialog mProgressDialog;
     private CoordinatorLayout mRootLayout;
 
@@ -135,19 +134,19 @@ public class ProfileActivity extends BaseActivity {
         mRadioBtnMale = (RadioButton) findViewById(R.id.male_gender_btn);
         mRadioBtnFemale = (RadioButton) findViewById(R.id.female_gender_button);
 
-        mBtnUpdate = (Button) findViewById(R.id.btn_update);
-        mBtnCancel = (Button) findViewById(R.id.btn_cancel);
+        mBtnUpdate = (RippleView) findViewById(R.id.btn_update);
+        mBtnCancel = (RippleView) findViewById(R.id.btn_cancel);
 
-        mBtnUpdate.setOnClickListener(new View.OnClickListener() {
+        mBtnUpdate.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
             @Override
-            public void onClick(View v) {
+            public void onComplete(RippleView v) {
                 profileUpdate();
             }
         });
 
-        mBtnCancel.setOnClickListener(new View.OnClickListener() {
+        mBtnCancel.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
             @Override
-            public void onClick(View v) {
+            public void onComplete(RippleView v) {
 
             }
         });
