@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_help_outer_wrapper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.flowercentral.flowercentralcustomer.help.Help">
+    tools:context="com.flowercentral.flowercentralcustomer.deliveryTime.DeliveryTime">
 
-</android.support.constraint.ConstraintLayout>
+    <!-- Set toolbar -->
+    <include
+        android:id="@+id/toolbar_default"
+        layout="@layout/toolbar_default" />
+
+    <LinearLayout
+        android:id="@+id/ll_help_inner_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_default">
+
+        <WebView
+            android:id="@+id/wv_help"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </WebView>
+
+    </LinearLayout>
+
+</RelativeLayout>

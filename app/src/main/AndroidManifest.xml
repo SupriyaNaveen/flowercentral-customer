@@ -98,6 +98,21 @@
             android:parentActivityName=".delivery.AddressActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".deliveryTime.DeliveryTime"
+            android:label="@string/title_activity_delivery_time"
+            android:launchMode="singleInstance"
+            android:parentActivityName=".dashboard.Dashboard"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity android:name=".help.Help"
+            android:label="@string/title_activity_help"
+            android:launchMode="singleInstance"
+            android:parentActivityName=".dashboard.Dashboard"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+        </activity>
+
         <service
             android:name=".common.location.service.FetchAddressIntentService"
             android:exported="false">
@@ -116,10 +131,6 @@
             android:name="io.fabric.ApiKey"
             android:value="d7527c7823522f2c8672f93991ff0532472e56b4"/>
 
-        <activity android:name=".deliveryTime.DeliveryTime">
-        </activity>
-        <activity android:name=".help.Help">
-        </activity>
     </application>
 
 </manifest>

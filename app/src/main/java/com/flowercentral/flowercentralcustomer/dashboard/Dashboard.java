@@ -26,6 +26,8 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
+import com.flowercentral.flowercentralcustomer.deliveryTime.DeliveryTime;
+import com.flowercentral.flowercentralcustomer.help.Help;
 import com.flowercentral.flowercentralcustomer.productDetail.ProductDetailActivity;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.cart.CartActivity;
@@ -302,11 +304,17 @@ public class Dashboard extends BaseActivity
     }
 
     private void showHelp () {
-
+        Intent intent = new Intent(mContext, Help.class);
+        intent.setAction(AppConstant.ACTIONS.HELP.name());
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
     }
 
     private void showDeliveryTime () {
-
+        Intent intent = new Intent(mContext, DeliveryTime.class);
+        intent.setAction(AppConstant.ACTIONS.DELIVERY_TIME.name());
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
     }
 
     @Override

@@ -86,6 +86,25 @@ public class CartActivity extends BaseActivity implements RippleView.OnRippleCom
     public boolean onCreateOptionsMenu (Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater ().inflate (R.menu.dashboard, menu);
+
+        MenuItem search = menu.findItem (R.id.action_search);
+        if(search != null){
+            search.setVisible (false);
+        }
+
+        MenuItem toggleView = menu.findItem (R.id.action_toggle_view);
+        if(toggleView != null){
+            toggleView.setVisible (false);
+        }
+
+
+        MenuItem cart = menu.findItem (R.id.action_cart);
+        if(cart != null){
+            cart.setVisible (false);
+        }
+
+        this.invalidateOptionsMenu ();
+
         return true;
     }
 
@@ -97,6 +116,7 @@ public class CartActivity extends BaseActivity implements RippleView.OnRippleCom
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 break;
+
         }
         return super.onOptionsItemSelected(item);
 

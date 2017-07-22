@@ -287,7 +287,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
                         }
                         order.put("products", products);
 
-                        submitOrderDetailsToServer(mContext, mCurrentActivity, order);
+                        submitOrder(mContext, mCurrentActivity, order);
 
                     } catch (JSONException jsonEx) {
                         Logger.log(TAG, "onClick - btnContinue: ", jsonEx.getMessage(), AppConstant.LOG_LEVEL_ERR);
@@ -403,11 +403,6 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         return null;
     }
 
-    private void submitOrderDetailsToServer(Context _context, Activity _activity, JSONObject _data) {
-        submitOrder(_context, _activity, constructJsonObject());
-
-    }
-
     private void submitOrder(Context _context, Activity _activity, JSONObject _data) {
         //Start Progress dialog
         dismissDialog();
@@ -423,9 +418,10 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
                 dismissDialog();
                 try {
                     if (response.getInt(getString(R.string.api_res_status)) == 1) {
-                        Snackbar.make(mRootLayout, getString(R.string.msg_order_success), Snackbar.LENGTH_SHORT).show();
+                        // Retrieve Transaction id from the response.
 
-                        //Redirct user to payment InstaMojo
+                        // Call to initiate instamojo
+
 
 
                     } else {

@@ -11,7 +11,13 @@
     <string name="title_activity_product_detail">Product Detail</string>
     <string name="title_activity_cart">Your Cart</string>
     <string name="title_activity_address">Address</string>
-
+    <string name="title_activity_order_details">Order Details</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_delivery_time">Delivery Time</string>
+    <string name="title_activity_help">Help</string>
+    <string name="title_filter_by">Filter By</string>
+    <string name="title_activity_order">My Order</string>
+    <string name="title_location_permission">Location Access</string>
     <!-- Error Messages and Title -->
 
     <string name="title_connection_time_out">Connection Timeout</string>
@@ -21,6 +27,25 @@
     <string name="msg_internet_unavailable">It looks like you are offline, connect with Internet &amp;\nTry Again!</string>
     <string name="msg_invalid_email">Invalid email format</string>
     <string name="msg_password_min_length">Min 6 charcter in length.</string>
+    <string name="msg_authenticating_user">Please wait, authenticating user.</string>
+    <string name="msg_recovering_password">Please wait, recovering your password</string>
+    <string name="msg_empty_cart">No item in the Cart.</string>
+    <string name="msg_reg_user_missing_input">Required parameters are missing. Please check and try again!</string>
+    <string name="msg_registering_user">Please wait, saving information.</string>
+    <string name="msg_check_address">Please wait, validating address.</string>
+    <string name="msg_logout_success">You have been Successfully logged out.</string>
+    <string name="msg_user_not_registered">Unable to register user.</string>
+    <string name="msg_finding_products">Please wait, looking for products.</string>
+    <string name="msg_please_wait">Please wait...</string>
+    <string name="msg_item_added_cart">Product is added to your cart.</string>
+    <string name="msg_err_delivery_address">Please check your delivery carefully before submitting your order.</string>
+    <string name="msg_err_cart_items">Please add product into your cart before submitting order.</string>
+    <string name="msg_order_success">Your order has been successfully placed .</string>
+    <string name="msg_order_fail">Oops! we have encountered some problem. Please try again!</string>
+    <string name="msg_registering_order">Placing your order.</string>
+    <string name="msg_no_order">It seems that you\'ve not placed any order yet.\nPlease checkout our flower collections.</string>
+    <string name="msg_no_cart_item">It seems that you\'ve not added any item into cart.\nPlease checkout our flower collections.</string>
+    <string name="msg_no_product">Opps! Did not find product.</string>
 
     <string name="lbl_email">Email</string>
     <string name="lbl_password">Password</string>
@@ -41,6 +66,22 @@
     <string name="lbl_google">Google</string>
     <string name="lbl_instagram">Instagram</string>
     <string name="lbl_or">Or Sign-In With</string>
+    <string name="lbl_first_name">First Name</string>
+    <string name="lbl_last_name">Last Name</string>
+    <string name="lbl_mobile">Mobile</string>
+    <string name="lbl_gender">Gender</string>
+    <string name="lbl_male">Male</string>
+    <string name="lbl_female">Female</string>
+    <string name="lbl_query_hint">Enter Search Keywords</string>
+    <string name="lbl_order">Order No</string>
+    <string name="lbl_orderDate">Ordered On</string>
+    <string name="lbl_see_items">See Items</string>
+    <string name="lbl_orderQty">Item/Amount</string>
+    <string name="lbl_orderAmount">Amount</string>
+    <string name="lbl_SchdDelivery">Schd. Delivery</string>
+    <string name="lbl_schdDeliveryDate">Delivered On</string>
+    <string name="lbl_items">Items</string>
+    <string name="lbl_DeliveryAddress">Delivered At</string>
 
     <string name="nav_menu_order">Order</string>
     <string name="nav_menu_profile">Profile</string>
@@ -51,6 +92,8 @@
     <string name="action_cart">Cart</string>
     <string name="action_plus">+</string>
     <string name="action_minus">-</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_toggle_view">Toggle View</string>
 
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
@@ -60,6 +103,9 @@
     <string name="hint_state">State</string>
     <string name="hint_zip">Zip</string>
     <string name="hint_phone">Phone</string>
+    <string name="hint_customer_name">Full Name</string>
+    <string name="hint_phone1">Phone1</string>
+    <string name="hint_phone2">Phone2</string>
 
     <string name="btn_try_again">Try Again</string>
     <string name="btn_cancel">Cancel</string>
@@ -69,60 +115,30 @@
     <string name="btn_add_to_cart">Add to Cart</string>
     <string name="btn_buy_now">Buy Now</string>
     <string name="btn_remove">Remove</string>
-
-    <string name="msg_authenticating_user">Please wait, authenticating user.</string>
-    <string name="msg_recovering_password">Please wait, recovering your password</string>
-    <string name="msg_empty_cart">No item in the Cart.</string>
+    <string name="btn_update">Update</string>
+    <string name="btn_choose">Choose</string>
+    <string name="btn_continue">Continue</string>
+    <string name="btn_allow">Allow</string>
 
     <string name="err_inavlid_username_password">User name and Password doesn\'t match.</string>
+    <string name="err_empty_text">Can not be empty.</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Settings</string>
 
     <!-- SOCIAL APP KEY -->
     <string name="fb_app_id">1806307213019284</string>
     <string name="instagram_client_id">0bc257261932418dbfc40e26ab458d5b</string>
     <string name="instagram_client_secret">1b614f547dc54dfba94623ac358962b3</string>
     <string name="instagram_callback_url">http://flowercentral.com</string>
-    <string name="msg_reg_user_missing_input">Required parameters are missing. Please check and try again!</string>
-    <string name="msg_registering_user">Please wait, saving information.</string>
-    <string name="msg_check_address">Please wait, validating address.</string>
-    <string name="msg_logout_success">You have been Successfully logged out.</string>
-    <string name="err_empty_text">Can not be empty.</string>
-    <string name="title_location_permission">Location Access</string>
     <string name="content_location_permission">Flower Central needs your location info to look for nearest provider.</string>
-    <string name="btn_allow">Allow</string>
-    <string name="title_activity_order_details">Order Details</string>
-    <string name="title_activity_profile">Profile</string>
-    <string name="lbl_first_name">First Name</string>
-    <string name="lbl_last_name">Last Name</string>
-    <string name="lbl_mobile">Mobile</string>
-    <string name="lbl_gender">Gender</string>
-    <string name="lbl_male">Male</string>
-    <string name="lbl_female">Female</string>
-    <string name="msg_user_not_registered">Unable to register user.</string>
-    <string name="msg_finding_products">Please wait, looking for products.</string>
-    <string name="msg_please_wait">Please wait...</string>
-    <string name="title_filter_by">Filter By</string>
-    <string name="btn_choose">Choose</string>
-    <string name="btn_continue">Continue</string>
-
-    <string name="hint_customer_name">Full Name</string>
-    <string name="hint_phone1">Phone1</string>
-    <string name="hint_phone2">Phone2</string>
+    <string name="map_error_unable_locate_address">Unable to locate the address.</string>
 
     <string name="s_required_permission_location">Grant permission to access location</string>
     <string name="s_action_request_again">Request</string>
     <string name="s_required_permission_settings">Grant permission in setting.</string>
     <string name="s_action_redirect_settings">Settings</string>
 
-    <string name="key_latitude">latitude</string>
-    <string name="key_longitude">longitude</string>
-    <string name="key_address">address</string>
-    <string name="key_is_draggable">isDraggable</string>
-    <string name="map_error_unable_locate_address">Unable to locate the address.</string>
     <string name="api_key_name">name</string>
     <string name="api_key_address">address</string>
     <string name="api_key_city">city</string>
@@ -130,31 +146,14 @@
     <string name="api_key_pin">pin</string>
     <string name="api_key_phone1">mobile_no</string>
     <string name="api_res_status">status</string>
-    <string name="lbl_query_hint">Enter Search Keywords</string>
-    <string name="msg_item_added_cart">Product is added to your cart.</string>
-    <string name="btn_update">Update</string>
     <string name="api_key_firstname">first_name</string>
     <string name="api_key_lastname">last_name</string>
     <string name="api_key_gender">gender</string>
-    <string name="msg_err_delivery_address">Please check your delivery carefully before submitting your order.</string>
-    <string name="msg_err_cart_items">Please add product into your cart before submitting order.</string>
-    <string name="msg_order_success">Your order has been successfully placed .</string>
-    <string name="msg_order_fail">Oops! we have encountered some problem. Please try again!</string>
-    <string name="msg_registering_order">Placing your order.</string>
-    <string name="title_activity_order">My Order</string>
-    <string name="lbl_order">Order No</string>
-    <string name="lbl_orderDate">Ordered On</string>
-    <string name="lbl_see_items">See Items</string>
-    <string name="lbl_orderQty">Item/Amount</string>
-    <string name="lbl_orderAmount">Amount</string>
-    <string name="lbl_SchdDelivery">Schd. Delivery</string>
-    <string name="lbl_schdDeliveryDate">Delivered On</string>
-    <string name="lbl_items">Items</string>
-    <string name="lbl_DeliveryAddress">Delivered At</string>
-    <string name="action_toggle_view">Toggle View</string>
-    <string name="msg_no_order">It seems that you\'ve not placed any order yet.\nPlease checkout our flower collections.</string>
-    <string name="msg_no_cart_item">It seems that you\'ve not added any item into cart.\nPlease checkout our flower collections.</string>
-    <string name="msg_no_product">Opps! Did not find product.</string>
+
+    <string name="key_latitude">latitude</string>
+    <string name="key_longitude">longitude</string>
+    <string name="key_address">address</string>
+    <string name="key_is_draggable">isDraggable</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

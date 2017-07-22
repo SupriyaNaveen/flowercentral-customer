@@ -76,10 +76,19 @@ public class ProductDetailActivity extends BaseActivity implements RippleView.On
     public boolean onCreateOptionsMenu (Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater ().inflate (R.menu.dashboard, menu);
-       /* MenuItem menuItem = menu.findItem (R.id.action_search);
-        if(menuItem != null){
-            menuItem.setVisible (false);
-        }*/
+
+        MenuItem search = menu.findItem (R.id.action_search);
+        if(search != null){
+            search.setVisible (false);
+        }
+
+        MenuItem toggleView = menu.findItem (R.id.action_toggle_view);
+        if(toggleView != null){
+            toggleView.setVisible (false);
+        }
+
+        this.invalidateOptionsMenu ();
+
         return true;
     }
 
