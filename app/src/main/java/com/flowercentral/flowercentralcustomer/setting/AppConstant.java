@@ -40,4 +40,8 @@ public final class AppConstant {
     public enum VIEW_TYPE {LIST, GRID};
     public enum SORTING_OPTION {BY_CATEGORY, BY_PRICE};
 
+    //For InstaMojo
+    public static final String ORDER_DATA_KEY = "order_data_key";
+    public static final int PAYMENT_REQUEST_CODE = 200;
+
 }

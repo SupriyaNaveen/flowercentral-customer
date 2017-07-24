@@ -10,6 +10,7 @@ import android.os.StrictMode;
 import com.crashlytics.android.Crashlytics;
 import com.flowercentral.flowercentralcustomer.preference.UserPreference;
 import com.flowercentral.flowercentralcustomer.util.Logger;
+import com.instamojo.android.Instamojo;
 
 import java.util.List;
 
@@ -57,6 +58,9 @@ public class FlowerCentral extends Application {
         }
 
         UserPreference.init(mContext);
+
+        //Initialize Instamojo
+        Instamojo.initialize (this);
 
     }
 

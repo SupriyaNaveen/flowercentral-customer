@@ -23,8 +23,11 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+
 import com.andexert.library.RippleView;
+
 import com.flowercentral.flowercentralcustomer.BaseActivity;
+import com.flowercentral.flowercentralcustomer.BuildConfig;
 import com.flowercentral.flowercentralcustomer.R;
 import com.flowercentral.flowercentralcustomer.common.model.ShoppingCart;
 import com.flowercentral.flowercentralcustomer.dao.LocalDAO;
@@ -36,6 +39,14 @@ import com.flowercentral.flowercentralcustomer.util.Logger;
 import com.flowercentral.flowercentralcustomer.util.MapActivity;
 import com.flowercentral.flowercentralcustomer.util.Util;
 import com.flowercentral.flowercentralcustomer.volley.ErrorData;
+
+import com.instamojo.android.activities.PaymentDetailsActivity;
+import com.instamojo.android.callbacks.OrderRequestCallBack;
+import com.instamojo.android.helpers.Constants;
+import com.instamojo.android.models.Errors;
+import com.instamojo.android.models.Order;
+import com.instamojo.android.network.Request;
+
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -44,7 +55,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -278,6 +291,8 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
                             return;
                         }
                         order.put("delivery_address", deliveryAddress);
+                        order.put("client_id",BuildConfig.INSTA_MOJO_CLIENT_ID);
+                        order.put("client_secret",BuildConfig.INSTA_MOJO_CLIENT_SECRET);
 
                         //Get Cart Information
                         JSONArray products = getCartItems(mContext);
@@ -349,28 +364,28 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
 
                     switch (error.getErrorType()) {
                         case NETWORK_NOT_AVAILABLE:
-                            Snackbar.make(mRootLayout, getResources().getString(R.string.msg_internet_unavailable), Snackbar.LENGTH_SHORT).show();
+                            showMessage (mRootLayout, getResources().getString(R.string.msg_internet_unavailable));
                             break;
                         case INTERNAL_SERVER_ERROR:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                         case CONNECTION_TIMEOUT:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                         case APPLICATION_ERROR:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                         case INVALID_INPUT_SUPPLIED:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                         case AUTHENTICATION_ERROR:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                         case UNAUTHORIZED_ERROR:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                         default:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                     }
                 }
@@ -403,7 +418,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         return null;
     }
 
-    private void submitOrder(Context _context, Activity _activity, JSONObject _data) {
+    private void submitOrder(Context _context, final Activity _activity, JSONObject _data) {
         //Start Progress dialog
         dismissDialog();
 
@@ -417,18 +432,22 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
                 //CLose Progress dialog
                 dismissDialog();
                 try {
-                    if (response.getInt(getString(R.string.api_res_status)) == 1) {
-                        // Retrieve Transaction id from the response.
+                    if (response != null) {
+                        // Retrieve transaction_id, order_id, access_token and other order related data from the response.
+                        String instamojo_access_token = response.getString ("access_token");
+                        String transaction_id = response.getString ("transaction_id");
+                        String order_id = response.getString ("order_id");
 
-                        // Call to initiate instamojo
-
-
+                        // Fetch order by using order_id and access_token
+                        fetchOrder(_activity, instamojo_access_token, order_id);
 
                     } else {
                         Snackbar.make(mRootLayout, getString(R.string.msg_order_fail), Snackbar.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     Snackbar.make(mRootLayout, "Fail", Snackbar.LENGTH_SHORT).show();
+                }catch (Exception ex){
+
                 }
             }
 
@@ -442,28 +461,28 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
 
                     switch (error.getErrorType()) {
                         case NETWORK_NOT_AVAILABLE:
-                            Snackbar.make(mRootLayout, getResources().getString(R.string.msg_internet_unavailable), Snackbar.LENGTH_SHORT).show();
+                            showMessage (mRootLayout, getResources().getString(R.string.msg_internet_unavailable));
                             break;
                         case INTERNAL_SERVER_ERROR:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                         case CONNECTION_TIMEOUT:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                         case APPLICATION_ERROR:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                         case INVALID_INPUT_SUPPLIED:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                         case AUTHENTICATION_ERROR:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                         case UNAUTHORIZED_ERROR:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                         default:
-                            Snackbar.make(mRootLayout, error.getErrorMessage(), Snackbar.LENGTH_SHORT).show();
+                            showMessage(mRootLayout, error.getErrorMessage());
                             break;
                     }
                 }
@@ -543,18 +562,6 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         return isValid;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_CODE_MAP:
-                mLatitude = data.getDoubleExtra(getString(R.string.key_latitude), 0.0);
-                mLongitude = data.getDoubleExtra(getString(R.string.key_longitude), 0.0);
-                setMap();
-                break;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     private void locateAddress(String strAddress) {
 
         Geocoder coder = new Geocoder(this);
@@ -630,6 +637,162 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         }
 
         return products;
+    }
+
+    private void fetchOrder (Activity _activity, String _instamojo_access_token, String _order_id) {
+        // Good time to show dialog
+        //Start Progress dialog
+        dismissDialog();
+        mProgressDialog = Util.showProgressDialog(_activity, null, getString(R.string.msg_registering_order), false);
+
+        Request request = new Request(_instamojo_access_token, _order_id, new OrderRequestCallBack () {
+            @Override
+            public void onFinish(final Order order, final Exception error) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dismissDialog();
+                        if (error != null) {
+                            if (error instanceof Errors.ConnectionError) {
+                                showMessage(mRootLayout, "No internet connection");
+                            } else if (error instanceof Errors.ServerError) {
+                                showMessage(mRootLayout, "Server Error. Try again");
+                            } else if (error instanceof Errors.AuthenticationError) {
+                                showMessage(mRootLayout, "Access token is invalid or expired. Please Update the token!!");
+                            } else {
+                                showMessage(mRootLayout, error.toString());
+                            }
+                            return;
+                        }
+
+                        startPreCreatedUI(order);
+                    }
+                });
+
+            }
+        });
+        request.execute();
+    }
+
+    private void startPreCreatedUI (Order _order) {
+        //Using Pre created UI
+        Intent intent = new Intent(getBaseContext(), PaymentDetailsActivity.class);
+        intent.putExtra(AppConstant.ORDER_DATA_KEY, _order);
+        startActivityForResult(intent, Constants.REQUEST_CODE);
+    }
+
+    private void showMessage (View _view, String _msg) {
+        Snackbar.make(_view, _msg, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CODE_MAP:
+                mLatitude = data.getDoubleExtra(getString(R.string.key_latitude), 0.0);
+                mLongitude = data.getDoubleExtra(getString(R.string.key_longitude), 0.0);
+                setMap();
+                break;
+
+            case AppConstant.PAYMENT_REQUEST_CODE:
+                if (data != null) {
+                    String orderID = data.getStringExtra(Constants.ORDER_ID);
+                    String transactionID = data.getStringExtra(Constants.TRANSACTION_ID);
+                    String paymentID = data.getStringExtra(Constants.PAYMENT_ID);
+
+                    // Check transactionID, orderID, and orderID for null before using them to
+                    // check the Payment status.
+                    if (orderID != null && transactionID != null && paymentID != null) {
+                        //Check for Payment status with Order ID or Transaction ID
+                        HashMap<String, String> payload = new HashMap<String, String> ();
+                        payload.put ("order_id", orderID);
+                        payload.put ("transaction_id", transactionID);
+                        payload.put ("payment_id", paymentID);
+                        checkPaymentStatus(mCurrentActivity, mContext, payload);
+
+                    } else {
+                        //Oops!! Payment was cancelled
+                    }
+                }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void checkPaymentStatus (Activity _activity, Context _context, HashMap<String, String> _payload) {
+        //Start Progress dialog
+        dismissDialog();
+
+        mProgressDialog = Util.showProgressDialog(_activity, null, getString(R.string.msg_checking_payment_status), false);
+
+        BaseModel<JSONObject> baseModel = new BaseModel<JSONObject>(_context) {
+            @Override
+            public void onSuccess(int statusCode, Map<String, String> headers, JSONObject response) {
+
+                //TODO Handle res
+                //CLose Progress dialog
+                dismissDialog();
+                try {
+                    if (response != null) {
+                        //Display message and redirect to home page on success
+                        String status = response.getString ("status");
+
+
+                    } else {
+                        showMessage (mRootLayout, getString (R.string.updating_payment_status_failed));
+                    }
+                } catch (JSONException e) {
+                    Snackbar.make(mRootLayout, "Fail", Snackbar.LENGTH_SHORT).show();
+                }catch (Exception ex){
+
+                }
+            }
+
+            @Override
+            public void onError(ErrorData error) {
+                //Close Progress dialog
+                dismissDialog();
+
+                if (error != null) {
+                    error.setErrorMessage("Delivery address failed. Cause -> " + error.getErrorMessage());
+
+                    switch (error.getErrorType()) {
+                        case NETWORK_NOT_AVAILABLE:
+                            showMessage (mRootLayout, getResources().getString(R.string.msg_internet_unavailable));
+                            break;
+                        case INTERNAL_SERVER_ERROR:
+                            showMessage(mRootLayout, error.getErrorMessage());
+                            break;
+                        case CONNECTION_TIMEOUT:
+                            showMessage(mRootLayout, error.getErrorMessage());
+                            break;
+                        case APPLICATION_ERROR:
+                            showMessage(mRootLayout, error.getErrorMessage());
+                            break;
+                        case INVALID_INPUT_SUPPLIED:
+                            showMessage(mRootLayout, error.getErrorMessage());
+                            break;
+                        case AUTHENTICATION_ERROR:
+                            showMessage(mRootLayout, error.getErrorMessage());
+                            break;
+                        case UNAUTHORIZED_ERROR:
+                            showMessage(mRootLayout, error.getErrorMessage());
+                            break;
+                        default:
+                            showMessage(mRootLayout, error.getErrorMessage());
+                            break;
+                    }
+                }
+            }
+        };
+
+        String url = QueryBuilder.getSubmitOrderUrl();
+
+        if (_payload != null) {
+            JSONObject payload = new JSONObject (_payload);
+            baseModel.executePostJsonRequest(url, payload, TAG);
+        } else {
+            Snackbar.make(mRootLayout, getResources().getString(R.string.msg_reg_user_missing_input), Snackbar.LENGTH_SHORT).show();
+        }
     }
 
 }

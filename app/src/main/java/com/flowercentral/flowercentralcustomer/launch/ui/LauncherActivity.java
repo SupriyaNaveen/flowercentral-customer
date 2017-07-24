@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -94,6 +95,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
     private List<Product> mProductList;
     private boolean mDataDownloaded;
     private boolean mUserRegistered;
+    private RelativeLayout mRlOuterLoginWrapper;
 
 
     @Override
@@ -117,6 +119,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
         mFlOuterWrapper = (FrameLayout) findViewById(R.id.outer_wrapper);
         mFlNoInternet = (FrameLayout) findViewById(R.id.fl_no_internet);
         mllLoginWrapper = (LinearLayout) findViewById(R.id.login_wrapper);
+        mRlOuterLoginWrapper = (RelativeLayout) findViewById (R.id.rl_outer_login_wrapper);
 
         mBtnTryAgain.setOnRippleCompleteListener(this);
         mBtnFacebook.setOnRippleCompleteListener(this);
@@ -329,26 +332,29 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
             mFlNoInternet.setVisibility(View.GONE);
             mllLoginWrapper.setVisibility(View.VISIBLE);
 
-            mProgressDialog = Util.showProgressDialog(mCurrentActivity, null, getString(R.string.msg_please_wait), false);
+            //mProgressDialog = Util.showProgressDialog(mCurrentActivity, null, getString(R.string.msg_please_wait), false);
 
             //Initialize social plugins
             initSocialPlugins();
-
-            //Get data from server
-            getProductsFromServer(_context);
 
             //Todo Goto dashboard if user already logged in
             String accessToken = UserPreference.getAccessToken ();
             if(!TextUtils.isEmpty (accessToken)){
                 mUserRegistered = true;
+                mRlOuterLoginWrapper.setVisibility (View.GONE);
             }else{
                 mUserRegistered = false;
+                mRlOuterLoginWrapper.setVisibility (View.VISIBLE);
             }
 
             if(mUserRegistered == true && mDataDownloaded == true){
                 //Goto dashboard
                 showDashboard();
             }
+
+            //Get data from server
+            getProductsFromServer(_context);
+
 
         } else {
             mFlNoInternet.setVisibility(View.VISIBLE);
@@ -539,71 +545,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
         finish();
     }
 
-    /*private void getCurrrentLocation(Context _context) {
-        try {
-
-            LocationApi locationApi = new LocationApi(_context);
-
-            LocationApi.MyLocationDataListener myLocationListener = new LocationApi.MyLocationDataListener() {
-
-                @Override
-                public void gotLocation(Location _location) {
-                    Log.i(TAG, "Location: Lat" + String.valueOf(_location.getLatitude()) + ", Lon: " + String.valueOf(_location.getLongitude()));
-                    UserPreference.setLatitude(_location.getLatitude());
-                    UserPreference.setLongitude(_location.getLongitude());
-
-                }
-
-                @Override
-                public void gotLocation(Location location, Bundle _addresses) {
-                    Log.i(TAG, "Location: Address" + _addresses.getString(LocationApiConstants.RESULT_DATA_MSG_KEY));
-                    UserPreference.setAddress(_addresses.getString(LocationApiConstants.RESULT_DATA_MSG_KEY));
-                    mLocationFound = true;
-
-                    if (mLocationFound == true && mDataDownloaded == true) {
-                        dismissDialog();
-
-                        //Validate access token and store the fresh token
-                        validateAccessToken();
-                    }
-                }
-
-                @Override
-                public void locationNotAvailable() {
-                    Log.i(TAG, "Location is not Available");
-                }
-
-                @Override
-                public void onPermissionRequired() {
-                    Log.i(TAG, "Permission required");
-                }
-            };
-
-            locationApi.init(mContext, true, myLocationListener);
-
-        } catch (SecurityException sqEx) {
-            sqEx.printStackTrace();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }*/
-
-    /*private void validateAccessToken() {
-        if (!TextUtils.isEmpty(UserPreference.getAccessToken())) {
-            //Revalidate the auth token based on type of login
-            if (UserPreference.getLoginMethod() == AppConstant.LOGIN_TYPE.FACEBOOK.ordinal()) {
-                mFacebookHelper.performSignIn(mCurrentActivity);
-
-            } else if (UserPreference.getLoginMethod() == AppConstant.LOGIN_TYPE.GOOGLE.ordinal()) {
-                mGoogleHelper.performSignIn(mCurrentActivity);
-
-            } else if (UserPreference.getLoginMethod() == AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal()) {
-                mInstagramHelper.performSignIn();
-            }
-        }
-    }*/
-
-    private MaterialDialog showDialog(Context _context, String _title, String _content, boolean _cancellable,
+    /*private MaterialDialog showDialog(Context _context, String _title, String _content, boolean _cancellable,
                                       boolean _autoDismiss, String _positiveText, String _negativeText, Drawable _icon) {
 
         MaterialDialog.Builder builder = new MaterialDialog.Builder(_context)
@@ -620,9 +562,11 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
 
         mDialog = builder.build();
         return mDialog;
-    }
+    }*/
 
     private void getProductsFromServer(final Context _context) {
+
+        mProgressDialog = Util.showProgressDialog(mCurrentActivity, null, getString(R.string.msg_fetching_product), false);
 
         BaseModel<JSONArray> baseModel = new BaseModel<JSONArray>(_context) {
 
