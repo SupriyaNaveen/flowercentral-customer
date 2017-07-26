@@ -39,35 +39,35 @@ public class QueryBuilder {
     public static String getDeliveryAddressUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append(BuildConfig.SERVER);
-        sb.append("delivery_address");
+        sb.append("deliveryaddress");
         return sb.toString();
     }
 
     public static String getCheckDeliveryAddressUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append(BuildConfig.SERVER);
-        sb.append("checkdelivery_address");
+        sb.append("checkdeliveryaddress");
         return sb.toString();
     }
 
     public static String getProfileUpdateUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append(BuildConfig.SERVER);
-        sb.append("personal_info");
+        sb.append("personalinformation");
         return sb.toString();
     }
 
     public static String getSubmitOrderUrl() {
         StringBuilder sb = new StringBuilder();
         sb.append(BuildConfig.SERVER);
-        sb.append("submit_order");
+        sb.append("submitOrder");
         return sb.toString();
     }
 
     public static String getCartItemUrl () {
         StringBuilder sb = new StringBuilder();
         sb.append(BuildConfig.SERVER);
-        sb.append("cart_item");
+        sb.append("shoppingcart");
         return sb.toString();
 
     }
@@ -75,7 +75,7 @@ public class QueryBuilder {
     public static String getPreviousOrderUrl () {
         StringBuilder sb = new StringBuilder ();
         sb.append(BuildConfig.SERVER);
-        sb.append ("previous_orders");
+        sb.append ("previousorders");
         return sb.toString ();
     }
 }

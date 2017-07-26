@@ -24,7 +24,7 @@ public class Product implements Parcelable, Comparable<Product>{
     private String mProductID;
 
     @SerializedName ("flower_details")
-    private ArrayList<FlowerDetails> mFlowerDetailsList;
+    private ArrayList<FlowerDetails> mFlowerDetailsList = new ArrayList<>();
 
     @SerializedName ("description")
     private String mDescription;
