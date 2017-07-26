@@ -85,11 +85,11 @@ public class LocalDAO {
 
             ContentValues contentValues = new ContentValues();
             contentValues.put ("productID", _product.getString ("id"));
-            contentValues.put("flower", _product.getString ("flower"));
+//            contentValues.put("flower", _product.getString ("flower"));
             contentValues.put("description", _product.getString ("description"));
             contentValues.put("category", _product.getString ("category"));
             contentValues.put("image", _product.getString ("image"));
-            contentValues.put("quantity", _product.getString ("quantity"));
+//            contentValues.put("quantity", _product.getString ("quantity"));
             contentValues.put("price", _product.getString ("price"));
 
             String relatedImages = "";
@@ -219,12 +219,12 @@ public class LocalDAO {
 
                     jsonObject.put ("localProductID", cursor.getString (cursor.getColumnIndex ("id")));
                     jsonObject.put ("id", cursor.getString (cursor.getColumnIndex ("productID")));
-                    jsonObject.put ("flower", cursor.getString (cursor.getColumnIndex ("flower")));
+//                    jsonObject.put ("flower", cursor.getString (cursor.getColumnIndex ("flower")));
                     jsonObject.put ("description", cursor.getString (cursor.getColumnIndex ("description")));
                     jsonObject.put ("category", cursor.getString (cursor.getColumnIndex ("category")));
                     jsonObject.put ("image", cursor.getString (cursor.getColumnIndex ("image")));
                     jsonObject.put ("price", cursor.getString (cursor.getColumnIndex ("price")));
-                    jsonObject.put ("quantity", cursor.getString (cursor.getColumnIndex ("quantity")));
+//                    jsonObject.put ("quantity", cursor.getString (cursor.getColumnIndex ("quantity")));
                     jsonObject.put ("liked", cursor.getString (cursor.getColumnIndex ("liked")));
 
                     String images = cursor.getString (cursor.getColumnIndex ("relatedImages"));

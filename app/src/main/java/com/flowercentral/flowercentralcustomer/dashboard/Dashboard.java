@@ -500,13 +500,17 @@ public class Dashboard extends BaseActivity
 
         if (jsonArray != null) {
 
-            Gson gson = new Gson();
+            try {
+                Gson gson = new Gson();
 
-            Type listType = new TypeToken<ArrayList<Product>>() {
-            }.getType();
+                Type listType = new TypeToken<ArrayList<Product>>() {
+                }.getType();
 
-            mProductList = null;
-            mProductList = gson.fromJson(jsonArray.toString(), listType);
+                mProductList = null;
+                mProductList = gson.fromJson(jsonArray.toString(), listType);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
     }

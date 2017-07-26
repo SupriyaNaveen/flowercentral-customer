@@ -16,7 +16,7 @@ public class QueryBuilder {
     {
         StringBuilder sb = new StringBuilder();
         sb.append(BuildConfig.SERVER);
-        sb.append("customer_login");
+        sb.append("login");
         return sb.toString();
     }
 
@@ -32,7 +32,7 @@ public class QueryBuilder {
     {
         StringBuilder sb = new StringBuilder();
         sb.append(BuildConfig.SERVER);
-        sb.append("show_product");
+        sb.append("products");
         return sb.toString();
     }
 

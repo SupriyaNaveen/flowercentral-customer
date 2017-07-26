@@ -35,7 +35,7 @@ android {
         development {
             buildConfigField("String", "BUILD_MODE", "\"DEVELOPMENT\"")
             buildConfigField("boolean", "IS_PRODUCTION", "false")
-            buildConfigField("String", "SERVER", "\"https://private-63c01-divye.apiary-mock.com/\"")
+            buildConfigField("String", "SERVER", "\"http://ec2-52-66-183-190.ap-south-1.compute.amazonaws.com/customerApi/v1/\"")
             buildConfigField("String", "INSTA_MOJO_BASE_URL", "\"https://test.instamojo.com/\"")
             buildConfigField("String", "INSTA_MOJO_CLIENT_ID", "\"QbHbuD79tnWujQaZhQA4zgNrTYdztNp7sh9ANWxQ\"")
             buildConfigField("String", "INSTA_MOJO_CLIENT_SECRET", "\"TcVEMIsx9wdJwKDmww0T6QasRC4LlEMxMk8KiXAfahi0zYnuFVVjFmakFsmxd3Si4a8kXX2eA4a02INbKfYQQlHa74WG77f860GS2v0tH2FjEzzFkvfzakSCvSZRsqYR\"")
@@ -44,7 +44,7 @@ android {
         production {
             buildConfigField("String", "BUILD_MODE", "\"PRODUCTION\"")
             buildConfigField("boolean", "IS_PRODUCTION", "true")
-            buildConfigField("String", "SERVER", "\"https://private-63c01-divye.apiary-mock.com/\"")
+            buildConfigField("String", "SERVER", "\"http://ec2-52-66-183-190.ap-south-1.compute.amazonaws.com/customerApi/v1/\"")
             buildConfigField("String", "INSTA_MOJO_BASE_URL", "\"https://www.instamojo.com/\"")
             buildConfigField("String", "INSTA_MOJO_CLIENT_ID", "\"IsPqj56UPZWzY4czhqvLk6cUdVV6osJUhL6ykTPr\"")
             buildConfigField("String", "INSTA_MOJO_CLIENT_SECRET", "\"jgSLO2Jovfm6kLicE9NMdReWNOwNGsV6nQKIf5nFXuPtB8e8Vs1jzHCb1HEAG8HwpjoVCA76MZd7RqbINEzTSByMu05UFPKPq2CalQYWM6o7igG5HHkZoS9ReeZJ37Wp\"")

@@ -352,9 +352,10 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                 showDashboard();
             }
 
-            //Get data from server
-            getProductsFromServer(_context);
-
+            if(mUserRegistered) {
+                //Get data from server
+                getProductsFromServer(_context);
+            }
 
         } else {
             mFlNoInternet.setVisibility(View.VISIBLE);
@@ -468,6 +469,8 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                             //Redirect to Dashboard
                             if (mUserRegistered == true && mDataDownloaded == true) {
                                 showDashboard();
+                            } else {
+                                getProductsFromServer(mContext);
                             }
 
 
@@ -656,8 +659,8 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                 }
 
                 mLoginMethod = AppConstant.LOGIN_TYPE.FACEBOOK.ordinal();
-                mFacebookHelper.performSignIn(this);
-
+//                mFacebookHelper.performSignIn(this);
+                temporaryLogin();
                 break;
 
             case R.id.btn_google:
@@ -682,6 +685,40 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
 
                 break;
 
+        }
+    }
+    /**
+     * TODO Remove
+     */
+    private void temporaryLogin() {
+        //Prepare json object by getting required user info from GoogleUser object
+        JSONObject user = new JSONObject();
+
+        try {
+
+            user.put("email", "divye@mail.com");
+            user.put("auth_token", "token");
+            user.put("auth_type", "google");
+            user.put("imeiNum", Util.getIEMINumber(mContext));
+            user.put("deviceid", Util.getDeviceId(mContext));
+
+            String name = "Supriya Naveen";
+
+            if (TextUtils.isEmpty(name)) {
+                name = "";
+            }
+
+            user.put("name", name);
+            user.put("age", "");
+            user.put("profile_pic", "");
+            user.put("address", "Bengaluru");
+            user.put("phone", "0000000000");
+            user.put("password", "123456");
+
+            registerUser(mContext, user);
+
+        } catch (JSONException jsonEx) {
+            Snackbar.make(mFlOuterWrapper, "JSON Parsing Error", Snackbar.LENGTH_SHORT).show();
         }
     }
 }

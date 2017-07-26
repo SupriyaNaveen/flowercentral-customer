@@ -23,8 +23,8 @@ public class Product implements Parcelable, Comparable<Product>{
     @SerializedName ("id")
     private String mProductID;
 
-    @SerializedName ("flower")
-    private String mFlower;
+    @SerializedName ("flower_details")
+    private ArrayList<FlowerDetails> mFlowerDetailsList;
 
     @SerializedName ("description")
     private String mDescription;
@@ -38,8 +38,8 @@ public class Product implements Parcelable, Comparable<Product>{
     @SerializedName ("price")
     private double mPrice;
 
-    @SerializedName ("quantity")
-    private int mQty;
+//    @SerializedName ("quantity")
+//    private int mQty;
 
     @SerializedName ("liked")
     private int mIsLiked;
@@ -59,12 +59,12 @@ public class Product implements Parcelable, Comparable<Product>{
     protected Product (Parcel in) {
         mID = in.readInt ();
         mProductID = in.readString ();
-        mFlower = in.readString ();
+        in.readList(mFlowerDetailsList, FlowerDetails.class.getClassLoader());
         mDescription = in.readString ();
         mImage = in.readString ();
         mCategory = in.readString ();
         mPrice = in.readDouble ();
-        mQty = in.readInt ();
+//        mQty = in.readInt ();
         mIsLiked = in.readInt ();
         mRelatedImages = in.readArrayList (String.class.getClassLoader ());
         mTags = in.readArrayList (String.class.getClassLoader ());
@@ -75,12 +75,12 @@ public class Product implements Parcelable, Comparable<Product>{
     public void writeToParcel (Parcel dest, int flags) {
         dest.writeInt (mID);
         dest.writeString (mProductID);
-        dest.writeString (mFlower);
+        dest.writeList (mFlowerDetailsList);
         dest.writeString (mDescription);
         dest.writeString (mImage);
         dest.writeString (mCategory);
         dest.writeDouble (mPrice);
-        dest.writeInt (mQty);
+//        dest.writeInt (mQty);
         dest.writeInt (mIsLiked);
         dest.writeList (mRelatedImages);
         dest.writeList (mTags);
@@ -105,11 +105,15 @@ public class Product implements Parcelable, Comparable<Product>{
     };
 
     public String getFlowerName () {
-        return mFlower;
+        String flowerName = "";
+        if(mFlowerDetailsList != null && !mFlowerDetailsList.isEmpty()) {
+            flowerName = mFlowerDetailsList.get(0).getFlowerName();
+        }
+        return flowerName;
     }
 
-    public void setFlowerName (String _title) {
-        mFlower = _title;
+    public ArrayList<FlowerDetails> getmFlowerDetailsList() {
+        return mFlowerDetailsList;
     }
 
     public String getDescription () {
@@ -168,12 +172,16 @@ public class Product implements Parcelable, Comparable<Product>{
     }
 
     public int getQty () {
-        return mQty;
+        int qty = 0;
+        if(mFlowerDetailsList != null && !mFlowerDetailsList.isEmpty()) {
+            qty = mFlowerDetailsList.get(0).getFlowerQuantity();
+        }
+        return qty;
     }
-
-    public void setQty (int qty) {
-        mQty = qty;
-    }
+//
+//    public void setQty (int qty) {
+//        mQty = qty;
+//    }
 
     public String getCategory () {
         return mCategory;
@@ -209,7 +217,7 @@ public class Product implements Parcelable, Comparable<Product>{
 
     @Override
     public String toString () {
-        return "[ ID: "+String.valueOf (mID)+", Flower Name: "+mFlower+", Price: "+String.valueOf (mPrice)+" ]";
+        return "[ ID: "+String.valueOf (mID)+", Flower Name: "+getFlowerName()+", Price: "+String.valueOf (mPrice)+" ]";
     }
 
     @Override

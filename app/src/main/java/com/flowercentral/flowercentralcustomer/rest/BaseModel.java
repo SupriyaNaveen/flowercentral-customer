@@ -1,6 +1,9 @@
 package com.flowercentral.flowercentralcustomer.rest;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -13,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.flowercentral.flowercentralcustomer.R;
+import com.flowercentral.flowercentralcustomer.launch.ui.LauncherActivity;
 import com.flowercentral.flowercentralcustomer.preference.UserPreference;
 import com.flowercentral.flowercentralcustomer.setting.AppConstant;
 import com.flowercentral.flowercentralcustomer.util.Logger;
@@ -101,25 +105,7 @@ public abstract class BaseModel<T> implements Response.ErrorListener,HttpRespons
                     errorData.setErrorType (ErrorData.ERROR_TYPE.UNAUTHORIZED_ERROR);
 
                 case AUTHENTICATION_ERROR:
-                    /*if(!(mContext instanceof LoginActivity)) {
-
-                        if (mContext != null && mContext instanceof BaseActivity) {
-                            ((BaseActivity) mContext).dismissDialog(0);
-                            ((BaseActivity) mContext).finish();
-                        }
-
-                        //Todo: reset all authentication related data
-
-                        Intent intent = new Intent(mContext, SplashActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        mContext.startActivity(intent);
-                        AsyncHttpClient.getInstance(mContext).cancelAllRequests();
-                    }else
-                    {
-                        errorData.setErrorMessage(mContext.getString (R.string.err_inavlid_username_password));
-                        errorData.setErrorType (ErrorData.ERROR_TYPE.AUTHENTICATION_ERROR);
-                    }*/
+                    showSessionExpiredDialog();
                     break;
                 case CONNECTION_TIMEOUT:
                     errorData.setErrorType(ErrorData.ERROR_TYPE.CONNECTION_TIMEOUT);
@@ -365,6 +351,33 @@ public abstract class BaseModel<T> implements Response.ErrorListener,HttpRespons
 
     public void cancelRequestByTag(String _tag){
         AsyncHttpClient.getInstance(mContext).cancelAllRequestsByTag (_tag);
+    }
+
+    private void showSessionExpiredDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("Authentication Error");
+        builder.setMessage("Session expired. Please login again!");
+
+        builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (mContext != null && mContext instanceof Activity) {
+                    ((Activity) mContext).finish();
+                }
+                UserPreference.deleteProfileInformation();
+                Intent intent = new Intent(mContext, LauncherActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mContext.startActivity(intent);
+                AsyncHttpClient.getInstance(mContext).cancelAllRequests();
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCancelable(false);
+        alertDialog.show();
     }
 
 }
