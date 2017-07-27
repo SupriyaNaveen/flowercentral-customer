@@ -437,6 +437,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                     try {
                         if (_response.getString("status").equalsIgnoreCase("1")) {
                             UserPreference.setAccessToken(_response.getString("token"));
+                            UserPreference.setApiToken(_response.getString("token"));
                             if (_user.getString("auth_type").equalsIgnoreCase("google")) {
                                 UserPreference.setLoginMethod(AppConstant.LOGIN_TYPE.GOOGLE.ordinal());
 
@@ -460,9 +461,9 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                                 UserPreference.setUserCity(customer.getString("city"));
                                 UserPreference.setUserState(customer.getString("state"));
                                 UserPreference.setUserCountry(customer.getString("country"));
-                                UserPreference.setUserPin(customer.getString("PIN"));
-                                UserPreference.setUserAddress1(customer.getString("Phone"));
-                                UserPreference.setProfilePic(customer.getString("profile_img"));
+                                UserPreference.setUserPin(customer.getString("pin"));
+                                UserPreference.setUserAddress1(customer.getString("phone"));
+                                UserPreference.setProfilePic(customer.getString("profile_image"));
                             }
 
                             mUserRegistered = true;

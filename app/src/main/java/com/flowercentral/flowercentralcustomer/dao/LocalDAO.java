@@ -85,7 +85,8 @@ public class LocalDAO {
 
             ContentValues contentValues = new ContentValues();
             contentValues.put ("productID", _product.getString ("id"));
-//            contentValues.put("flower", _product.getString ("flower"));
+            // Not null flower title field
+            contentValues.put("flower", " ");
             contentValues.put("description", _product.getString ("description"));
             contentValues.put("category", _product.getString ("category"));
             contentValues.put("image", _product.getString ("image"));

@@ -39,7 +39,7 @@ import java.util.Map;
 /**
  * Created by Ashish Upadhyay on 7/18/16.
  */
-public abstract class BaseModel<T> implements Response.ErrorListener,HttpResponseListener<T> {
+public abstract class BaseModel<T> implements Response.ErrorListener, HttpResponseListener<T> {
 
     public static final int INVALID_INPUT_SUPPLIED = 400;
     public static final int AUTHENTICATION_ERROR = 401;
@@ -51,8 +51,7 @@ public abstract class BaseModel<T> implements Response.ErrorListener,HttpRespons
     private static final int MY_SOCKET_TIMEOUT_MS = 10000;
     public Context mContext;
 
-    public BaseModel (Context context)
-    {
+    public BaseModel(Context context) {
         this.mContext = context;
     }
 
@@ -61,21 +60,21 @@ public abstract class BaseModel<T> implements Response.ErrorListener,HttpRespons
         public void onResponse(T response) {
 
         }
-    } ;
+    };
 
     @Override
     public void onErrorResponse(VolleyError error) {
 
 
         // write logic here for handling error and preparing custom error;
-        ErrorData errorData = new ErrorData ();
+        ErrorData errorData = new ErrorData();
 
-        if(error!=null&&error.networkResponse!=null) {
+        if (error != null && error.networkResponse != null) {
 
             errorData.setErrorCode(error.networkResponse.statusCode);
 
             byte[] dataU = error.networkResponse.data;
-            if(dataU!=null) {
+            if (dataU != null) {
                 String s = new String(dataU);
                 try {
                     JSONObject obj = new JSONObject(s);
@@ -92,8 +91,7 @@ public abstract class BaseModel<T> implements Response.ErrorListener,HttpRespons
                 }
             }
 
-            if(!TextUtils.isEmpty(error.getMessage()))
-            {
+            if (!TextUtils.isEmpty(error.getMessage())) {
                 errorData.setErrorMessage(error.getMessage());
             }
 
@@ -102,64 +100,61 @@ public abstract class BaseModel<T> implements Response.ErrorListener,HttpRespons
 
                 case UNAUTHORIZED_ERROR:
                     errorData.setErrorMessage("Unauthorized: Access denied.");
-                    errorData.setErrorType (ErrorData.ERROR_TYPE.UNAUTHORIZED_ERROR);
-
+                    errorData.setErrorType(ErrorData.ERROR_TYPE.UNAUTHORIZED_ERROR);
+                    break;
                 case AUTHENTICATION_ERROR:
                     showSessionExpiredDialog();
                     break;
                 case CONNECTION_TIMEOUT:
                     errorData.setErrorType(ErrorData.ERROR_TYPE.CONNECTION_TIMEOUT);
-                    errorData.setErrorMessage ("Can not connect to server. Connection timeout");
+                    errorData.setErrorMessage("Can not connect to server. Connection timeout");
+                    break;
                 case INTERNAL_SERVER_ERROR:
                     errorData.setErrorType(ErrorData.ERROR_TYPE.INTERNAL_SERVER_ERROR);
-                    errorData.setErrorMessage ("Internal server error. Please contact to system administrator.");
+                    errorData.setErrorMessage("Internal server error. Please contact to system administrator.");
+                    break;
                 case INVALID_INPUT_SUPPLIED:
                     byte[] data = error.networkResponse.data;
                     String s = new String(data);
                     try {
                         JSONObject obj = new JSONObject(s);
-                        if(obj!=null){
-                            if(!obj.isNull("errorCode")){
-                                String code =   obj.getString("errorCode");
+                        if (obj != null) {
+                            if (!obj.isNull("errorCode")) {
+                                String code = obj.getString("errorCode");
                                 errorData.setErrorCodeOfResponseData(code);
-                                errorData.setErrorType (ErrorData.ERROR_TYPE.INVALID_INPUT_SUPPLIED);
-                                errorData.setErrorMessage ("Invalid input supplied, please provide required and valid parameters.");
+                                errorData.setErrorType(ErrorData.ERROR_TYPE.INVALID_INPUT_SUPPLIED);
+                                errorData.setErrorMessage("Invalid input supplied, please provide required and valid parameters.");
                             }
                         }
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    break;
 
                 default:
                     errorData.setErrorType(ErrorData.ERROR_TYPE.INTERNAL_SERVER_ERROR);
-
+                    break;
             }
-        }else
-        {
+        } else {
             errorData.setErrorType(ErrorData.ERROR_TYPE.APPLICATION_ERROR);
-            if(error!=null&&error.getMessage()!=null)
-            {
+            if (error != null && error.getMessage() != null) {
 
                 errorData.setErrorMessage(error.getMessage());
                 errorData.setNetworkTimems(error.getNetworkTimeMs());
-            }else if(error instanceof TimeoutError)
-            {
+            } else if (error instanceof TimeoutError) {
                 errorData.setErrorType(ErrorData.ERROR_TYPE.CONNECTION_TIMEOUT);
-                if(mContext!=null)
-                {
+                if (mContext != null) {
                     errorData.setErrorMessage(mContext.getString(R.string.msg_connection_time_out));
 
-                }else {
+                } else {
                     errorData.setErrorMessage(mContext.getString(R.string.msg_connection_time_out));
                 }
-            }else
-            {
+            } else {
                 errorData.setErrorMessage("Error response data is null");
             }
         }
-        if(!TextUtils.isEmpty(errorData.getErrorMessage())&&errorData.getErrorMessage().contains("java.io.IOException: No authentication challenges found"))
-        {
+        if (!TextUtils.isEmpty(errorData.getErrorMessage()) && errorData.getErrorMessage().contains("java.io.IOException: No authentication challenges found")) {
             /*if(!(mContext instanceof LoginActivity)) {
 
                 if (mContext != null && mContext instanceof BaseActivity) {
@@ -189,20 +184,18 @@ public abstract class BaseModel<T> implements Response.ErrorListener,HttpRespons
     @Override
     public abstract void onError(ErrorData error);
 
-    public void executeGetJsonRequest(String url,@Nullable String tag)
-    {
-        if(RestUtil.isNetworkAvailable(mContext)) {
+    public void executeGetJsonRequest(String url, @Nullable String tag) {
+        if (RestUtil.isNetworkAvailable(mContext)) {
             JSONObject params = appendCommonParams(mContext, new JSONObject());
             CustomJsonObjectRequest request = new CustomJsonObjectRequest(Request.Method.GET, url, params, listener, this);
-            request.setRetryPolicy(new DefaultRetryPolicy (MY_SOCKET_TIMEOUT_MS,
+            request.setRetryPolicy(new DefaultRetryPolicy(MY_SOCKET_TIMEOUT_MS,
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             request.setCustomResponseListener(this);
             request.appendHeaderValues(getCommonAuthorizationHeader());
             // addCommonHeaderParams(request);
             AsyncHttpClient.getInstance(mContext).addToRequestQueue(request, tag);
-        }else
-        {
+        } else {
             ErrorData errorData = new ErrorData();
             errorData.setErrorType(ErrorData.ERROR_TYPE.NETWORK_NOT_AVAILABLE);
             errorData.setErrorMessage(mContext.getResources().getString(R.string.msg_internet_unavailable));
@@ -210,21 +203,19 @@ public abstract class BaseModel<T> implements Response.ErrorListener,HttpRespons
         }
     }
 
-    public void executePostJsonRequest(String url,JSONObject jsonObjectData,@Nullable String tag)
-    {
+    public void executePostJsonRequest(String url, JSONObject jsonObjectData, @Nullable String tag) {
 
-        if(RestUtil.isNetworkAvailable(mContext)) {
+        if (RestUtil.isNetworkAvailable(mContext)) {
             JSONObject params = appendCommonParams(mContext, jsonObjectData);
             CustomJsonObjectRequest request = new CustomJsonObjectRequest(Request.Method.POST, url, params, listener, this);
-            request.setRetryPolicy(new DefaultRetryPolicy (MY_SOCKET_TIMEOUT_MS,
+            request.setRetryPolicy(new DefaultRetryPolicy(MY_SOCKET_TIMEOUT_MS,
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             request.setCustomResponseListener(this);
             request.appendHeaderValues(getCommonAuthorizationHeader());
             //addCommonHeaderParams(request);
             AsyncHttpClient.getInstance(mContext).addToRequestQueue(request, tag);
-        }else
-        {
+        } else {
             ErrorData errorData = new ErrorData();
             errorData.setErrorType(ErrorData.ERROR_TYPE.NETWORK_NOT_AVAILABLE);
             errorData.setErrorMessage(mContext.getResources().getString(R.string.msg_internet_unavailable));
@@ -232,20 +223,18 @@ public abstract class BaseModel<T> implements Response.ErrorListener,HttpRespons
         }
     }
 
-    public void executeGetJsonArrayRequest(String url,@Nullable String tag)
-    {
-        if(RestUtil.isNetworkAvailable(mContext)) {
+    public void executeGetJsonArrayRequest(String url, @Nullable String tag) {
+        if (RestUtil.isNetworkAvailable(mContext)) {
             JSONObject params = appendCommonParams(mContext, new JSONObject());
             CustomJsonArrayObjectRequest request = new CustomJsonArrayObjectRequest(Request.Method.GET, url, null, listener, this);
-            request.setRetryPolicy(new DefaultRetryPolicy (MY_SOCKET_TIMEOUT_MS,
+            request.setRetryPolicy(new DefaultRetryPolicy(MY_SOCKET_TIMEOUT_MS,
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             request.setCustomResponseListener(this);
             request.appendHeaderValues(getCommonAuthorizationHeader());
             // addCommonHeaderParams(request);
             AsyncHttpClient.getInstance(mContext).addToRequestQueue(request, tag);
-        }else
-        {
+        } else {
             ErrorData errorData = new ErrorData();
             errorData.setErrorType(ErrorData.ERROR_TYPE.NETWORK_NOT_AVAILABLE);
             errorData.setErrorMessage(mContext.getResources().getString(R.string.msg_internet_unavailable));
@@ -253,39 +242,34 @@ public abstract class BaseModel<T> implements Response.ErrorListener,HttpRespons
         }
     }
 
-    private void addCommonHeaderParams(Request request)
-    {
+    private void addCommonHeaderParams(Request request) {
         try {
-            if(request.getHeaders()!=null){
+            if (request.getHeaders() != null) {
                 request.getHeaders().putAll(getCommonAuthorizationHeader());
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private JSONObject appendCommonParams(Context context,JSONObject jsonObject)
-    {
-        if(jsonObject==null)
-        {
+    private JSONObject appendCommonParams(Context context, JSONObject jsonObject) {
+        if (jsonObject == null) {
             jsonObject = new JSONObject();
         }
         try {
             jsonObject.put("build_number", String.valueOf(getVersionCode(context)));
             jsonObject.put("version_number", getVersionName(context));
-            jsonObject.put ("tutorly-device-id", Util.getDeviceId (context));
-            jsonObject.put ("tutorly-device-type", "android");
+            jsonObject.put("tutorly-device-id", Util.getDeviceId(context));
+            jsonObject.put("tutorly-device-type", "android");
 
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return jsonObject;
     }
 
-    private  Map<String, String> getCommonAuthorizationHeader() {
+    private Map<String, String> getCommonAuthorizationHeader() {
         Map<String, String> headerValues = new HashMap<String, String>();
         try {
 
@@ -302,17 +286,17 @@ public abstract class BaseModel<T> implements Response.ErrorListener,HttpRespons
 
             headerValues.put("Content-Type", "application/json");
             headerValues.put("Accept", "application/json");
-            headerValues.put("tutorly-device-id", Util.getDeviceId (mContext));
+            headerValues.put("tutorly-device-id", Util.getDeviceId(mContext));
             headerValues.put("tutorly-device-type", "android");
-            String apiToken = UserPreference.getApiToken ();
-            if(apiToken != null && !apiToken.isEmpty() ){
-                headerValues.put("Authorization", "Bearer "+apiToken);
+            String apiToken = UserPreference.getApiToken();
+            if (apiToken != null && !apiToken.isEmpty()) {
+                headerValues.put("Authorization", "Bearer " + apiToken);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Logger.log(TAG,"getCommonAuthorizationHeader", "Header values " + headerValues, AppConstant.LOG_LEVEL_INFO);
+        Logger.log(TAG, "getCommonAuthorizationHeader", "Header values " + headerValues, AppConstant.LOG_LEVEL_INFO);
         return headerValues;
     }
 
@@ -344,13 +328,13 @@ public abstract class BaseModel<T> implements Response.ErrorListener,HttpRespons
         return versionCode;
     }
 
-    public void cancelRequests(){
-        AsyncHttpClient.getInstance(mContext).cancelAllRequests ();
+    public void cancelRequests() {
+        AsyncHttpClient.getInstance(mContext).cancelAllRequests();
     }
 
 
-    public void cancelRequestByTag(String _tag){
-        AsyncHttpClient.getInstance(mContext).cancelAllRequestsByTag (_tag);
+    public void cancelRequestByTag(String _tag) {
+        AsyncHttpClient.getInstance(mContext).cancelAllRequestsByTag(_tag);
     }
 
     private void showSessionExpiredDialog() {

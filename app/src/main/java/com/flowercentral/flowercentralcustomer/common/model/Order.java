@@ -170,7 +170,8 @@ public class Order implements Parcelable {
                 for(int i=0; i<_products.length (); i++){
                     JSONObject object = _products.getJSONObject (i);
                     product = new Product ();
-                    product.setTitle (object.getString ("title"));
+                    //TODO
+//                    product.setTitle (object.getString ("title"));
                     product.setCategory (object.getString ("category"));
                     product.setImage (object.getString ("img_url"));
                     product.setPrice (Double.valueOf (object.getString ("price")));
