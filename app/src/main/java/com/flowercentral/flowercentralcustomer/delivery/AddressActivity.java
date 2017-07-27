@@ -23,9 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-
 import com.andexert.library.RippleView;
-
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.BuildConfig;
 import com.flowercentral.flowercentralcustomer.R;
@@ -39,14 +37,12 @@ import com.flowercentral.flowercentralcustomer.util.Logger;
 import com.flowercentral.flowercentralcustomer.util.MapActivity;
 import com.flowercentral.flowercentralcustomer.util.Util;
 import com.flowercentral.flowercentralcustomer.volley.ErrorData;
-
 import com.instamojo.android.activities.PaymentDetailsActivity;
 import com.instamojo.android.callbacks.OrderRequestCallBack;
 import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.Order;
 import com.instamojo.android.network.Request;
-
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -55,7 +51,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +67,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
     private TextInputEditText mCustomerAddress;
     private TextInputEditText mCustomerCity;
     private TextInputEditText mCustomerState;
+    private TextInputEditText mCustomerCountry;
     private TextInputEditText mCustomerZip;
     private TextInputEditText mCustomerPrimaryPhone;
     private TextInputEditText mCustomerAlternatePhone;
@@ -147,6 +143,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         mCustomerAddress = (TextInputEditText) findViewById(R.id.edt_customer_address);
         mCustomerCity = (TextInputEditText) findViewById(R.id.edt_city);
         mCustomerState = (TextInputEditText) findViewById(R.id.edt_state);
+        mCustomerCountry = (TextInputEditText) findViewById(R.id.edt_country);
         mCustomerZip = (TextInputEditText) findViewById(R.id.edt_zip);
         mCustomerPrimaryPhone = (TextInputEditText) findViewById(R.id.edt_phone1);
         mCustomerAlternatePhone = (TextInputEditText) findViewById(R.id.edt_phone2);
@@ -196,6 +193,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
 
         mCustomerCity.setText(UserPreference.getUserCity());
         mCustomerState.setText(UserPreference.getUserState());
+        mCustomerCountry.setText(UserPreference.getUserCountry());
         mCustomerZip.setText(UserPreference.getUserPin());
         mCustomerPrimaryPhone.setText(UserPreference.getUserPhone());
 
@@ -351,7 +349,8 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
                         Snackbar.make(mRootLayout, "The address data is valid.", Snackbar.LENGTH_SHORT).show();
                         locateAddress(mCustomerAddress.getText().toString() + BLANK_SPACE +
                                 mCustomerCity.getText() + BLANK_SPACE +
-                                mCustomerState.getText(), false);
+                                mCustomerState.getText() + BLANK_SPACE +
+                                mCustomerCountry.getText(), false);
                         setMap();
                     } else {
                         Snackbar.make(mRootLayout, "Invalid address", Snackbar.LENGTH_SHORT).show();
@@ -414,7 +413,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
             user.put(getString(R.string.api_key_name), mCustomerName.getText());
             user.put(getString(R.string.api_key_address), mCustomerAddress.getText());
             user.put(getString(R.string.api_key_city), mCustomerCity.getText());
-            user.put(getString(R.string.api_key_country), mCustomerCity.getText());
+            user.put(getString(R.string.api_key_country), mCustomerCountry.getText());
             user.put(getString(R.string.api_key_state), mCustomerState.getText());
             user.put(getString(R.string.api_key_pin), mCustomerZip.getText());
             user.put(getString(R.string.api_key_phone1), mCustomerPrimaryPhone.getText());
@@ -552,6 +551,13 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
             mCustomerState.setError(null);
         }
 
+        if (mCustomerCountry.getText().toString().isEmpty()) {
+            mCustomerCountry.setError(getString(R.string.err_empty_text));
+            isValid = false;
+        } else {
+            mCustomerCountry.setError(null);
+        }
+
         if (mCustomerZip.getText().toString().isEmpty()) {
             mCustomerZip.setError(getString(R.string.err_empty_text));
             isValid = false;
@@ -598,6 +604,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
             deliveryAddress.put("address", mCustomerAddress.getText().toString());
             deliveryAddress.put("city", mCustomerCity.getText().toString());
             deliveryAddress.put("state", mCustomerState.getText().toString());
+            deliveryAddress.put("country", mCustomerCountry.getText().toString());
             deliveryAddress.put("zip", mCustomerZip.getText().toString());
             deliveryAddress.put("primary_phone", mCustomerPrimaryPhone.getText().toString());
             deliveryAddress.putOpt("alternate_phone", mCustomerAlternatePhone.getText().toString());

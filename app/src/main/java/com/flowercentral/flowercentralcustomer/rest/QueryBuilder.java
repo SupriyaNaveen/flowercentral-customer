@@ -20,13 +20,13 @@ public class QueryBuilder {
         return sb.toString();
     }
 
-    public static String getRegistrationUrl()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append(BuildConfig.SERVER);
-        sb.append("customer_login");
-        return sb.toString();
-    }
+//    public static String getRegistrationUrl()
+//    {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append(BuildConfig.SERVER);
+//        sb.append("customer_login");
+//        return sb.toString();
+//    }
 
     public static String getProducts()
     {
@@ -36,12 +36,12 @@ public class QueryBuilder {
         return sb.toString();
     }
 
-    public static String getDeliveryAddressUrl() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(BuildConfig.SERVER);
-        sb.append("deliveryaddress");
-        return sb.toString();
-    }
+//    public static String getDeliveryAddressUrl() {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append(BuildConfig.SERVER);
+//        sb.append("deliveryaddress");
+//        return sb.toString();
+//    }
 
     public static String getCheckDeliveryAddressUrl() {
         StringBuilder sb = new StringBuilder();
