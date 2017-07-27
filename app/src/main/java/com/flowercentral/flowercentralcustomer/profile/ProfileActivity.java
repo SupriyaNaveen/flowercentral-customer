@@ -27,8 +27,6 @@ import com.flowercentral.flowercentralcustomer.rest.BaseModel;
 import com.flowercentral.flowercentralcustomer.rest.QueryBuilder;
 import com.flowercentral.flowercentralcustomer.util.Util;
 import com.flowercentral.flowercentralcustomer.volley.ErrorData;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -188,6 +186,9 @@ public class ProfileActivity extends BaseActivity {
                         user.put(getString(R.string.api_key_gender), UserPreference.GENDER.F);
                         break;
                 }
+
+                user.put(getString(R.string.api_key_email), UserPreference.getUserEmail());
+                user.put(getString(R.string.api_key_phone), mEditTextMobile.getText());
             } catch (JSONException e) {
 
             }
@@ -199,11 +200,33 @@ public class ProfileActivity extends BaseActivity {
             BaseModel<JSONObject> baseModel = new BaseModel<JSONObject>(this) {
                 @Override
                 public void onSuccess(int statusCode, Map<String, String> headers, JSONObject response) {
-                    ProfileData profileData = new Gson().fromJson(String.valueOf(response),
-                            new TypeToken<ProfileData>() {
-                            }.getType());
-                    UserPreference.setProfileInformation(profileData);
-                    Snackbar.make(mRootLayout, getResources().getString(R.string.msg_profile_saved), Snackbar.LENGTH_SHORT).show();
+//                    ProfileData profileData = new Gson().fromJson(String.valueOf(response),
+//                            new TypeToken<ProfileData>() {
+//                            }.getType());
+//                    UserPreference.setProfileInformation(profileData);
+
+                    try {
+                        if (response.getString("status").equalsIgnoreCase("1")) {
+                            UserPreference.setUserFirstName(mEditTextFirstName.getText().toString());
+                            UserPreference.setUserLastName(mEditTextLastName.getText().toString());
+                            UserPreference.setUserPhone(mEditTextMobile.getText().toString());
+                            switch (mRadioGroupGender.getCheckedRadioButtonId()) {
+                                case R.id.male_gender_btn:
+                                    UserPreference.setLoggedInUserGender(UserPreference.GENDER.M);
+                                    break;
+                                case R.id.female_gender_button:
+                                    UserPreference.setLoggedInUserGender(UserPreference.GENDER.F);
+                                    break;
+                            }
+
+                            Snackbar.make(mRootLayout, getResources().getString(R.string.msg_profile_saved), Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            Snackbar.make(mRootLayout, response.getString("message"), Snackbar.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Snackbar.make(mRootLayout, "Profile save failed", Snackbar.LENGTH_SHORT).show();
+                    }
                     //CLose Progress dialog
                     dismissDialog();
                 }

@@ -160,6 +160,8 @@
     <string name="msg_fetching_product">Please wait! Looking for product updates</string>
     <string name="api_key_country">country</string>
     <string name="msg_profile_saved">Profile information saved.</string>
+    <string name="api_key_email">email</string>
+    <string name="api_key_phone">phone</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 
