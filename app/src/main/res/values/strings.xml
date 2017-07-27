@@ -159,6 +159,7 @@
     <string name="updating_payment_status_failed">Unable to update payment status</string>
     <string name="msg_fetching_product">Please wait! Looking for product updates</string>
     <string name="api_key_country">country</string>
+    <string name="msg_profile_saved">Profile information saved.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

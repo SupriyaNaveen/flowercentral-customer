@@ -203,6 +203,7 @@ public class ProfileActivity extends BaseActivity {
                             new TypeToken<ProfileData>() {
                             }.getType());
                     UserPreference.setProfileInformation(profileData);
+                    Snackbar.make(mRootLayout, getResources().getString(R.string.msg_profile_saved), Snackbar.LENGTH_SHORT).show();
                     //CLose Progress dialog
                     dismissDialog();
                 }
