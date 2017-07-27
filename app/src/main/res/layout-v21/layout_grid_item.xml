@@ -131,7 +131,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_marginStart="@dimen/dp10"
                 android:letterSpacing=".1"
                 android:maxLines="1"
                 android:padding="@dimen/dp5"
@@ -144,10 +143,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/dp10"
                 android:background="@drawable/rounded_corner_border_pink"
                 app:rv_zoom="true"
-                app:rv_color="@color/colorRipple">
+                app:rv_color="@color/colorRipple"
+                android:layout_toStartOf="@id/txt_item_price">
 
                 <TextView
                     android:layout_width="wrap_content"

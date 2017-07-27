@@ -284,6 +284,7 @@ public class UserPreference extends PreferenceActivity {
 
     public static void deleteProfileInformation() {
         setAccessToken(null);
+        setApiToken(null);
         setUserID(null);
         setUserEmail(null);
         setUserFirstName(null);

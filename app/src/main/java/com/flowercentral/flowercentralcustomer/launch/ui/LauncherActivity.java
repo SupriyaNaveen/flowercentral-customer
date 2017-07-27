@@ -462,7 +462,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                                 UserPreference.setUserState(customer.getString("state"));
                                 UserPreference.setUserCountry(customer.getString("country"));
                                 UserPreference.setUserPin(customer.getString("pin"));
-                                UserPreference.setUserAddress1(customer.getString("phone"));
+                                UserPreference.setUserPhone(customer.getString("phone"));
                                 UserPreference.setProfilePic(customer.getString("profile_image"));
                             }
 

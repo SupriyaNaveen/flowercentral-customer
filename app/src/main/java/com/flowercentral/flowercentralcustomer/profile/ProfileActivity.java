@@ -326,7 +326,7 @@ public class ProfileActivity extends BaseActivity {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    mCollapsingToolbar.setTitle("Ashish Upadhyay");
+                    mCollapsingToolbar.setTitle(UserPreference.getUserFirstName());
                     isShow = true;
                 } else if (isShow) {
                     mCollapsingToolbar.setTitle(" ");

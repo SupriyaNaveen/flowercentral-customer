@@ -171,7 +171,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
                 // Or else, locate the current address.
                 // On activity result change the map in this activity based on location.
                 if (mCustomerAddress.getText().length() > 0) {
-                    locateAddress(mCustomerAddress.getText().toString());
+                    locateAddress(mCustomerAddress.getText().toString(), true);
                 }
                 Intent mapIntent = new Intent(AddressActivity.this, MapActivity.class);
                 mapIntent.putExtra(getString(R.string.key_latitude), mLatitude);
@@ -186,7 +186,14 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         mCheckOnDeliveryAddress.setOnRippleCompleteListener(this);
 
         mCustomerName.setText(UserPreference.getUserFirstName());
-        mCustomerAddress.setText(UserPreference.getAddress());
+        if (UserPreference.getUserAddress1() != null) {
+            String userAddress = UserPreference.getUserAddress1();
+            if (UserPreference.getUserAddress2() != null) {
+                userAddress += BLANK_SPACE + UserPreference.getUserAddress2();
+                mCustomerAddress.setText(userAddress);
+            }
+        }
+
         mCustomerCity.setText(UserPreference.getUserCity());
         mCustomerState.setText(UserPreference.getUserState());
         mCustomerZip.setText(UserPreference.getUserPin());
@@ -291,8 +298,8 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
                             return;
                         }
                         order.put("delivery_address", deliveryAddress);
-                        order.put("client_id",BuildConfig.INSTA_MOJO_CLIENT_ID);
-                        order.put("client_secret",BuildConfig.INSTA_MOJO_CLIENT_SECRET);
+                        order.put("client_id", BuildConfig.INSTA_MOJO_CLIENT_ID);
+                        order.put("client_secret", BuildConfig.INSTA_MOJO_CLIENT_SECRET);
 
                         //Get Cart Information
                         JSONArray products = getCartItems(mContext);
@@ -341,16 +348,16 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
                 dismissDialog();
                 try {
                     if (response.getInt(getString(R.string.api_res_status)) == 1) {
-                        Snackbar.make(mRootLayout, "Success", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mRootLayout, "The address data is valid.", Snackbar.LENGTH_SHORT).show();
                         locateAddress(mCustomerAddress.getText().toString() + BLANK_SPACE +
                                 mCustomerCity.getText() + BLANK_SPACE +
-                                mCustomerState.getText());
+                                mCustomerState.getText(), false);
                         setMap();
                     } else {
-                        Snackbar.make(mRootLayout, "Fail", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(mRootLayout, "Invalid address", Snackbar.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
-                    Snackbar.make(mRootLayout, "Fail", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(mRootLayout, "Invalid address", Snackbar.LENGTH_SHORT).show();
                 }
             }
 
@@ -364,7 +371,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
 
                     switch (error.getErrorType()) {
                         case NETWORK_NOT_AVAILABLE:
-                            showMessage (mRootLayout, getResources().getString(R.string.msg_internet_unavailable));
+                            showMessage(mRootLayout, getResources().getString(R.string.msg_internet_unavailable));
                             break;
                         case INTERNAL_SERVER_ERROR:
                             showMessage(mRootLayout, error.getErrorMessage());
@@ -407,7 +414,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
             user.put(getString(R.string.api_key_name), mCustomerName.getText());
             user.put(getString(R.string.api_key_address), mCustomerAddress.getText());
             user.put(getString(R.string.api_key_city), mCustomerCity.getText());
-            user.put(getString(R.string.api_key_city), mCustomerCity.getText());
+            user.put(getString(R.string.api_key_country), mCustomerCity.getText());
             user.put(getString(R.string.api_key_state), mCustomerState.getText());
             user.put(getString(R.string.api_key_pin), mCustomerZip.getText());
             user.put(getString(R.string.api_key_phone1), mCustomerPrimaryPhone.getText());
@@ -434,9 +441,9 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
                 try {
                     if (response != null) {
                         // Retrieve transaction_id, order_id, access_token and other order related data from the response.
-                        String instamojo_access_token = response.getString ("access_token");
-                        String transaction_id = response.getString ("transaction_id");
-                        String order_id = response.getString ("order_id");
+                        String instamojo_access_token = response.getString("access_token");
+                        String transaction_id = response.getString("transaction_id");
+                        String order_id = response.getString("order_id");
 
                         // Fetch order by using order_id and access_token
                         fetchOrder(_activity, instamojo_access_token, order_id);
@@ -446,7 +453,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
                     }
                 } catch (JSONException e) {
                     Snackbar.make(mRootLayout, "Fail", Snackbar.LENGTH_SHORT).show();
-                }catch (Exception ex){
+                } catch (Exception ex) {
 
                 }
             }
@@ -457,11 +464,11 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
                 dismissDialog();
 
                 if (error != null) {
-                    error.setErrorMessage("Delivery address failed. Cause -> " + error.getErrorMessage());
+                    error.setErrorMessage("Submit order failed. Cause -> " + error.getErrorMessage());
 
                     switch (error.getErrorType()) {
                         case NETWORK_NOT_AVAILABLE:
-                            showMessage (mRootLayout, getResources().getString(R.string.msg_internet_unavailable));
+                            showMessage(mRootLayout, getResources().getString(R.string.msg_internet_unavailable));
                             break;
                         case INTERNAL_SERVER_ERROR:
                             showMessage(mRootLayout, error.getErrorMessage());
@@ -562,7 +569,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         return isValid;
     }
 
-    private void locateAddress(String strAddress) {
+    private void locateAddress(String strAddress, boolean isErrorShown) {
 
         Geocoder coder = new Geocoder(this);
         List<Address> address;
@@ -570,16 +577,16 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         try {
             address = coder.getFromLocationName(strAddress, 5);
             if (address == null) {
-                Toast.makeText(this, getString(R.string.map_error_unable_locate_address), Toast.LENGTH_LONG).show();
+                if (isErrorShown)
+                    Toast.makeText(this, getString(R.string.map_error_unable_locate_address), Toast.LENGTH_LONG).show();
                 return;
             }
 
             Address location = address.get(0);
             mLongitude = location.getLongitude();
             mLatitude = location.getLatitude();
-        } catch (IOException e) {
-            Toast.makeText(this, getString(R.string.map_error_unable_locate_address), Toast.LENGTH_LONG).show();
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IOException | IndexOutOfBoundsException e) {
+            if (isErrorShown)
             Toast.makeText(this, getString(R.string.map_error_unable_locate_address), Toast.LENGTH_LONG).show();
         }
     }
@@ -639,13 +646,13 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         return products;
     }
 
-    private void fetchOrder (Activity _activity, String _instamojo_access_token, String _order_id) {
+    private void fetchOrder(Activity _activity, String _instamojo_access_token, String _order_id) {
         // Good time to show dialog
         //Start Progress dialog
         dismissDialog();
         mProgressDialog = Util.showProgressDialog(_activity, null, getString(R.string.msg_registering_order), false);
 
-        Request request = new Request(_instamojo_access_token, _order_id, new OrderRequestCallBack () {
+        Request request = new Request(_instamojo_access_token, _order_id, new OrderRequestCallBack() {
             @Override
             public void onFinish(final Order order, final Exception error) {
                 runOnUiThread(new Runnable() {
@@ -674,14 +681,14 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         request.execute();
     }
 
-    private void startPreCreatedUI (Order _order) {
+    private void startPreCreatedUI(Order _order) {
         //Using Pre created UI
         Intent intent = new Intent(getBaseContext(), PaymentDetailsActivity.class);
         intent.putExtra(AppConstant.ORDER_DATA_KEY, _order);
         startActivityForResult(intent, Constants.REQUEST_CODE);
     }
 
-    private void showMessage (View _view, String _msg) {
+    private void showMessage(View _view, String _msg) {
         Snackbar.make(_view, _msg, Snackbar.LENGTH_SHORT).show();
     }
 
@@ -704,10 +711,10 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
                     // check the Payment status.
                     if (orderID != null && transactionID != null && paymentID != null) {
                         //Check for Payment status with Order ID or Transaction ID
-                        HashMap<String, String> payload = new HashMap<String, String> ();
-                        payload.put ("order_id", orderID);
-                        payload.put ("transaction_id", transactionID);
-                        payload.put ("payment_id", paymentID);
+                        HashMap<String, String> payload = new HashMap<String, String>();
+                        payload.put("order_id", orderID);
+                        payload.put("transaction_id", transactionID);
+                        payload.put("payment_id", paymentID);
                         checkPaymentStatus(mCurrentActivity, mContext, payload);
 
                     } else {
@@ -718,7 +725,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void checkPaymentStatus (Activity _activity, Context _context, HashMap<String, String> _payload) {
+    private void checkPaymentStatus(Activity _activity, Context _context, HashMap<String, String> _payload) {
         //Start Progress dialog
         dismissDialog();
 
@@ -734,15 +741,15 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
                 try {
                     if (response != null) {
                         //Display message and redirect to home page on success
-                        String status = response.getString ("status");
+                        String status = response.getString("status");
 
 
                     } else {
-                        showMessage (mRootLayout, getString (R.string.updating_payment_status_failed));
+                        showMessage(mRootLayout, getString(R.string.updating_payment_status_failed));
                     }
                 } catch (JSONException e) {
                     Snackbar.make(mRootLayout, "Fail", Snackbar.LENGTH_SHORT).show();
-                }catch (Exception ex){
+                } catch (Exception ex) {
 
                 }
             }
@@ -757,7 +764,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
 
                     switch (error.getErrorType()) {
                         case NETWORK_NOT_AVAILABLE:
-                            showMessage (mRootLayout, getResources().getString(R.string.msg_internet_unavailable));
+                            showMessage(mRootLayout, getResources().getString(R.string.msg_internet_unavailable));
                             break;
                         case INTERNAL_SERVER_ERROR:
                             showMessage(mRootLayout, error.getErrorMessage());
@@ -788,7 +795,7 @@ public class AddressActivity extends BaseActivity implements RippleView.OnRipple
         String url = QueryBuilder.getSubmitOrderUrl();
 
         if (_payload != null) {
-            JSONObject payload = new JSONObject (_payload);
+            JSONObject payload = new JSONObject(_payload);
             baseModel.executePostJsonRequest(url, payload, TAG);
         } else {
             Snackbar.make(mRootLayout, getResources().getString(R.string.msg_reg_user_missing_input), Snackbar.LENGTH_SHORT).show();

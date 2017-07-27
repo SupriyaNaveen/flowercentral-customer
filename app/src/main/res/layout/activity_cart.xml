@@ -67,7 +67,8 @@
                 android:drawablePadding="@dimen/dp5"
                 android:gravity="center"
                 android:text="$700"
-                android:textColor="@color/colorAccent" />
+                android:textColor="@color/colorAccent"
+                android:layout_toStartOf="@id/iv_cart"/>
 
         </RelativeLayout>
 
