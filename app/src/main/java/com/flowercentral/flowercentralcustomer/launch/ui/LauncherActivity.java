@@ -1,17 +1,11 @@
 package com.flowercentral.flowercentralcustomer.launch.ui;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,7 +15,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.andexert.library.RippleView;
 import com.binarysoft.sociallogin.facebook.FacebookGraphListner;
@@ -30,8 +23,6 @@ import com.binarysoft.sociallogin.google.GoogleUser;
 import com.binarysoft.sociallogin.instagram.InstagramUser;
 import com.flowercentral.flowercentralcustomer.BaseActivity;
 import com.flowercentral.flowercentralcustomer.R;
-import com.flowercentral.flowercentralcustomer.common.location.LocationApi;
-import com.flowercentral.flowercentralcustomer.common.location.LocationApiConstants;
 import com.flowercentral.flowercentralcustomer.common.model.Product;
 import com.flowercentral.flowercentralcustomer.dao.LocalDAO;
 import com.flowercentral.flowercentralcustomer.dashboard.Dashboard;
@@ -119,7 +110,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
         mFlOuterWrapper = (FrameLayout) findViewById(R.id.outer_wrapper);
         mFlNoInternet = (FrameLayout) findViewById(R.id.fl_no_internet);
         mllLoginWrapper = (LinearLayout) findViewById(R.id.login_wrapper);
-        mRlOuterLoginWrapper = (RelativeLayout) findViewById (R.id.rl_outer_login_wrapper);
+        mRlOuterLoginWrapper = (RelativeLayout) findViewById(R.id.rl_outer_login_wrapper);
 
         mBtnTryAgain.setOnRippleCompleteListener(this);
         mBtnFacebook.setOnRippleCompleteListener(this);
@@ -338,22 +329,23 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
             initSocialPlugins();
 
             //Todo Goto dashboard if user already logged in
-            String accessToken = UserPreference.getAccessToken ();
-            if(!TextUtils.isEmpty (accessToken)){
+            String accessToken = UserPreference.getAccessToken();
+            if (!TextUtils.isEmpty(accessToken)) {
                 mUserRegistered = true;
-                mRlOuterLoginWrapper.setVisibility (View.GONE);
-            }else{
+                mRlOuterLoginWrapper.setVisibility(View.GONE);
+            } else {
                 mUserRegistered = false;
-                mRlOuterLoginWrapper.setVisibility (View.VISIBLE);
+                mRlOuterLoginWrapper.setVisibility(View.VISIBLE);
             }
 
-            if(mUserRegistered == true && mDataDownloaded == true){
+            if (mUserRegistered == true && mDataDownloaded == true) {
                 //Goto dashboard
                 showDashboard();
             }
 
-            if(mUserRegistered) {
+            if (mUserRegistered) {
                 //Get data from server
+                syncCartItemsToServer();
                 getProductsFromServer(_context);
             }
 
@@ -361,6 +353,10 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
             mFlNoInternet.setVisibility(View.VISIBLE);
             mllLoginWrapper.setVisibility(View.GONE);
         }
+    }
+
+    private void syncCartItemsToServer() {
+        startService(new Intent(mContext, CartSyncService.class));
     }
 
     /**
@@ -447,7 +443,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                             } else if (_user.getString("auth_type").equalsIgnoreCase("instagram")) {
                                 UserPreference.setLoginMethod(AppConstant.LOGIN_TYPE.INSTAGRAM.ordinal());
                             } else {
-                                UserPreference.setLoginMethod (AppConstant.LOGIN_TYPE.CUSTOM.ordinal ());
+                                UserPreference.setLoginMethod(AppConstant.LOGIN_TYPE.CUSTOM.ordinal());
                             }
 
                             JSONObject customer = _response.getJSONObject("customer_details");
@@ -471,6 +467,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                             if (mUserRegistered == true && mDataDownloaded == true) {
                                 showDashboard();
                             } else {
+                                syncCartItemsToServer();
                                 getProductsFromServer(mContext);
                             }
 
@@ -588,7 +585,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
 
                         //CLose Progress dialog
                         if (mUserRegistered == true && mDataDownloaded == true) {
-                            showDashboard ();
+                            showDashboard();
                         }
 
                     } catch (Exception ex) {
@@ -688,6 +685,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
 
         }
     }
+
     /**
      * TODO Remove
      */

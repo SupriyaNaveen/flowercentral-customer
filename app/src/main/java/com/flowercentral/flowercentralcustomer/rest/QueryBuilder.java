@@ -78,4 +78,18 @@ public class QueryBuilder {
         sb.append ("previousorders");
         return sb.toString ();
     }
+
+    public static String getHelpDetailsUrl() {
+        StringBuilder sb = new StringBuilder ();
+        sb.append(BuildConfig.SERVER);
+        sb.append ("help");
+        return sb.toString ();
+    }
+
+    public static String getCartSyncUrl() {
+        StringBuilder sb = new StringBuilder ();
+        sb.append(BuildConfig.SERVER);
+        sb.append ("addtocart");
+        return sb.toString ();
+    }
 }

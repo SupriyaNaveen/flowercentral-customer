@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            android:padding="@dimen/dp10">
+
+            <ImageView
+                android:id="@+id/help_group_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                app:srcCompat="@drawable/ic_add"
+                android:contentDescription="@string/content_description"/>
+
+            <TextView
+                android:id="@+id/question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@id/help_group_indicator"
+                android:textSize="@dimen/sp15" />
+
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/group_divider_blank"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp20"
+            android:background="@color/color3b3b3b" />
+    </LinearLayout>
+</layout>

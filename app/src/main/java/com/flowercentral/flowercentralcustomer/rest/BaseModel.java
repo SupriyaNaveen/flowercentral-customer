@@ -28,7 +28,7 @@ import com.flowercentral.flowercentralcustomer.volley.ErrorData;
 import com.flowercentral.flowercentralcustomer.volley.HttpResponseListener;
 import com.flowercentral.flowercentralcustomer.volley.RestUtil;
 
-
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -364,4 +364,21 @@ public abstract class BaseModel<T> implements Response.ErrorListener, HttpRespon
         alertDialog.show();
     }
 
+    public void executePostJsonArrayRequest(String url, JSONArray requestObjectArray, String tag) {
+        if (RestUtil.isNetworkAvailable(mContext)) {
+            CustomJsonArrayObjectRequest request = new CustomJsonArrayObjectRequest(Request.Method.POST, url, requestObjectArray, listener, this);
+            request.setRetryPolicy(new DefaultRetryPolicy(MY_SOCKET_TIMEOUT_MS,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            request.setCustomResponseListener(this);
+            request.appendHeaderValues(getCommonAuthorizationHeader());
+            //addCommonHeaderParams(request);
+            AsyncHttpClient.getInstance(mContext).addToRequestQueue(request, tag);
+        } else {
+            ErrorData errorData = new ErrorData();
+            errorData.setErrorType(ErrorData.ERROR_TYPE.NETWORK_NOT_AVAILABLE);
+            errorData.setErrorMessage(mContext.getResources().getString(R.string.msg_internet_unavailable));
+            onError(errorData);
+        }
+    }
 }

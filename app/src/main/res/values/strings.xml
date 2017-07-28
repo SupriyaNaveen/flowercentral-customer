@@ -162,7 +162,10 @@
     <string name="msg_profile_saved">Profile information saved.</string>
     <string name="api_key_email">email</string>
     <string name="api_key_phone">phone</string>
+    <string name="title_help">Help</string>
+    <string name="content_description">content desc</string>
 
+    <string name="empty_help_items">No Help Details found.</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 
