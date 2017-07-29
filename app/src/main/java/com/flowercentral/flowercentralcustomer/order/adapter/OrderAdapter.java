@@ -166,7 +166,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
             if (products != null && products.size() > 0) {
 
-                if (products.get(0).getImage() != null) {
+                if (products.get(0).getImage() != null && !products.get(0).getImage().isEmpty()) {
                     Picasso.with(mContext).load(products.get(0).getImage()).into(viewListHolder.orderItemImage);
                 }
 

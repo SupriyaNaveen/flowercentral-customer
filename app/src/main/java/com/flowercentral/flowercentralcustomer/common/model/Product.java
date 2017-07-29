@@ -3,7 +3,6 @@ package com.flowercentral.flowercentralcustomer.common.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -23,6 +22,9 @@ public class Product implements Parcelable, Comparable<Product>{
     @SerializedName ("id")
     private String mProductID;
 
+    @SerializedName ("title")
+    private String mProductTitle;
+
     @SerializedName ("flower_details")
     private ArrayList<FlowerDetails> mFlowerDetailsList = new ArrayList<>();
 
@@ -38,8 +40,8 @@ public class Product implements Parcelable, Comparable<Product>{
     @SerializedName ("price")
     private double mPrice;
 
-//    @SerializedName ("quantity")
-//    private int mQty;
+    @SerializedName ("quantity")
+    private int mQty;
 
     @SerializedName ("liked")
     private int mIsLiked;
@@ -59,12 +61,13 @@ public class Product implements Parcelable, Comparable<Product>{
     protected Product (Parcel in) {
         mID = in.readInt ();
         mProductID = in.readString ();
+        mProductTitle = in.readString();
         in.readList(mFlowerDetailsList, FlowerDetails.class.getClassLoader());
         mDescription = in.readString ();
         mImage = in.readString ();
         mCategory = in.readString ();
         mPrice = in.readDouble ();
-//        mQty = in.readInt ();
+        mQty = in.readInt ();
         mIsLiked = in.readInt ();
         mRelatedImages = in.readArrayList (String.class.getClassLoader ());
         mTags = in.readArrayList (String.class.getClassLoader ());
@@ -75,12 +78,13 @@ public class Product implements Parcelable, Comparable<Product>{
     public void writeToParcel (Parcel dest, int flags) {
         dest.writeInt (mID);
         dest.writeString (mProductID);
+        dest.writeString(mProductTitle);
         dest.writeList (mFlowerDetailsList);
         dest.writeString (mDescription);
         dest.writeString (mImage);
         dest.writeString (mCategory);
         dest.writeDouble (mPrice);
-//        dest.writeInt (mQty);
+        dest.writeInt (mQty);
         dest.writeInt (mIsLiked);
         dest.writeList (mRelatedImages);
         dest.writeList (mTags);
@@ -105,11 +109,7 @@ public class Product implements Parcelable, Comparable<Product>{
     };
 
     public String getFlowerName () {
-        String flowerName = "";
-        if(mFlowerDetailsList != null && !mFlowerDetailsList.isEmpty()) {
-            flowerName = mFlowerDetailsList.get(0).getFlowerName();
-        }
-        return flowerName;
+        return mProductTitle;
     }
 
     public ArrayList<FlowerDetails> getmFlowerDetailsList() {
@@ -172,11 +172,7 @@ public class Product implements Parcelable, Comparable<Product>{
     }
 
     public int getQty () {
-        int qty = 0;
-        if(mFlowerDetailsList != null && !mFlowerDetailsList.isEmpty()) {
-            qty = mFlowerDetailsList.get(0).getFlowerQuantity();
-        }
-        return qty;
+        return mQty;
     }
 //
 //    public void setQty (int qty) {

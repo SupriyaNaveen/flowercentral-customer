@@ -85,7 +85,7 @@ public class LocalDAO {
             ContentValues contentValues = new ContentValues();
             contentValues.put("productID", _product.getString("id"));
             // Not null flower title field
-            contentValues.put("flower", " ");
+            contentValues.put("flower", _product.getString("title"));
             contentValues.put("description", _product.getString("description"));
             contentValues.put("category", _product.getString("category"));
             contentValues.put("image", _product.getString("image"));
@@ -219,7 +219,7 @@ public class LocalDAO {
 
                     jsonObject.put("localProductID", cursor.getString(cursor.getColumnIndex("id")));
                     jsonObject.put("id", cursor.getString(cursor.getColumnIndex("productID")));
-//                    jsonObject.put ("flower", cursor.getString (cursor.getColumnIndex ("flower")));
+                    jsonObject.put ("title", cursor.getString (cursor.getColumnIndex ("flower")));
                     jsonObject.put("description", cursor.getString(cursor.getColumnIndex("description")));
                     jsonObject.put("category", cursor.getString(cursor.getColumnIndex("category")));
                     jsonObject.put("image", cursor.getString(cursor.getColumnIndex("image")));

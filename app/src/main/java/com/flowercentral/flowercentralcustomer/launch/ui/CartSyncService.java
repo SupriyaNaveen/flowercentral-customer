@@ -28,6 +28,10 @@ public class CartSyncService extends IntentService {
         super(name);
     }
 
+    public CartSyncService() {
+        super(CartSyncService.class.getSimpleName());
+    }
+
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         LocalDAO localDAO = new LocalDAO(CartSyncService.this);

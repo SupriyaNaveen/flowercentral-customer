@@ -131,6 +131,8 @@
             android:name="io.fabric.ApiKey"
             android:value="d7527c7823522f2c8672f93991ff0532472e56b4"/>
 
+        <service android:name=".launch.ui.CartSyncService"/>
+
     </application>
 
 </manifest>

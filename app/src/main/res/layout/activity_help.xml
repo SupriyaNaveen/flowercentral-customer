@@ -15,23 +15,15 @@
         android:id="@+id/ll_help_inner_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar_default">
-
-        <TextView
-            android:id="@+id/help_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:gravity="center"
-            android:text="@string/title_help"
-            android:textSize="20sp"/>
+        android:layout_below="@+id/toolbar_default"
+        android:background="@color/colorBackground">
 
         <ExpandableListView
             android:id="@+id/help_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/help_title"
-            android:layout_marginTop="@dimen/dp5" />
+            android:layout_marginTop="@dimen/dp10"
+            android:groupIndicator="@null"/>
 
         <ProgressBar
             android:id="@+id/progress_bar"

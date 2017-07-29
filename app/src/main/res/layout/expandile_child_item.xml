@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/answer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:padding="@dimen/dp16" />
 
-        <TextView
-            android:id="@+id/answer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorWhite"
-            android:padding="@dimen/dp16" />
+    <View
+        android:id="@+id/child_divider_blank"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp20"
+        android:background="@color/colorBackground" />
 
-        <View
-            android:id="@+id/child_divider_blank"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp20"
-            android:background="@color/color3b3b3b" />
-
-    </LinearLayout>
-</layout>
+</LinearLayout>
