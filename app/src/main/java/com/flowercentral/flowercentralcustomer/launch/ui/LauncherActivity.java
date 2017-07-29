@@ -340,12 +340,10 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
 
             if (mUserRegistered == true && mDataDownloaded == true) {
                 //Goto dashboard
-                showDashboard();
-            }
-
-            if (mUserRegistered) {
-                //Get data from server
                 syncCartItemsToServer();
+                showDashboard();
+            } else if (mUserRegistered) {
+                //Get data from server
                 getProductsFromServer(_context);
             }
 
@@ -465,9 +463,9 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                             mUserRegistered = true;
                             //Redirect to Dashboard
                             if (mUserRegistered == true && mDataDownloaded == true) {
+                                syncCartItemsToServer();
                                 showDashboard();
                             } else {
-                                syncCartItemsToServer();
                                 getProductsFromServer(mContext);
                             }
 
@@ -585,6 +583,7 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
 
                         //CLose Progress dialog
                         if (mUserRegistered == true && mDataDownloaded == true) {
+                            syncCartItemsToServer();
                             showDashboard();
                         }
 
