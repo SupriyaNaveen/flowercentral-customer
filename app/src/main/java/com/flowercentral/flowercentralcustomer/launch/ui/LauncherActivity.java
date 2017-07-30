@@ -544,25 +544,6 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
         finish();
     }
 
-    /*private MaterialDialog showDialog(Context _context, String _title, String _content, boolean _cancellable,
-                                      boolean _autoDismiss, String _positiveText, String _negativeText, Drawable _icon) {
-
-        MaterialDialog.Builder builder = new MaterialDialog.Builder(_context)
-                .title(_title)
-                .content(_content)
-                .cancelable(_cancellable)
-                .autoDismiss(_autoDismiss)
-                .positiveText(_positiveText)
-                .negativeText(_negativeText);
-
-        if (_icon != null) {
-            builder.icon(_icon);
-        }
-
-        mDialog = builder.build();
-        return mDialog;
-    }*/
-
     private void getProductsFromServer(final Context _context) {
 
         mProgressDialog = Util.showProgressDialog(mCurrentActivity, null, getString(R.string.msg_fetching_product), false);
@@ -656,8 +637,8 @@ public class LauncherActivity extends BaseActivity implements RippleView.OnRippl
                 }
 
                 mLoginMethod = AppConstant.LOGIN_TYPE.FACEBOOK.ordinal();
-//                mFacebookHelper.performSignIn(this);
-                temporaryLogin();
+                mFacebookHelper.performSignIn(this);
+
                 break;
 
             case R.id.btn_google:
